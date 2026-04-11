@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-04-10
-last_updated: 2026-04-11 (Story 1.7 implementation complete — status: in-progress → review)
+last_updated: 2026-04-11 (Story 2.4 context created — status: backlog → ready-for-dev)
 project: car-buy-assistant
 project_key: NOKEY
 tracking_system: file-system
@@ -58,11 +58,11 @@ development_status:
   # ─────────────────────────────────────────────────────────────
   # Epic 2: Conversion Story — Hero Through Footer CTA
   # ─────────────────────────────────────────────────────────────
-  epic-2: backlog
-  2-1-build-herosection-with-micro-story-headline-phone-mockup-and-cta-slot: backlog
-  2-2-build-problemsection-with-statistics-and-css-only-fade-in: backlog
-  2-3-build-statcard-and-trustquotecard-tier-2-primitives-pre-launch-variants: backlog
-  2-4-build-inspectionstoryscroll-react-island-with-sticky-phone-mechanism-and-one-placeholder-scene: backlog
+  epic-2: in-progress
+  2-1-build-herosection-with-micro-story-headline-phone-mockup-and-cta-slot: ready-for-dev
+  2-2-build-problemsection-with-statistics-and-css-only-fade-in: ready-for-dev
+  2-3-build-statcard-and-trustquotecard-tier-2-primitives-pre-launch-variants: ready-for-dev
+  2-4-build-inspectionstoryscroll-react-island-with-sticky-phone-mechanism-and-one-placeholder-scene: ready-for-dev
   2-5-build-the-six-inspectionstoryscene-content-blocks-with-hard-stop-climax-variant: backlog
   2-6-build-socialproofsection-with-pre-launch-market-statistics: backlog
   2-7-build-blogpreviewssection-with-inline-placeholder-cards: backlog
