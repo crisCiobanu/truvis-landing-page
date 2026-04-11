@@ -1,0 +1,16 @@
+{
+  "index": {
+    "title": "Truvis blog",
+    "description": "Guides, checklists and research to help you buy a used car with confidence.",
+    "allCategories": "All categories",
+    "readMore": "Read more",
+    "readingTime": "{minutes} min read"
+  },
+  "article": {
+    "publishedOn": "Published on {date}",
+    "updatedOn": "Updated on {date}",
+    "relatedArticles": "Related articles",
+    "shareArticle": "Share this article",
+    "backToBlog": "Back to blog"
+  }
+}

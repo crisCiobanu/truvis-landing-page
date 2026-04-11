@@ -1,0 +1,48 @@
+{
+  "skipToMain": "Skip to main content",
+  "nav": {
+    "home": "Home",
+    "blog": "Blog",
+    "faq": "FAQ",
+    "about": "About",
+    "primaryLabel": "Primary",
+    "truvisHome": "Truvis home",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "footer": {
+    "product": "Product",
+    "blog": "Blog",
+    "legal": "Legal",
+    "follow": "Follow",
+    "features": "Features",
+    "howItWorks": "How it works",
+    "pricing": "Pricing",
+    "allArticles": "All articles",
+    "buyingGuides": "Buying guides",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "copyright": "© {year} Truvis. All rights reserved.",
+    "builtWith": "Built with Astro, shadcn/ui and Tailwind v4."
+  },
+  "errors": {
+    "notFound": {
+      "eyebrow": "Error 404",
+      "headline": "Page not found.",
+      "body": "That road doesn't lead anywhere on Truvis. Let's get you back on a route that does.",
+      "primaryCta": "Back to homepage",
+      "secondaryCta": "Read the blog",
+      "metaTitle": "Page not found · Truvis",
+      "metaDescription": "We couldn't find that page on Truvis. Head back to the landing page or browse the blog."
+    },
+    "serverError": {
+      "eyebrow": "Error 500",
+      "headline": "Something went wrong on our end.",
+      "body": "We're looking into it. Give it a minute and try again — or head somewhere that's working.",
+      "primaryCta": "Back to homepage",
+      "secondaryCta": "Read the blog",
+      "metaTitle": "Something went wrong · Truvis",
+      "metaDescription": "Truvis hit an unexpected error. Give it a moment and try again."
+    }
+  }
+}
