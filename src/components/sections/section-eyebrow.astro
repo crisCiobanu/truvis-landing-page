@@ -27,6 +27,13 @@ const pillClasses =
 
 const headingClasses =
   variant === 'light' ? 'text-[var(--color-primary)]' : 'text-white';
+
+// Only render the heading wrapper when a consumer actually passes
+// content into the `heading` slot. Otherwise the empty `<div>` adds a
+// phantom flex child, inflating the eyebrow→next-sibling gap (see
+// Story 2.1 review — HeroSection uses SectionEyebrow for the pill only
+// and places its own <h1> outside the component).
+const hasHeading = Astro.slots.has('heading');
 ---
 
 <div class:list={['flex flex-col items-start gap-4', className]}>
@@ -38,7 +45,11 @@ const headingClasses =
   >
     {eyebrow}
   </span>
-  <div class:list={['font-display text-2xl font-bold', headingClasses]}>
-    <slot name="heading" />
-  </div>
+  {
+    hasHeading && (
+      <div class:list={['font-display text-2xl font-bold', headingClasses]}>
+        <slot name="heading" />
+      </div>
+    )
+  }
 </div>

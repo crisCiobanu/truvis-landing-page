@@ -1,0 +1,105 @@
+---
+/**
+ * HeroSection — Story 2.1 (UX-DR4, AR23)
+ *
+ * Tier-2 composite: the financial micro-story hero that kicks off the
+ * landing page. Pure Astro with zero `client:*` directives — LCP is the
+ * only priority above the fold. The section colour is the warm white
+ * `--color-bg` so it starts the "white hero → surface problem" rhythm
+ * documented in `docs/design-conventions.md`.
+ *
+ * Layout: two-column grid at `lg` (≈55% copy / 45% phone), stacked with
+ * copy-first on mobile (UX-DR26). The `<slot name="cta">` is the Epic 3
+ * handoff contract — Story 3.5 swaps the disabled placeholder button
+ * for a real `<EmailCaptureBlock slot="cta" variant="hero" />` without
+ * touching this file.
+ *
+ * Copy: wired to `t('landing.hero.*', locale)` — no hardcoded strings.
+ * FR/DE currently render the English byte copies per FR52 V1 policy.
+ */
+import { t, type Locale } from '@/lib/i18n';
+import SectionEyebrow from '@/components/sections/section-eyebrow.astro';
+// Import the SVG as a raw string so Vite inlines it at build time — no
+// extra HTTP request, explicit width/height (see the SVG root), and the
+// whole payload lives in the HTML so the browser paints it with the LCP
+// text. Size: ~3.9KB raw, ≪ the 80KB hero-image budget (AC5 / NFR5).
+import phoneMockup from '@/assets/hero/phone-mockup.svg?raw';
+
+const locale = (Astro.currentLocale ?? 'en') as Locale;
+---
+
+<section aria-labelledby="hero-heading" class="bg-[var(--color-bg)]">
+  <div
+    class="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.25fr_1fr] lg:gap-12 lg:px-8 lg:py-24"
+  >
+    {/* Copy column — eyebrow → headline → subheadline → CTA slot */}
+    <div class="flex flex-col items-start gap-6">
+      <SectionEyebrow
+        variant="light"
+        eyebrow={t('landing.hero.eyebrow', locale)}
+      />
+      <h1
+        id="hero-heading"
+        class="font-display text-[length:var(--text-hero)] leading-tight font-bold text-[var(--color-primary)]"
+      >
+        {t('landing.hero.headline', locale)}
+      </h1>
+      <p
+        class="max-w-2xl text-[length:var(--text-lg)] text-[var(--color-primary)]"
+      >
+        {t('landing.hero.subheadline', locale)}
+      </p>
+
+      {
+        /*
+         * CTA slot — Epic 3 handoff contract. The wrapper `<div>` data-*
+         * attributes MUST stay exactly as-is; Story 3.5 targets them verbatim
+         * when it swaps in the real <EmailCaptureBlock slot="cta" variant="hero" />.
+         */
+      }
+      <slot name="cta">
+        <div data-cta-slot="hero" data-testid="hero-cta-slot">
+          <button
+            type="button"
+            disabled
+            aria-disabled="true"
+            class="inline-flex items-center rounded-md bg-[var(--color-teal)] px-6 py-3 font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-teal)] disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            {t('landing.hero.ctaPlaceholder', locale)}
+            <span class="sr-only"> — coming soon, form wires in Epic 3</span>
+          </button>
+        </div>
+      </slot>
+    </div>
+
+    {
+      /*
+       * Phone mockup column — centred on mobile, right-aligned at `lg:`.
+       * The inline SVG carries intrinsic width/height (320x640) so the
+       * browser reserves the slot on first paint and there is no CLS.
+       * We wrap it in a fixed-aspect container and let it scale inside.
+       */
+    }
+    <div class="flex items-center justify-center lg:justify-self-end">
+      <div
+        class="hero-phone w-full max-w-[320px]"
+        role="img"
+        aria-label={t('landing.hero.phoneAlt', locale)}
+        set:html={phoneMockup}
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  /*
+   * Give the inlined SVG a fluid box that keeps its 320:640 aspect ratio
+   * and flags it as the LCP candidate. No animations — NFR1 demands
+   * zero motion cost above the fold.
+   */
+  .hero-phone :global(svg) {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+</style>

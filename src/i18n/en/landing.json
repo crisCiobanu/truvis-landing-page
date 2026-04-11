@@ -4,8 +4,11 @@
     "description": "Truvis is a used-car inspection app that helps you know exactly what you are buying. Join the waitlist for early access."
   },
   "hero": {
-    "headline": "A smarter way to inspect used cars.",
-    "subheadline": "Truvis is coming soon. The full landing page — hero, inspection story scroll, social proof, waitlist — lands in Epic 2.",
+    "eyebrow": "The pre-purchase inspection in your pocket",
+    "headline": "A buyer paid €7,200 for a car with a €900 problem he couldn't see.",
+    "subheadline": "Truvis is a pocket inspector that walks you through a used car, flags what matters, and tells you what to negotiate — before you pay.",
+    "ctaPlaceholder": "Join the waitlist",
+    "phoneAlt": "Truvis app showing a used-car inspection in progress with a severity summary for the buyer.",
     "primaryCta": "Join the waitlist",
     "secondaryCta": "See how it works"
   },

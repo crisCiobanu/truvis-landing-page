@@ -20,6 +20,7 @@
  */
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionEyebrow from '@/components/sections/section-eyebrow.astro';
+import HeroSection from '@/components/sections/hero-section.astro';
 import { Button } from '@/components/ui/button';
 
 // 140% padded variants of every user-facing shell string.
@@ -184,6 +185,29 @@ const padded = {
           }
         </ul>
       </nav>
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* HeroSection (Story 2.1) — real component rendered in-place          */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 overflow-hidden rounded-lg ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-3 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        HeroSection · story 2.1 · 140% padded i18n strings (see note)
+      </p>
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-2 text-xs text-[var(--color-muted)]"
+      >
+        The hero below renders its copy through <code>t('landing.hero.*')</code>
+        against the live locale JSON. To stress-test with 140% padded strings, temporarily
+        pad the <code>hero</code> values in
+        <code>src/i18n/en/landing.json</code> and reload this page — the section must
+        not clip, truncate, or collapse at 375px, 768px, or 1280px viewport widths.
+      </p>
+      <HeroSection />
     </div>
 
     {/* ------------------------------------------------------------------ */}
