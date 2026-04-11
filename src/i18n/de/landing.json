@@ -13,8 +13,13 @@
     "secondaryCta": "See how it works"
   },
   "problem": {
-    "eyebrow": "The problem",
-    "headline": "Buyers lose an average of {amount} to hidden issues.",
-    "body": "Most private-party used cars hide at least one costly issue that a casual test drive won't surface."
+    "eyebrow": "The cost of not knowing",
+    "headline": "Buyers lose an average of €640 to hidden issues they couldn't see on a test drive.",
+    "body": {
+      "lede": "Used cars hide problems that a casual test drive won't surface — worn clutches, misaligned frames, electronic gremlins, history odometer rolls. The ones that do get caught are usually caught at the mechanic, after the money has already changed hands.",
+      "stat": "Roughly 1 in 3 private-party used cars has at least one undisclosed issue costing more than €500 to fix. The average buyer walks away from a handshake deal €640 poorer than they expected.",
+      "stakes": "On a €12,000 car, that is a 5 % hit before you've even driven it home. It is also entirely preventable — if you know what to look for."
+    },
+    "sourceNote": "Source: placeholder data — replaced with sourced statistics in Epic 5."
   }
 }

@@ -21,6 +21,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionEyebrow from '@/components/sections/section-eyebrow.astro';
 import HeroSection from '@/components/sections/hero-section.astro';
+import ProblemSection from '@/components/sections/problem-section.astro';
 import { Button } from '@/components/ui/button';
 
 // 140% padded variants of every user-facing shell string.
@@ -208,6 +209,33 @@ const padded = {
         not clip, truncate, or collapse at 375px, 768px, or 1280px viewport widths.
       </p>
       <HeroSection />
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* ProblemSection (Story 2.2) — real component rendered in-place       */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 overflow-hidden rounded-lg ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-3 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        ProblemSection · story 2.2 · live i18n strings (see note)
+      </p>
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-2 text-xs text-[var(--color-muted)]"
+      >
+        The section below renders real copy through <code
+          >t('landing.problem.*')</code
+        >
+        against the live locale JSON, inside its `max-w-2xl` body-text column. To
+        stress-test at 140% padding, temporarily pad the
+        <code>problem</code> values in
+        <code>src/i18n/en/landing.json</code> and reload — the section must not clip,
+        truncate, or collapse at 375px, 768px, or 1280px viewport widths, and the
+        background surface must transition cleanly from the hero above.
+      </p>
+      <ProblemSection />
     </div>
 
     {/* ------------------------------------------------------------------ */}

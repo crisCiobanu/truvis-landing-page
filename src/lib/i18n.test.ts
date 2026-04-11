@@ -71,8 +71,13 @@ describe('t() — i18n helper', () => {
   });
 
   it('supports named placeholder substitution', () => {
-    const rendered = t('landing.problem.headline', 'en', { amount: '€2,300' });
-    expect(rendered).toBe('Buyers lose an average of €2,300 to hidden issues.');
+    // Story 2.2 removed the `{amount}` placeholder from
+    // `landing.problem.headline` (Epic 5 will re-parameterise via the
+    // siteContent collection). Use `blog.index.readingTime` as the
+    // canonical string-substitution fixture — it still ships with a
+    // `{minutes}` placeholder in every locale JSON.
+    const rendered = t('blog.index.readingTime', 'en', { minutes: '7' });
+    expect(rendered).toBe('7 min read');
   });
 
   it('substitutes numeric values into named placeholders', () => {

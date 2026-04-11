@@ -8,6 +8,7 @@
  */
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import HeroSection from '@/components/sections/hero-section.astro';
+import ProblemSection from '@/components/sections/problem-section.astro';
 import { t, type Locale } from '@/lib/i18n';
 
 const locale = (Astro.currentLocale ?? 'en') as Locale;
@@ -18,4 +19,5 @@ const locale = (Astro.currentLocale ?? 'en') as Locale;
   description={t('landing.meta.description', locale)}
 >
   <HeroSection />
+  <ProblemSection />
 </BaseLayout>

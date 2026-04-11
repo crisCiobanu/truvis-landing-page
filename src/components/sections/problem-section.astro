@@ -1,0 +1,113 @@
+---
+/**
+ * ProblemSection — Story 2.2 (UX-DR5, AR23)
+ *
+ * Tier-2 composite: the second landing-page section. Sits directly
+ * below `HeroSection` and enforces the Story 1.7 "white hero →
+ * surface problem" colour rhythm on the warm-grey `--color-surface`
+ * background.
+ *
+ * Pure Astro, **zero** `client:*` directives, **zero** JavaScript.
+ * The entrance motion is CSS-only:
+ *   - primary path: `animation-timeline: view()` (scroll-driven)
+ *   - fallback: `@supports not (...)` one-shot on page load
+ *   - gated by `@media (prefers-reduced-motion: no-preference)`
+ *   - only `opacity` + `transform: translateY(...)` animate (CLS-safe)
+ *
+ * The resting state (outside any `@media` block) already renders
+ * fully visible, so if every motion branch fails the content is
+ * still readable — fails-open by design.
+ *
+ * Copy: every visible string routes through `t('landing.problem.*',
+ * locale)`. Source-note scaffolding flags the node Epic 5's Story 5.4
+ * will swap for real `siteContent` collection reads.
+ */
+import { t, type Locale } from '@/lib/i18n';
+import SectionEyebrow from '@/components/sections/section-eyebrow.astro';
+
+const locale = (Astro.currentLocale ?? 'en') as Locale;
+---
+
+<section aria-labelledby="problem-heading" class="bg-[var(--color-surface)]">
+  <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <div class="problem-fade flex max-w-2xl flex-col items-start gap-6">
+      <SectionEyebrow
+        variant="light"
+        eyebrow={t('landing.problem.eyebrow', locale)}
+      />
+      <h2
+        id="problem-heading"
+        class="font-display text-[length:var(--text-2xl)] leading-tight font-bold text-[var(--color-primary)]"
+      >
+        {t('landing.problem.headline', locale)}
+      </h2>
+      <p class="text-[length:var(--text-lg)] text-[var(--color-primary)]">
+        {t('landing.problem.body.lede', locale)}
+      </p>
+      <p class="text-[length:var(--text-lg)] text-[var(--color-primary)]">
+        {t('landing.problem.body.stat', locale)}
+      </p>
+      <p class="text-[length:var(--text-lg)] text-[var(--color-primary)]">
+        {t('landing.problem.body.stakes', locale)}
+      </p>
+      <p class="text-[length:var(--text-sm)] text-[var(--color-muted)]">
+        {t('landing.problem.sourceNote', locale)}
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  /*
+   * Fails-open resting state. If every @media / @supports branch below
+   * fails — unsupported browser, reduced-motion user, CSS error — the
+   * section is still fully visible at its final layout position. This
+   * is deliberate and load-bearing; do not remove.
+   */
+  .problem-fade {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /*
+     * Primary path: CSS scroll-driven animation. No JS, no
+     * IntersectionObserver. `animation-range: entry 0% entry 60%`
+     * plays the fade as the section enters the viewport.
+     */
+    @supports (animation-timeline: view()) {
+      .problem-fade {
+        animation: problem-fade-in linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 60%;
+      }
+    }
+
+    /*
+     * Fallback for browsers without scroll-driven animations: a
+     * one-shot fade on page load using the shared `--duration-slow`
+     * motion token from Story 1.7.
+     */
+    @supports not (animation-timeline: view()) {
+      .problem-fade {
+        animation: problem-fade-in var(--duration-slow) ease-out both;
+      }
+    }
+  }
+
+  /*
+   * Only `opacity` and `transform` animate — both GPU-composited,
+   * neither triggers layout. NFR3 (CLS < 0.1) demands no layout-
+   * invalidating properties in entrance motion.
+   */
+  @keyframes problem-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
