@@ -1,25 +1,29 @@
 ---
 /**
- * 404 — Page not found (Story 1.5 / FR56)
+ * 500 — Server error (Story 1.5 / FR56)
  *
- * Astro renders this file for any unmatched route, and Cloudflare Pages
- * serves it with an HTTP 404 status automatically when the file is named
- * `404.astro`. See README § Hosting for the 5xx counterpart.
+ * Astro renders `500.astro` for uncaught errors in its own routes and
+ * emits the file as `dist/500.html`. Cloudflare Pages does NOT auto-serve
+ * a custom 5xx page, so the mapping is wired up once per environment from
+ * the Cloudflare dashboard (Workers & Pages → Settings → Custom Pages →
+ * `5xx Errors` → `/500.html`). See README § Hosting → "Branded error
+ * pages" for the rationale (`public/_routes.json` controls Function
+ * routing only, not error responses, and therefore cannot satisfy AC2).
  *
- * Constraints (per story 1.5 Dev Notes):
+ * Constraints (same as 404.astro — Dev Notes of story 1.5):
  *   - Reuses `BaseLayout` (Story 1.4) — no bespoke layout.
  *   - No JS / React islands — must render even if the bundle fails.
- *   - Brand voice: 70 % Inspector / 30 % Ally. Short, calm, direct.
+ *   - Brand voice: calm Inspector with one Ally reassurance beat.
  *   - Two CTAs back to `/` and `/blog` (FR56).
- *   - Hardcoded English strings — Story 1.6 wires i18n.
- *   - Marked `noindex` so search engines don't surface the page.
+ *   - Hardcoded English — Story 1.6 wires i18n.
+ *   - `noindex` so search engines don't surface the page.
  */
 import BaseLayout from '@/layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="Page not found · Truvis"
-  description="We couldn't find that page on Truvis. Head back to the landing page or browse the blog."
+  title="Something went wrong · Truvis"
+  description="Truvis hit an unexpected error. Give it a moment and try again."
 >
   <meta slot="head" name="robots" content="noindex" />
 
@@ -27,18 +31,18 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     class="mx-auto flex min-h-[60vh] max-w-2xl flex-col items-center justify-center px-4 py-24 text-center sm:px-6"
   >
     <p
-      class="mb-4 font-mono text-sm font-semibold uppercase tracking-[0.2em] text-[var(--color-teal)]"
+      class="mb-4 font-mono text-sm font-semibold uppercase tracking-[0.2em] text-[var(--color-primary)]"
     >
-      Error 404
+      Error 500
     </p>
     <h1
       class="font-display text-[length:var(--text-hero)] font-bold leading-tight text-[var(--color-primary)]"
     >
-      Page not found.
+      Something went wrong on our end.
     </h1>
     <p class="mt-6 text-lg text-[var(--color-muted)]">
-      That road doesn't lead anywhere on Truvis. Let's get you back on a route
-      that does.
+      We're looking into it. Give it a minute and try again — or head somewhere
+      that's working.
     </p>
 
     <div class="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:gap-6">

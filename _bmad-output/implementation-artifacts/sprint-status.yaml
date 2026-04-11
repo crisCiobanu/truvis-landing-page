@@ -1,5 +1,5 @@
 # generated: 2026-04-10
-# last_updated: 2026-04-10 (Epic 1 stories created — all 1.x ready-for-dev)
+# last_updated: 2026-04-11 (Story 1.5 → review)
 # project: car-buy-assistant
 # project_key: NOKEY
 # tracking_system: file-system
@@ -50,7 +50,7 @@ development_status:
   1-2-provision-cloudflare-pages-and-ci-cd-with-lighthouse-budget-gates: done
   1-3-apply-truvis-brand-tokens-and-typography-to-tailwind-config: review
   1-4-build-baselayout-header-footer-mobilenav-drawer-and-sectioneyebrow-shell: review
-  1-5-build-branded-404-and-500-error-pages: ready-for-dev
+  1-5-build-branded-404-and-500-error-pages: review
   1-6-wire-astro-built-in-i18n-routing-and-locale-detection-middleware: ready-for-dev
   1-7-codify-accessibility-motion-text-expansion-and-component-conventions: ready-for-dev
   epic-1-retrospective: optional

@@ -109,6 +109,19 @@ Edge security posture (all configured on the Cloudflare dashboard, not in code):
 
 Push to `main` triggers an automatic production deploy. Every open PR gets a unique Cloudflare preview URL commented on the PR by the Cloudflare GitHub app.
 
+### Branded error pages (Story 1.5 / FR56)
+
+The site ships two branded error pages that reuse `BaseLayout` and the Truvis brand tokens:
+
+- **`src/pages/404.astro`** — Astro's static build emits this as `dist/404.html`. Cloudflare Pages returns it with HTTP `404` automatically for any request that matches no static asset. No dashboard configuration required. Verify after deploy with `curl -I https://<preview>/does-not-exist` → expect `HTTP/2 404`.
+- **`src/pages/500.astro`** — emitted as `dist/500.html`. Cloudflare Pages does **not** automatically serve a custom 5xx page, so wire it up once per environment from the dashboard:
+
+  _Workers & Pages → `truvis-landing-page` → Settings → Custom Pages → `5xx Errors` → point at `/500.html`._
+
+  We deliberately chose the dashboard route over a `public/_routes.json` workaround because `_routes.json` controls Function routing, not error responses. Verify after deploy with a deliberately failing route (temporarily `throw` from an API handler and `curl -I https://<preview>/api/<route>` → expect `HTTP/2 500`).
+
+Both error pages are marked `noindex` and carry two nav-back CTAs (`/` and `/blog`) per FR56.
+
 ## Environment Variables
 
 Cloudflare Pages is the **source of truth** for environment variables in `preview` and `production`. The repository's `.env.local` (gitignored) holds local dev values. **Never commit real secrets.** CI (`.github/workflows/ci.yml`) does not need any of these — it only runs the build and Lighthouse against the local preview server.
