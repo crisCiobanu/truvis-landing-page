@@ -1,6 +1,6 @@
 # Story 1.2: Provision Cloudflare Pages and CI/CD with Lighthouse budget gates
 
-Status: review
+Status: done
 
 ## Story
 
@@ -73,6 +73,40 @@ so that **performance, accessibility, and SEO regressions cannot land on `main`*
   - [x] T5.2 Add `## Environment Variables` section listing each var, which env it lives in, who owns the value, and which downstream story populates it
   - [x] T5.3 Add `## CI / Quality Gates` section: Lighthouse thresholds, what blocks merge, how to run LHCI locally
   - [x] T5.4 Add `## Operations Runbook` with the rollback dry-run timing from T2.8 (placeholder row marked `pending T2.8` — measured time will be filled in when the dashboard drill runs)
+
+### Review Findings
+
+_Code review on 2026-04-11 (bmad-code-review). Layers: Blind Hunter, Edge Case Hunter, Acceptance Auditor. Scope exclusion per reviewer: T2.8 CF rollback drill explicitly out of scope._
+
+**Decisions resolved** (recorded 2026-04-11 by Cristian during review):
+
+- **KB vs KiB on NFR5**: decision is to **keep** the gate at `maxNumericValue: 512000` (500 KiB) and amend doc/comment wording to say "500 KiB" so the reachable docs agree with the enforcement. NFR5's PRD wording is out of scope for this review but should be tightened to "500 KiB" on the next PRD touch (flagged in `deferred-work.md`). Converted to patch items below.
+- **Orphan `src/components/Chart.tsx` + `recharts`**: decision is to **keep** both on disk and rely on the Lighthouse budget gate to catch any accidental re-import. Story 2.1 will replace `index.astro` wholesale anyway. No patch — dismissed by decision.
+
+**Patch** — all applied 2026-04-11 during review session
+
+- [x] [Review][Patch] **Pin `vitest` and `@lhci/cli` via lockfile — previous workflow violated its own "never `@latest`" policy** — `vitest@^2` (2.1.9) and `@lhci/cli@0.14.x` (0.14.0) added to `devDependencies`; `ci.yml` now calls `npx vitest` and `npx lhci` from `node_modules`, fully deterministic per commit.
+- [x] [Review][Patch] **Added `permissions: contents: read` at workflow level** [`.github/workflows/ci.yml`] — principle-of-least-privilege; no jobs in this workflow need write scope.
+- [x] [Review][Patch] **README HSTS line corrected** [`README.md` Hosting section] — now reads `max-age=31536000` only, with explicit note that `includeSubDomains`/`preload` are intentionally off in V1 and hardened by Story 7.7.
+- [~] [Review][Dismissed on second look] **`budget.json` per-type ceilings vs total** — re-examined: Lighthouse per-resource-type budgets are independent ceilings, not additive components. No real inconsistency. Finding retracted during patch pass.
+- [x] [Review][Patch] **`actions/upload-artifact@v4` artifact name includes `${{ github.run_attempt }}`** [`.github/workflows/ci.yml`] — prevents v4 hard-error on duplicate artifact name when a failed job is re-run.
+- [~] [Review][Re-deferred] **`--max-warnings=0` on lint script** — re-deferred to Story 1.7 because the starter has 2 pre-existing warnings that would immediately red the gate. Story 1.7 convention pass will fix the warnings and add `--max-warnings=0` in the same commit.
+- [x] [Review][Patch] **README lint-script description updated** [`README.md` scripts table] — now reads "Runs ESLint (`eslint .`) — flat config auto-discovers .ts, .tsx, and .astro files".
+- [x] [Review][Patch] **Removed `LHCI_GITHUB_APP_TOKEN` env from workflow** [`.github/workflows/ci.yml`] — the LHCI GitHub App was never actually wired up; the secret read contradicted README's "CI needs no secrets" claim. Removed. If the GitHub App is wired in future, re-add alongside README documentation.
+- [x] [Review][Patch] **"500 KiB" unit made explicit in reachable docs and comments** [`lighthouse/lighthouserc.cjs` header + inline, `README.md` quality-gates table] — `resource-summary:total:size maxNumericValue: 512000` unchanged; surrounding prose now reads "500 KiB (512 000 bytes)" so SI vs binary confusion is resolved. PRD NFR5 wording tightening tracked in `deferred-work.md`.
+
+**Deferred (pre-existing / future-story work)**
+
+- [x] [Review][Resolved via patch] **`vitest` not in `devDependencies`** — resolved during review patch pass; `vitest@^2` (2.1.9) is now a real devDependency installed from the lockfile.
+- [x] [Review][Defer] **`--max-warnings=0` on ESLint** [`package.json` lint script] — re-deferred; blocked on the 2 pre-existing starter warnings (`src/hooks/use-toast.ts`, `src/stores/layout.ts`). Story 1.7 convention pass should fix the warnings and add the flag in one commit.
+- [x] [Review][Defer] **LHCI audits only `http://127.0.0.1:4321/`** [`lighthouse/lighthouserc.cjs`] — deferred, Story 6.7 perf re-audit will broaden URL coverage to blog index, article, 404, and i18n variants.
+- [x] [Review][Defer] **`resource-summary:total:size` ≠ "initial page weight"** [`lighthouse/lighthouserc.cjs:774`] — deferred, conceptually accepted trade-off; post-load lazy fetches inflate the measurement. Re-evaluate in Story 6.7.
+- [x] [Review][Defer] **`.cjs`/`.mjs` may fall through flat-config Node globals gap** [`eslint.config.js`] — deferred, Story 1.7 convention pass. `js.configs.recommended` applies globally with no `languageOptions.globals: { ...globals.node }`, so `lighthouserc.cjs` technically relies on luck for `no-undef` — verify and wire explicit Node globals in 1.7.
+- [x] [Review][Defer] **LHCI `settings.preset` / `formFactor` / `aggregationMethod` not declared** [`lighthouse/lighthouserc.cjs`] — deferred, Story 6.7. Current behaviour relies on LHCI defaults (mobile + simulated throttling + median), which have historically drifted across LHCI versions.
+- [x] [Review][Defer] **Astro `<script lang="ts">` blocks not covered by `@typescript-eslint` recommended rules** [`eslint.config.js`] — deferred, Story 1.7. The TS config block `files: ['**/*.ts','**/*.tsx']` does not match Astro embedded script contents.
+- [x] [Review][Defer] **`startServerReadyPattern: '4321'` substring-match fragility** [`lighthouse/lighthouserc.cjs`] — deferred, tighten to `http://127\.0\.0\.1:4321` regex when LHCI tooling is next touched.
+
+**Dismissed as noise** (not written above, for the record): `astro check` runs twice (checks job + `npm run build`); TextLayout.astro trailing-newline removal (prettier reformat only); `chromeFlags` string vs array (works); `needs: checks` UX discussion; fork-PR `LHCI_GITHUB_APP_TOKEN` empty-string path; `src/pages/index.astro` residual `Layout` import (transitional placeholder); `ui/*.tsx` prettier reformat (no logic change); `NODE_VERSION` workflow env not documented (trivial); per-resource ceilings softened to `warn` (intentional and documented in T3.3 rationale).
 
 ## Dev Notes
 
