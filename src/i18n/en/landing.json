@@ -1,0 +1,17 @@
+{
+  "meta": {
+    "title": "Truvis — Smarter used-car inspections",
+    "description": "Truvis is a used-car inspection app that helps you know exactly what you are buying. Join the waitlist for early access."
+  },
+  "hero": {
+    "headline": "A smarter way to inspect used cars.",
+    "subheadline": "Truvis is coming soon. The full landing page — hero, inspection story scroll, social proof, waitlist — lands in Epic 2.",
+    "primaryCta": "Join the waitlist",
+    "secondaryCta": "See how it works"
+  },
+  "problem": {
+    "eyebrow": "The problem",
+    "headline": "Buyers lose an average of {amount} to hidden issues.",
+    "body": "Most private-party used cars hide at least one costly issue that a casual test drive won't surface."
+  }
+}
