@@ -1,0 +1,67 @@
+/*
+ * InspectionStoryScroll — CSS module (Story 2.4, AC7 + AC8 + AC11)
+ *
+ * Motion is deliberately CSS-only. Two animations live in this file:
+ *
+ * 1. `.phone-screen-content` — crossfade applied to the phone-screen
+ *    content container. React remounts this element (via the `key`
+ *    prop on `currentScene.id`) whenever `$currentScene` changes, so
+ *    the CSS animation replays from its `from` keyframe automatically.
+ *    Duration is `--duration-base` (250ms) — the epic text mentions
+ *    300ms, but the Story 1.7 motion token is 250ms and we use the
+ *    token for codebase consistency. The deviation is documented in
+ *    the story's Dev Agent Record.
+ *
+ * 2. `.scene-slot` / `.scene-slot--entered` — narrative column entrance
+ *    animation (UX-DR15). Each slot starts `opacity: 0; translateY(20px)`
+ *    and animates to `opacity: 1; translateY(0)` when the Intersection
+ *    Observer adds the `--entered` modifier. The class is never removed,
+ *    so past scenes remain visible (UX-DR15 requirement).
+ *
+ * Both animations are gated under `@media (prefers-reduced-motion:
+ * no-preference)`. The base `.scene-slot` rule lives OUTSIDE the media
+ * query so reduced-motion users (and the global kill-switch in
+ * `src/styles/global.css`) see fully-visible slots from first paint
+ * rather than permanently invisible stubs. Belt-and-braces.
+ */
+
+.scene-slot {
+  /* Fails-open default: fully visible when the no-preference media
+     query is not matched (reduced motion, missing animation support,
+     or JS disabled so the class toggle never fires). */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .scene-slot {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity var(--duration-slow) ease-out,
+      transform var(--duration-slow) ease-out;
+    will-change: opacity, transform;
+  }
+
+  .scene-slot--entered {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .phone-screen-content {
+    animation: inspection-story-phone-screen-fade var(--duration-base) ease-out
+      both;
+    will-change: opacity, transform;
+  }
+}
+
+@keyframes inspection-story-phone-screen-fade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
