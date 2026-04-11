@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-04-10
-last_updated: 2026-04-11
+last_updated: 2026-04-11 (Story 1.2 in-progress — dev started)
 project: car-buy-assistant
 project_key: NOKEY
 tracking_system: file-system
@@ -47,7 +47,7 @@ development_status:
   # ─────────────────────────────────────────────────────────────
   epic-1: in-progress
   1-1-initialise-project-from-one-ie-astro-shadcn-starter: review
-  1-2-provision-cloudflare-pages-and-ci-cd-with-lighthouse-budget-gates: ready-for-dev
+  1-2-provision-cloudflare-pages-and-ci-cd-with-lighthouse-budget-gates: in-progress
   1-3-apply-truvis-brand-tokens-and-typography-to-tailwind-config: ready-for-dev
   1-4-build-baselayout-header-footer-mobilenav-drawer-and-sectioneyebrow-shell: ready-for-dev
   1-5-build-branded-404-and-500-error-pages: ready-for-dev
