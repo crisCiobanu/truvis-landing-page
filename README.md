@@ -27,7 +27,7 @@ npm install
 | `npm run dev`     | Starts the Astro dev server with HMR at `http://localhost:4321/`.                            |
 | `npm run build`   | Runs `astro check` (TypeScript + Astro diagnostics) then produces a static build in `dist/`. |
 | `npm run preview` | Serves the production build from `dist/` locally so you can verify it before deploying.      |
-| `npm run lint`    | Lints `.ts`, `.tsx`, and `.astro` files via ESLint.                                          |
+| `npm run lint`    | Runs ESLint (`eslint .`) — flat config auto-discovers `.ts`, `.tsx`, and `.astro` files.     |
 | `npm run format`  | Formats the project with Prettier.                                                           |
 
 ## Starter Verification
@@ -104,7 +104,7 @@ Tooling: `lighthouse@13.1.0` driving Chromium 146.0.7680.164 (snap). Reports:
 Edge security posture (all configured on the Cloudflare dashboard, not in code):
 
 - **TLS ≥ 1.2** enforced at the edge; HTTP requests are 301'd to HTTPS. Minimum TLS version set via _SSL/TLS → Edge Certificates → Minimum TLS Version = 1.2_. (NFR10)
-- **HSTS** enabled with `max-age=31536000; includeSubDomains; preload`. _SSL/TLS → Edge Certificates → HSTS_.
+- **HSTS** enabled with `max-age=31536000` (12 months). `includeSubDomains` and `preload` are intentionally **off** in V1 — they are hardened by Story 7.7 once the subdomain topology is settled. _SSL/TLS → Edge Certificates → HSTS_.
 - **WAF rate limiting** placeholder rule scoped to `/api/v1/blog/*` at 100 req/min/IP. Refined in Story 4.9. (NFR14)
 
 Push to `main` triggers an automatic production deploy. Every open PR gets a unique Cloudflare preview URL commented on the PR by the Cloudflare GitHub app.
@@ -138,14 +138,14 @@ Every PR runs [`.github/workflows/ci.yml`](.github/workflows/ci.yml), which gate
 
 Lighthouse thresholds (all `error` mode — any breach fails the PR):
 
-| Metric               | Threshold                           | NFR   |
-| -------------------- | ----------------------------------- | ----- |
-| Performance          | ≥ 90                                | NFR6  |
-| Accessibility        | ≥ 90                                | NFR25 |
-| SEO                  | ≥ 95                                | NFR39 |
-| LCP                  | < 2.5 s                             | NFR1  |
-| CLS                  | < 0.1                               | NFR3  |
-| Total initial weight | < 500 KB (`lighthouse/budget.json`) | NFR5  |
+| Metric               | Threshold                                               | NFR   |
+| -------------------- | ------------------------------------------------------- | ----- |
+| Performance          | ≥ 90                                                    | NFR6  |
+| Accessibility        | ≥ 90                                                    | NFR25 |
+| SEO                  | ≥ 95                                                    | NFR39 |
+| LCP                  | < 2.5 s                                                 | NFR1  |
+| CLS                  | < 0.1                                                   | NFR3  |
+| Total initial weight | < 500 KiB (512 000 bytes, see `lighthouse/budget.json`) | NFR5  |
 
 HTML reports are uploaded as workflow artefacts (`lighthouse-reports-<sha>`, 14-day retention) and also to LHCI's temporary public storage so they're clickable from the PR.
 
@@ -153,7 +153,7 @@ HTML reports are uploaded as workflow artefacts (`lighthouse-reports-<sha>`, 14-
 
 ```sh
 npm run build
-npx --yes @lhci/cli@0.14.x autorun --config=./lighthouse/lighthouserc.cjs
+npx lhci autorun --config=./lighthouse/lighthouserc.cjs
 ```
 
 Reports land in `.lighthouseci/` (gitignored). If the assertions fail locally, fix the regression **in the code** — **never loosen a threshold** to make CI pass. If the baseline itself cannot meet a threshold, that is a Story 1.1 acceptance failure to repair first.

@@ -69,6 +69,7 @@
     "zod": "^4.1.11"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.14.0",
     "@tailwindcss/typography": "0.5.0-alpha.3",
     "@typescript-eslint/eslint-plugin": "^8.45.0",
     "@typescript-eslint/parser": "^8.45.0",
@@ -77,6 +78,7 @@
     "prettier": "^3.6.2",
     "prettier-plugin-astro": "^0.14.1",
     "shadcn": "^3.3.1",
-    "vite": "^6.3.6"
+    "vite": "^6.3.6",
+    "vitest": "^2.1.9"
   }
 }

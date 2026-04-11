@@ -22,6 +22,12 @@ on:
   push:
     branches: [main]
 
+# Principle of least privilege — this workflow only needs to read the
+# repo contents and upload run artefacts. Nothing here pushes commits,
+# comments on PRs, or mutates anything on GitHub.
+permissions:
+  contents: read
+
 # Cancel older in-flight runs for the same ref — a fresh push obsoletes
 # the previous run's results anyway, and saves minutes.
 concurrency:
@@ -62,9 +68,10 @@ jobs:
 
       - name: Vitest (no-op if no tests yet)
         # `--passWithNoTests` keeps the gate green until Story 1.7 / Epic
-        # 4 introduces the first unit tests. We pin via npx so we don't
-        # have to add vitest to devDependencies until it is actually used.
-        run: npx --yes vitest@^2 run --passWithNoTests
+        # 4 introduces the first unit tests. Vitest is a pinned
+        # devDependency so `npm ci` installs it from the lockfile — no
+        # per-run registry fetch, fully deterministic per commit.
+        run: npx vitest run --passWithNoTests
 
   lighthouse:
     name: Lighthouse CI (perf / a11y / SEO budgets)
@@ -91,18 +98,19 @@ jobs:
         # `autorun` reads lighthouse/lighthouserc.cjs, which in turn
         # starts `npm run preview`, collects three runs against
         # http://127.0.0.1:4321/, asserts the NFR-mapped budgets, and
-        # uploads HTML reports to temporary public storage.
-        run: npx --yes @lhci/cli@0.14.x autorun --config=./lighthouse/lighthouserc.cjs
-        env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+        # uploads HTML reports to temporary public storage. @lhci/cli
+        # is a pinned devDependency so versions are locked per commit.
+        run: npx lhci autorun --config=./lighthouse/lighthouserc.cjs
 
       - name: Upload Lighthouse reports
         # Always upload — we want the HTML reports available even when
         # the assertion step fails, so regressions can be inspected.
+        # `run_attempt` in the artifact name prevents v4 upload-artifact
+        # from erroring on duplicate name when a failed job is re-run.
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: lighthouse-reports-${{ github.sha }}
+          name: lighthouse-reports-${{ github.sha }}-${{ github.run_attempt }}
           path: .lighthouseci/
           retention-days: 14
           if-no-files-found: warn

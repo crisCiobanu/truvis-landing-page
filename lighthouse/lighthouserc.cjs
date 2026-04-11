@@ -11,7 +11,7 @@
  *   - SEO          ≥ 0.95  (NFR39)
  *   - LCP          < 2.5s  (NFR1)
  *   - CLS          < 0.1   (NFR3)
- *   - Total initial weight < 500 KB via ./budget.json (NFR5)
+ *   - Total initial weight < 500 KiB (512 000 bytes) via ./budget.json (NFR5)
  *
  * Baseline reference (Story 1.1, mobile run):
  *   Perf 98, A11y 92, SEO 100, LCP 2.1s, CLS 0
@@ -47,12 +47,15 @@ module.exports = {
         'categories:seo': ['error', { minScore: 0.95 }],
         'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
         'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
-        // Total initial page weight (NFR5). Mirrors the `total` budget
-        // in `lighthouse/budget.json` but as an actionable assertion —
-        // Lighthouse's `performance-budget` audit is informational-only
-        // (scoreDisplayMode: notApplicable), so an LHCI assertion on
-        // it is a silent no-op. `resource-summary:total:size` has a
-        // real numericValue (in bytes) and is the correct primitive.
+        // Total initial page weight — NFR5, expressed as 500 KiB
+        // (512 000 bytes). Mirrors the `total` budget in
+        // `lighthouse/budget.json` (Lighthouse budget JSON treats the
+        // `budget` field as KiB per the LH spec) but as an actionable
+        // assertion — Lighthouse's `performance-budget` audit is
+        // informational-only (scoreDisplayMode: notApplicable), so an
+        // LHCI assertion on it is a silent no-op.
+        // `resource-summary:total:size` has a real numericValue in
+        // bytes and is the correct primitive.
         'resource-summary:total:size': ['error', { maxNumericValue: 512000 }],
         // Per-resource-type ceilings matching `lighthouse/budget.json`,
         // in bytes. Set to `warn` for now so a single noisy resource
