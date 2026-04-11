@@ -33,12 +33,10 @@ module.exports = {
         // Default Lighthouse mobile emulation + simulated throttling.
         // Chrome flags are required in GitHub Actions' sandboxed runners.
         chromeFlags: '--no-sandbox --headless=new',
-        // Hand the resource-weight budgets to Lighthouse itself at
-        // collect time — it produces the `performance-budget` audit,
-        // which the `assert` block below then gates on. This is the
-        // LHCI-supported way to combine category assertions with a
-        // JSON budget file (LHCI rejects `budgetsFile` + `assertions`
-        // used together).
+        // Also feed the budget JSON to Lighthouse at collect-time so
+        // it produces the (informational) `performance-budget` audit —
+        // useful for humans reading the HTML report, even though the
+        // hard gates below use `resource-summary:*:size` instead.
         budgetPath: './lighthouse/budget.json',
       },
     },
@@ -49,9 +47,30 @@ module.exports = {
         'categories:seo': ['error', { minScore: 0.95 }],
         'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
         'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
-        // Any breach of `lighthouse/budget.json` (total < 500 KB plus
-        // per-resource-type ceilings) fails this audit → fails the PR.
-        'performance-budget': 'error',
+        // Total initial page weight (NFR5). Mirrors the `total` budget
+        // in `lighthouse/budget.json` but as an actionable assertion —
+        // Lighthouse's `performance-budget` audit is informational-only
+        // (scoreDisplayMode: notApplicable), so an LHCI assertion on
+        // it is a silent no-op. `resource-summary:total:size` has a
+        // real numericValue (in bytes) and is the correct primitive.
+        'resource-summary:total:size': ['error', { maxNumericValue: 512000 }],
+        // Per-resource-type ceilings matching `lighthouse/budget.json`,
+        // in bytes. Set to `warn` for now so a single noisy resource
+        // type doesn't block a PR while we're still iterating on the
+        // starter weight; Story 6.7 can promote to `error` once the
+        // real content is in place.
+        'resource-summary:script:size': ['warn', { maxNumericValue: 153600 }], //  150 KB
+        'resource-summary:stylesheet:size': [
+          'warn',
+          { maxNumericValue: 61440 },
+        ], // 60 KB
+        'resource-summary:image:size': ['warn', { maxNumericValue: 204800 }], // 200 KB
+        'resource-summary:font:size': ['warn', { maxNumericValue: 102400 }], // 100 KB
+        'resource-summary:document:size': ['warn', { maxNumericValue: 40960 }], // 40 KB
+        'resource-summary:third-party:size': [
+          'warn',
+          { maxNumericValue: 102400 },
+        ], // 100 KB
         // Best-practices is tracked but not budget-gated in V1.
         'categories:best-practices': ['warn', { minScore: 0.9 }],
       },
