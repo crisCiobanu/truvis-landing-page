@@ -49,6 +49,16 @@
   --shadow-*: initial;
 
   /* ------- Colour palette (UX-DR1) ------- */
+  /*
+   * Restore `white` / `black` after the `--color-*: initial` reset above.
+   * Without these, `text-white` / `bg-white` / `text-black` / `bg-black`
+   * resolve to no-op utilities (Tailwind v4 only emits rules for tokens
+   * that exist in `@theme`), which silently made every white-on-dark
+   * heading in Epic 2 inherit `--color-primary` and render invisible.
+   */
+  --color-white: #ffffff;
+  --color-black: #000000;
+
   --color-bg: #fffdf9;
   --color-surface: #f7f5f2;
   --color-surface-2: #fff8ef;

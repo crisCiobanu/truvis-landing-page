@@ -41,85 +41,52 @@ export default function InspectionStoryScenes({
 }: InspectionStoryScenesProps) {
   const tr = (key: string) => t(`landing.inspectionStory.${key}`, locale);
 
+  const buildNarrative = (sceneKey: string) => (
+    <Narrative
+      eyebrow={tr(`${sceneKey}.sceneNumberLabel`)}
+      heading={tr(`${sceneKey}.featureName`)}
+      narrative={tr(`${sceneKey}.narrative`)}
+      benefit={tr(`${sceneKey}.featureBenefit`)}
+    />
+  );
+
   const scenes: InspectionStoryScene[] = [
     {
       id: 'scene-1-model-dna',
       label: tr('scene1.sceneNumberLabel'),
-      children: (
-        <SceneShell
-          eyebrow={tr('scene1.sceneNumberLabel')}
-          heading={tr('scene1.featureName')}
-          narrative={tr('scene1.narrative')}
-          benefit={tr('scene1.featureBenefit')}
-          interior={<ModelDnaInterior />}
-        />
-      ),
+      narrative: buildNarrative('scene1'),
+      phoneContent: <ModelDnaInterior />,
     },
     {
       id: 'scene-2-severity-calibrator',
       label: tr('scene2.sceneNumberLabel'),
-      children: (
-        <SceneShell
-          eyebrow={tr('scene2.sceneNumberLabel')}
-          heading={tr('scene2.featureName')}
-          narrative={tr('scene2.narrative')}
-          benefit={tr('scene2.featureBenefit')}
-          interior={<SeverityCalibratorInterior />}
-        />
-      ),
+      narrative: buildNarrative('scene2'),
+      phoneContent: <SeverityCalibratorInterior />,
     },
     {
       id: 'scene-3-personal-risk-calibration',
       label: tr('scene3.sceneNumberLabel'),
-      children: (
-        <SceneShell
-          eyebrow={tr('scene3.sceneNumberLabel')}
-          heading={tr('scene3.featureName')}
-          narrative={tr('scene3.narrative')}
-          benefit={tr('scene3.featureBenefit')}
-          interior={<RiskCalibrationInterior />}
-        />
-      ),
+      narrative: buildNarrative('scene3'),
+      phoneContent: <RiskCalibrationInterior />,
     },
     {
       id: 'scene-4-poker-face-mode',
       label: tr('scene4.sceneNumberLabel'),
-      children: (
-        <SceneShell
-          eyebrow={tr('scene4.sceneNumberLabel')}
-          heading={tr('scene4.featureName')}
-          narrative={tr('scene4.narrative')}
-          benefit={tr('scene4.featureBenefit')}
-          interior={<PokerFaceInterior />}
-        />
-      ),
+      narrative: buildNarrative('scene4'),
+      phoneContent: <PokerFaceInterior />,
     },
     {
       id: 'scene-5-hard-stop-protocol',
       label: tr('scene5.sceneNumberLabel'),
       variant: 'climax',
-      children: (
-        <SceneShell
-          eyebrow={tr('scene5.sceneNumberLabel')}
-          heading={tr('scene5.featureName')}
-          narrative={tr('scene5.narrative')}
-          benefit={tr('scene5.featureBenefit')}
-          interior={<HardStopInterior />}
-        />
-      ),
+      narrative: buildNarrative('scene5'),
+      phoneContent: <HardStopInterior />,
     },
     {
       id: 'scene-6-negotiation-report',
       label: tr('scene6.sceneNumberLabel'),
-      children: (
-        <SceneShell
-          eyebrow={tr('scene6.sceneNumberLabel')}
-          heading={tr('scene6.featureName')}
-          narrative={tr('scene6.narrative')}
-          benefit={tr('scene6.featureBenefit')}
-          interior={<NegotiationReportInterior />}
-        />
-      ),
+      narrative: buildNarrative('scene6'),
+      phoneContent: <NegotiationReportInterior />,
     },
   ];
 
@@ -127,20 +94,21 @@ export default function InspectionStoryScenes({
 }
 
 /* ------------------------------------------------------------------ */
-/* Scene shell — narrative column content shared by all six scenes.   */
+/* Narrative — white-on-dark scene copy for the scrollable left       */
+/* column. Paired with a sibling phone-interior mini-composition via  */
+/* the `InspectionStoryScene` contract; the two trees are intentionally */
+/* NOT nested so the phone card never inherits the white-on-pale text. */
 /* ------------------------------------------------------------------ */
-function SceneShell({
+function Narrative({
   eyebrow,
   heading,
   narrative,
   benefit,
-  interior,
 }: {
   eyebrow: string;
   heading: string;
   narrative: string;
   benefit: string;
-  interior: React.ReactNode;
 }) {
   return (
     <div className="space-y-4">
@@ -152,13 +120,6 @@ function SceneShell({
       </h3>
       <p className="text-[length:var(--text-lg)] text-white/90">{narrative}</p>
       <p className="text-[length:var(--text-sm)] text-white/70">{benefit}</p>
-
-      {/* Phone-interior mini-composition. In the desktop layout this is
-          only rendered inline for the mobile stacked fallback (the
-          sticky desktop phone is handled by the island). On mobile the
-          island wraps this entire tree in `aria-hidden="true"`, so the
-          duplicate phone markup below is hidden from assistive tech. */}
-      {interior}
     </div>
   );
 }

@@ -39,9 +39,16 @@ export interface InspectionStoryScene {
   /** Short human-readable label, e.g. "Scene 1 — Walkaround". Used
    * by the progress indicator's screen-reader label. */
   label: string;
-  /** Rendered inside the phone screen AND, on mobile, inline under
-   * the narrative copy. Typically supplied by the consumer as JSX. */
-  children: ReactNode;
+  /** Scene copy rendered in the scrollable **left column** (dark
+   * primary background). Owns the scene eyebrow, heading, narrative
+   * and benefit line — the white-on-dark narrative block. */
+  narrative: ReactNode;
+  /** Mini-composition rendered **inside the phone screen** (light
+   * surface-3 background). Shows the visual-only representation of
+   * the scene (badges, severity rows, gauges, etc.) — does NOT
+   * duplicate the narrative copy. Also used as the inline phone
+   * instance on mobile under the narrative. */
+  phoneContent: ReactNode;
   /** Visual-layout override. `'climax'` is used for scene 5 (Hard
    *  Stop Protocol) per UX-DR13 — centred narrative column, severity-
    *  red accent border, subtle sticky-phone scale. Defaults to
@@ -133,7 +140,7 @@ export default function InspectionStoryScroll({
               data-scene-variant={variant}
               className={`${styles['scene-slot']}${climaxClass} py-10 md:min-h-[70vh]`}
             >
-              {scene.children}
+              {scene.narrative}
 
               {/* Mobile (<768px): render an inline phone instance under
                  the narrative copy. The sticky phone in the right
@@ -150,7 +157,7 @@ export default function InspectionStoryScroll({
               <div className="mt-8 md:hidden" aria-hidden="true">
                 <PhoneFrame>
                   <div className={styles['phone-screen-content']}>
-                    {scene.children}
+                    {scene.phoneContent}
                   </div>
                 </PhoneFrame>
               </div>
@@ -174,7 +181,7 @@ export default function InspectionStoryScroll({
             aria-live="polite"
             className={styles['phone-screen-content']}
           >
-            {currentScene?.children}
+            {currentScene?.phoneContent}
           </div>
         </PhoneFrame>
 
