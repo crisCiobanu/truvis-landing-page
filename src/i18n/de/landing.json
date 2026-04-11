@@ -62,5 +62,31 @@
       "featureName": "Negotiation Report",
       "featureBenefit": "An itemised counter-offer built from real repair costs, ready to send."
     }
+  },
+  "socialProof": {
+    "eyebrow": "The numbers don't lie",
+    "headline": "A used-car market that punishes buyers who don't look.",
+    "stats": {
+      "stat1": {
+        "value": "1 in 3",
+        "label": "private-party used cars carry an undisclosed issue that costs more than €500 to fix.",
+        "source": "Placeholder data — replaced with sourced statistics in Epic 5."
+      },
+      "stat2": {
+        "value": "€640",
+        "label": "average hidden-issue loss the typical buyer walks away with after a handshake deal.",
+        "source": "Placeholder data — replaced with sourced statistics in Epic 5."
+      },
+      "stat3": {
+        "value": "5%",
+        "label": "of the purchase price vanishes to repairs that were visible before the sale — if you knew where to look.",
+        "source": "Placeholder data — replaced with sourced statistics in Epic 5."
+      }
+    },
+    "quote": {
+      "text": "The used-car market is fundamentally asymmetric. Sellers always know more than buyers, and that gap is where most of the money goes.",
+      "attribution": "— Placeholder Attribution",
+      "context": "V1 placeholder — replaced with a real testimonial or industry-publication quote in Epic 5."
+    }
   }
 }

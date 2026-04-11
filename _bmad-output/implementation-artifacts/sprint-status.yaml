@@ -1,5 +1,5 @@
 # generated: 2026-04-10
-# last_updated: 2026-04-11 (Story 2.5 → review)
+# last_updated: 2026-04-11 (Story 2.6 → review)
 # project: car-buy-assistant
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-04-10
-last_updated: 2026-04-11 (Story 2.5 → review)
+last_updated: 2026-04-11 (Story 2.6 → review)
 project: car-buy-assistant
 project_key: NOKEY
 tracking_system: file-system
@@ -64,7 +64,7 @@ development_status:
   2-3-build-statcard-and-trustquotecard-tier-2-primitives-pre-launch-variants: review
   2-4-build-inspectionstoryscroll-react-island-with-sticky-phone-mechanism-and-one-placeholder-scene: review
   2-5-build-the-six-inspectionstoryscene-content-blocks-with-hard-stop-climax-variant: review
-  2-6-build-socialproofsection-with-pre-launch-market-statistics: ready-for-dev
+  2-6-build-socialproofsection-with-pre-launch-market-statistics: review
   2-7-build-blogpreviewssection-with-inline-placeholder-cards: ready-for-dev
   2-8-build-faqsection-with-shadcn-accordion-and-placeholder-entries: ready-for-dev
   2-9-build-footerctasection-and-compose-the-full-landing-page-with-cta-placeholder-slots: ready-for-dev

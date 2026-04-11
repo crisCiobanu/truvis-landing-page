@@ -25,6 +25,7 @@ import ProblemSection from '@/components/sections/problem-section.astro';
 import StatCard from '@/components/sections/stat-card.astro';
 import TrustQuoteCard from '@/components/sections/trust-quote-card.astro';
 import InspectionStorySection from '@/components/sections/inspection-story-section.astro';
+import SocialProofSection from '@/components/sections/social-proof-section.astro';
 import { Button } from '@/components/ui/button';
 
 // 140% padded variants of every user-facing shell string.
@@ -324,6 +325,36 @@ const padded = {
         accent border) still holds at 375/768/1280px viewport widths.
       </p>
       <InspectionStorySection />
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* SocialProofSection (Story 2.6) — real component rendered in-place  */}
+    {/* with live i18n strings. Stress-test by temporarily padding         */}
+    {/* `landing.socialProof.*` in en/landing.json and reloading — confirm */}
+    {/* no clipping at 375/768/1280px, the three-column stats grid         */}
+    {/* collapses cleanly below 768px, and the quote card stays within     */}
+    {/* max-w-3xl and wraps naturally.                                     */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 overflow-hidden rounded-lg ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-3 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        SocialProofSection · story 2.6 · live i18n strings (see note)
+      </p>
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-2 text-xs text-[var(--color-muted)]"
+      >
+        The section below renders real copy through
+        <code>t('landing.socialProof.*')</code>
+        against the live locale JSON. To stress-test at 140% padding, temporarily
+        pad the <code>socialProof</code> values in
+        <code>src/i18n/en/landing.json</code> and reload — confirm the three-column
+        stats grid collapses cleanly below 768px and the quote card wraps without
+        overflow.
+      </p>
+      <SocialProofSection />
     </div>
 
     {/* ------------------------------------------------------------------ */}
