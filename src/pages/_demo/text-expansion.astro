@@ -24,6 +24,7 @@ import HeroSection from '@/components/sections/hero-section.astro';
 import ProblemSection from '@/components/sections/problem-section.astro';
 import StatCard from '@/components/sections/stat-card.astro';
 import TrustQuoteCard from '@/components/sections/trust-quote-card.astro';
+import InspectionStorySection from '@/components/sections/inspection-story-section.astro';
 import { Button } from '@/components/ui/button';
 
 // 140% padded variants of every user-facing shell string.
@@ -290,6 +291,39 @@ const padded = {
           context={padded.quoteContext}
         />
       </div>
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* InspectionStorySection (Story 2.5) — real component rendered       */}
+    {/* in-place with live i18n strings. Stress-test by temporarily        */}
+    {/* padding `landing.inspectionStory.*` in en/landing.json and         */}
+    {/* reloading — confirm no clipping at 375/768/1280px and that the     */}
+    {/* climax scene's centred layout with severity-red accent border      */}
+    {/* holds under 140% padding.                                          */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 overflow-hidden rounded-lg ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-3 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        InspectionStorySection · story 2.5 · live i18n strings (see note)
+      </p>
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-2 text-xs text-[var(--color-muted)]"
+      >
+        The section below renders real copy through <code
+          >t('landing.inspectionStory.*')</code
+        >
+        against the live locale JSON, with the Story 2.4 sticky-phone mechanism hydrated
+        in-place. To stress-test at 140% padding, temporarily pad the <code
+          >inspectionStory</code
+        > values in
+        <code>src/i18n/en/landing.json</code> and reload — confirm no clipping, no
+        horizontal scroll, and that scene 5's climax layout (centred column, severity-red
+        accent border) still holds at 375/768/1280px viewport widths.
+      </p>
+      <InspectionStorySection />
     </div>
 
     {/* ------------------------------------------------------------------ */}

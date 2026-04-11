@@ -21,5 +21,46 @@
       "stakes": "On a €12,000 car, that is a 5 % hit before you've even driven it home. It is also entirely preventable — if you know what to look for."
     },
     "sourceNote": "Source: placeholder data — replaced with sourced statistics in Epic 5."
+  },
+  "inspectionStory": {
+    "eyebrow": "How Truvis inspects",
+    "headline": "Six moments, one inspection.",
+    "subheadline": "A walk through the six things Truvis looks for on every used car. The exact moments that separate a good deal from a disaster.",
+    "scene1": {
+      "sceneNumberLabel": "Scene 1 · Model DNA",
+      "narrative": "A 2017 Ford Focus with the 1.0 EcoBoost has a documented coolant-line failure pattern after 60,000 miles and a known timing-chain tensioner wear signature. Truvis already knows those exact faults before you open the bonnet, so you walk in with the same shortlist a seasoned mechanic carries in their head.",
+      "featureName": "Model DNA",
+      "featureBenefit": "Know the faults for this exact engine before you open the bonnet."
+    },
+    "scene2": {
+      "sceneNumberLabel": "Scene 2 · Severity Calibrator",
+      "narrative": "Not every finding is a dealbreaker. A worn wiper is a €12 Sunday fix. A seeping head gasket is a €2,200 emergency. Truvis grades every observation green, amber, or red against real repair costs, so the weight of each finding matches its real-world impact on your wallet.",
+      "featureName": "Severity Calibrator",
+      "featureBenefit": "Every finding weighed in euros, not vague warnings."
+    },
+    "scene3": {
+      "sceneNumberLabel": "Scene 3 · Personal Risk Calibration",
+      "narrative": "A young family and a weekend hobbyist tolerate risk differently. Truvis asks three short questions about your budget, your daily-driver needs, and how much of a fix-up project you actually want, and then recalibrates every severity threshold to match. The same car can be a pass for one buyer and a walk-away for another.",
+      "featureName": "Personal Risk Calibration",
+      "featureBenefit": "Thresholds adjusted to your budget and your appetite for repairs."
+    },
+    "scene4": {
+      "sceneNumberLabel": "Scene 4 · Poker Face Mode",
+      "narrative": "The seller sees a neutral progress screen. No severity colours, no running tally, no red flags flashing over your shoulder. Truvis keeps the full inspection private on your device until you choose what to share, so your negotiation leverage stays yours until the moment you decide to use it.",
+      "featureName": "Poker Face Mode",
+      "featureBenefit": "The seller sees an in-progress screen. You keep the leverage."
+    },
+    "scene5": {
+      "sceneNumberLabel": "Scene 5 · Hard Stop Protocol",
+      "narrative": "Some findings are not negotiable. A compromised airbag, a cut-and-shut chassis weld, a VIN that does not match the logbook. When Truvis hits one, the app raises a Hard Stop and tells you to walk away on the spot. The feature exists so that a good deal never quietly becomes a dangerous one.",
+      "featureName": "Hard Stop Protocol",
+      "featureBenefit": "Safety-critical findings trigger an immediate walk-away signal."
+    },
+    "scene6": {
+      "sceneNumberLabel": "Scene 6 · Negotiation Report",
+      "narrative": "At the end of the inspection Truvis hands you a short, itemised negotiation brief. Every amber finding gets a line, a real repair cost estimate, and a suggested price delta. You leave the driveway with a clear counter-offer instead of a gut feeling, and the seller sees numbers instead of haggling.",
+      "featureName": "Negotiation Report",
+      "featureBenefit": "An itemised counter-offer built from real repair costs, ready to send."
+    }
   }
 }
