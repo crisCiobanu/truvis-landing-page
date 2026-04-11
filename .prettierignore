@@ -1,0 +1,33 @@
+# Prettier ignore — Truvis landing page
+#
+# Keep this list tight: anything NOT ignored here is enforced by the
+# CI `prettier --check .` gate (see .github/workflows/ci.yml).
+
+# Build output
+dist/
+.astro/
+.lighthouseci/
+
+# Node / tooling caches
+node_modules/
+coverage/
+
+# Vendored BMad skill payloads — not our code, not hand-edited
+_bmad/
+# BMad planning + implementation artefacts are authored/edited directly
+# and formatted by hand (long tables, YAML front matter). Prettier
+# reflows tables and breaks readability, so exclude them.
+_bmad-output/
+
+# Immutable Lighthouse baseline reports (Story 1.1 reference artefacts)
+lighthouse/baseline/
+
+# Package manifests — npm owns the formatting
+package-lock.json
+
+# Human-edited project docs and design artefacts
+CLAUDE.md
+truvis-home-screen-refined.html
+
+# Devcontainer JSON supports comments — prettier can't parse JSONC
+.devcontainer/devcontainer.json

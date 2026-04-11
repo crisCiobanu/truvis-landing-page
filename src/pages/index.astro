@@ -1,6 +1,9 @@
 ---
+// Starter demo `<Chart>` removed in Story 1.2 (it pulled in ~391 KB of
+// recharts and tanked the Lighthouse 12 performance score). This page is
+// a transitional placeholder — Story 2.1 replaces it with the real
+// Truvis hero section (architecture-truvis-landing-page.md §Epic 2).
 import Layout from '../layouts/Layout.astro';
-import { Chart } from '../components/Chart';
 ---
 
 <Layout title="Astro + shadcn/ui">
@@ -32,10 +35,6 @@ import { Chart } from '../components/Chart';
         </a>
       </div>
     </div>
-  </section>
-
-  <section class="space-y-6 py-8 md:py-12 lg:py-24">
-    <Chart client:load />
   </section>
 
   <section class="space-y-6 py-8 md:py-12 lg:py-24">

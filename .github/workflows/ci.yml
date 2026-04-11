@@ -1,0 +1,108 @@
+# Truvis landing page — PR quality gates
+#
+# Runs on every PR and on push to `main`. Every job must succeed before
+# a PR can be merged (GitHub branch protection on `main` enforces this
+# workflow's check name as required — see Story 1.2 T4.7).
+#
+# Pins (never use @latest for actions — Story 1.2 T4.4):
+#   - actions/checkout@v4
+#   - actions/setup-node@v4
+#   - actions/upload-artifact@v4
+#
+# Secrets: this workflow must NEVER touch real integration keys.
+# Cloudflare Pages is the source of truth for `preview` / `production`
+# env vars (Story 1.2 T2.3). The Lighthouse job only needs the built
+# static output and a local preview URL.
+
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Cancel older in-flight runs for the same ref — a fresh push obsoletes
+# the previous run's results anyway, and saves minutes.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  checks:
+    name: Lint, type-check, unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Astro type-check
+        run: npx astro check
+
+      - name: ESLint
+        # Flat config (eslint.config.js) discovers .ts / .tsx / .astro
+        # files automatically — `--ext` was removed in ESLint 9.
+        run: npx eslint .
+
+      - name: Prettier (format check)
+        run: npx prettier --check .
+
+      - name: Vitest (no-op if no tests yet)
+        # `--passWithNoTests` keeps the gate green until Story 1.7 / Epic
+        # 4 introduces the first unit tests. We pin via npx so we don't
+        # have to add vitest to devDependencies until it is actually used.
+        run: npx --yes vitest@^2 run --passWithNoTests
+
+  lighthouse:
+    name: Lighthouse CI (perf / a11y / SEO budgets)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: checks
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production bundle
+        run: npm run build
+
+      - name: Run Lighthouse CI
+        # `autorun` reads lighthouse/lighthouserc.cjs, which in turn
+        # starts `npm run preview`, collects three runs against
+        # http://127.0.0.1:4321/, asserts the NFR-mapped budgets, and
+        # uploads HTML reports to temporary public storage.
+        run: npx --yes @lhci/cli@0.14.x autorun --config=./lighthouse/lighthouserc.cjs
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Upload Lighthouse reports
+        # Always upload — we want the HTML reports available even when
+        # the assertion step fails, so regressions can be inspected.
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports-${{ github.sha }}
+          path: .lighthouseci/
+          retention-days: 14
+          if-no-files-found: warn
