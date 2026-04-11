@@ -27,6 +27,7 @@ import TrustQuoteCard from '@/components/sections/trust-quote-card.astro';
 import InspectionStorySection from '@/components/sections/inspection-story-section.astro';
 import SocialProofSection from '@/components/sections/social-proof-section.astro';
 import BlogPreviewsSection from '@/components/sections/blog-previews-section.astro';
+import FaqSection from '@/components/sections/faq-section.astro';
 import { Button } from '@/components/ui/button';
 
 // 140% padded variants of every user-facing shell string.
@@ -381,6 +382,36 @@ const padded = {
         truncates without clipping the card footer.
       </p>
       <BlogPreviewsSection />
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* FaqSection (Story 2.8) — real component, live i18n strings         */}
+    {/* Note: the accordion is collapsed by default; to stress-test answer */}
+    {/* wrapping under 140% padding, open each trigger manually in the    */}
+    {/* harness preview, or pad `landing.faq.items.*.answer` in           */}
+    {/* en/landing.json and then open each item.                          */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 overflow-hidden rounded-lg ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-3 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        FaqSection · story 2.8 · live i18n strings (see note)
+      </p>
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-2 text-xs text-[var(--color-muted)]"
+      >
+        The section below renders real FAQ entries through
+        <code>t('landing.faq.*')</code>
+        against the live locale JSON. To stress-test at 140% padding, temporarily
+        pad <code>landing.faq.items.*.question</code> and
+        <code>landing.faq.items.*.answer</code> in
+        <code>src/i18n/en/landing.json</code>, reload, and open each accordion
+        item — confirm long questions wrap cleanly, long answers do not break
+        the narrow <code>max-w-3xl</code> container, and the chevron colour is warm-amber.
+      </p>
+      <FaqSection />
     </div>
 
     {/* ------------------------------------------------------------------ */}

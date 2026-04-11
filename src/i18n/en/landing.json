@@ -113,5 +113,39 @@
         "readTime": "5 min read"
       }
     }
+  },
+  "faq": {
+    "eyebrow": "Frequently asked",
+    "headline": "Questions worth asking before you buy.",
+    "items": {
+      "scope": {
+        "question": "What exactly does Truvis do?",
+        "answer": "Truvis walks you through a used-car inspection on your phone, flags the parts most likely to fail on your specific model and year, and gives you a severity-rated summary and a list of issues worth negotiating on before you hand over the money. It is designed to sit in your pocket during the test drive and the walk-around."
+      },
+      "vs-mechanic": {
+        "question": "Does Truvis replace a professional pre-purchase inspection?",
+        "answer": "No, and it is not designed to. A qualified mechanic with a lift and diagnostic scan tools will always see more than a phone in a car park. Truvis is the step before that: it tells you whether a car is worth booking a mechanic for at all, and which specific things to ask the mechanic to check."
+      },
+      "privacy": {
+        "question": "What does Truvis do with my data?",
+        "answer": "Truvis stores your inspection history on your device by default. If you opt into cloud sync, inspection data is stored in an EU region only. We never sell your data, we never share it with dealerships, and you can delete your history any time from the app settings."
+      },
+      "cost": {
+        "question": "How much does it cost?",
+        "answer": "Pricing is being finalised before launch. Sign up to the waitlist and you will be among the first to know. Early signups will receive preferential introductory pricing."
+      },
+      "platforms": {
+        "question": "Which phones does Truvis run on?",
+        "answer": "Truvis will launch on iOS and Android. The waitlist covers both, and we will notify you as soon as your platform is ready to download."
+      },
+      "accuracy": {
+        "question": "How accurate are Truvis's severity ratings?",
+        "answer": "Severity is calibrated against the documented fault histories for each specific model and model year, combined with the visible and audible signals Truvis asks you to check. It is a decision-support tool, not a diagnostic certification, so always combine it with a test drive and, for expensive cars, a professional inspection."
+      },
+      "data-retention": {
+        "question": "How long does Truvis keep my inspection data?",
+        "answer": "Inspection data stays on your device indefinitely unless you delete it. If you enable cloud sync, you can delete every record from the app settings. Deletion is immediate, verifiable, and permanent. See our privacy policy for the full data lifecycle."
+      }
+    }
   }
 }
