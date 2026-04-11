@@ -64,33 +64,33 @@ const imageURL = new URL(image, Astro.site);
     <ThemeInit />
   </head>
 
-  <body class="min-h-screen bg-background font-sans antialiased touch-none">
+  <body class="bg-background min-h-screen touch-none font-sans antialiased">
     <a
       href="#main-content"
-      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md"
+      class="focus:bg-primary focus:text-primary-foreground sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:px-4 focus:py-2"
     >
       Skip to main content
     </a>
-    <div class="flex min-h-screen optimize-gpu">
+    <div class="optimize-gpu flex min-h-screen">
       <div
         id="left-sidebar"
-        class="w-[64px] shrink-0 border-r mobile:fixed mobile:z-50 mobile:transition-transform mobile:duration-300 mobile:translate-x-[-64px] mobile:data-[open=true]:translate-x-0"
+        class="mobile:fixed mobile:z-50 mobile:transition-transform mobile:duration-300 mobile:translate-x-[-64px] mobile:data-[open=true]:translate-x-0 w-[64px] shrink-0 border-r"
       >
         <Sidebar client:load />
       </div>
 
-      <div class="flex-1 flex flex-col min-w-0 mobile:pl-0">
+      <div class="mobile:pl-0 flex min-w-0 flex-1 flex-col">
         <header
           id="top-header"
-          class="h-16 min-h-[64px] max-h-[64px] border-b flex items-center px-6 gap-4 bg-background"
+          class="bg-background flex h-16 max-h-[64px] min-h-[64px] items-center gap-4 border-b px-6"
         >
-          <div class="flex-1 flex justify-center pl-16">
+          <div class="flex flex-1 justify-center pl-16">
             <img src="/logo-dark.png" alt="Logo" class="h-10 dark:hidden" />
-            <img src="/logo.svg" alt="Logo" class="h-10 hidden dark:block" />
+            <img src="/logo.svg" alt="Logo" class="hidden h-10 dark:block" />
           </div>
           <a
             href="/install"
-            class="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg"
+            class="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-2 rounded-lg px-4 py-2"
           >
             <Download className="h-4 w-4" />
             Install
@@ -103,7 +103,7 @@ const imageURL = new URL(image, Astro.site);
 
         <footer
           id="bottom-footer"
-          class="h-12 border-t flex items-center px-6 text-sm text-muted-foreground"
+          class="text-muted-foreground flex h-12 items-center border-t px-6 text-sm"
         >
           © 2025 &nbsp; <a href="https://one.ie"> ONE </a>
         </footer>

@@ -56,7 +56,7 @@ export function MobileNav({
         aria-expanded={open}
         aria-controls="mobile-nav-drawer"
         onClick={openMobileNav}
-        className="inline-flex h-11 w-11 items-center justify-center rounded-md text-[var(--color-primary)] transition-colors hover:bg-[var(--color-surface-3)] focus-visible:outline-2 focus-visible:outline-[var(--color-teal)] focus-visible:outline-offset-2"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-md text-[var(--color-primary)] transition-colors hover:bg-[var(--color-surface-3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-teal)]"
       >
         {open ? (
           <X className="h-6 w-6" aria-hidden="true" />
@@ -83,7 +83,7 @@ export function MobileNav({
                 <a
                   href={item.href}
                   onClick={closeMobileNav}
-                  className="flex min-h-11 items-center rounded-md px-3 py-2 text-lg font-medium text-[var(--color-primary)] transition-colors hover:bg-[var(--color-surface-3)] hover:text-[var(--color-teal)] focus-visible:outline-2 focus-visible:outline-[var(--color-teal)] focus-visible:outline-offset-2"
+                  className="flex min-h-11 items-center rounded-md px-3 py-2 text-lg font-medium text-[var(--color-primary)] transition-colors hover:bg-[var(--color-surface-3)] hover:text-[var(--color-teal)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-teal)]"
                 >
                   {item.label}
                 </a>

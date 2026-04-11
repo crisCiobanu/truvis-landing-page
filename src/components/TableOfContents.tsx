@@ -78,8 +78,8 @@ export function TableOfContents({ headings, className }: TableOfContentsProps) {
                 href={`#${heading.slug}`}
                 onClick={(e) => handleClick(e, heading.slug)}
                 className={cn(
-                  'inline-block py-0.5 text-muted-foreground transition-colors hover:text-foreground',
-                  isActive && 'font-medium text-foreground'
+                  'text-muted-foreground hover:text-foreground inline-block py-0.5 transition-colors',
+                  isActive && 'text-foreground font-medium'
                 )}
               >
                 {heading.text}
