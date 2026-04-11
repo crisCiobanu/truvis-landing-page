@@ -1,6 +1,6 @@
 # Story 1.1: Initialise project from `one-ie/astro-shadcn` starter
 
-Status: ready-for-dev
+Status: review
 
 > **Context engine note (2026-04-10):** This is the very first story in the project. There is no prior story, no previous commit history, no `package.json` yet, and no `truvis-landing-page/` working tree. Everything described below is to be **created from scratch** by cloning the chosen starter, verifying it, pruning it, and committing the result. The downstream Epic 1 stories (1.2 → 1.7) all assume the artefacts produced by this story exist.
 
@@ -127,60 +127,54 @@ The README does **not** yet document Cloudflare Pages setup, env vars, or CI —
 
 ## Tasks / Subtasks
 
-- [ ] **T1 — Pre-init verification of `one-ie/astro-shadcn`** (AC: 1)
-  - [ ] T1.1 Open https://github.com/one-ie/astro-shadcn and confirm the licence file is MIT/Apache/BSD-permissive
-  - [ ] T1.2 Confirm latest commit on `main` is within the last ~6 months
-  - [ ] T1.3 Open `package.json` on the upstream `main` branch and list any AI SDKs / heavy analytics / demo-only deps to flag for pruning in T3
-  - [ ] T1.4 Capture the upstream commit SHA you intend to clone (note it for the AC5 commit message)
-  - [ ] T1.5 If any of T1.1–T1.3 fail, **STOP** and proceed to T6 (fallback path) instead of continuing this task list
+- [x] **T1 — Pre-init verification of `one-ie/astro-shadcn`** (AC: 1)
+  - [x] T1.1 Open https://github.com/one-ie/astro-shadcn and confirm the licence file is MIT/Apache/BSD-permissive — **MIT, confirmed via `gh api`**
+  - [x] T1.2 Confirm latest commit on `main` is within the last ~6 months — **borderline: default branch is `astro-shadcn-starter` (not `main`); latest commit `e60b7af` dated 2025-09-30, ~6mo 11d ago. Documented in README and proceeded as judgement call.**
+  - [x] T1.3 Open `package.json` on the upstream `main` branch and list any AI SDKs / heavy analytics / demo-only deps to flag for pruning in T3 — **none present; all non-essential deps are wired into kept `src/components/ui/*` primitives, so nothing to prune**
+  - [x] T1.4 Capture the upstream commit SHA you intend to clone — **`e60b7aff238bdda4acaa19f0e6004ba0b0f13e48`**
+  - [x] T1.5 If any of T1.1–T1.3 fail, **STOP** and proceed to T6 (fallback path) — **N/A, not triggered**
 
-- [ ] **T2 — Clone, install, and verify the dev server** (AC: 2)
-  - [ ] T2.1 `git clone https://github.com/one-ie/astro-shadcn truvis-landing-page`
-  - [ ] T2.2 `cd truvis-landing-page && rm -rf .git && git init`
-  - [ ] T2.3 `npm install` — capture the output. Any `npm ERR!` lines → STOP and investigate; do not paper over with `--force`.
-  - [ ] T2.4 `npm audit` — record moderate findings to copy into README later (T7); high/critical findings on production deps → STOP and investigate.
-  - [ ] T2.5 `npm run dev` — open `http://localhost:4321`, confirm the starter renders **and** the browser DevTools console has **zero errors** (warnings about React DevTools / HMR are fine). Stop the dev server before continuing.
+- [x] **T2 — Clone, install, and verify the dev server** (AC: 2)
+  - [x] T2.1 `git clone … truvis-landing-page` — **deviation: cloned into `/tmp/astro-shadcn-starter` and overlaid files into the existing working tree; see Completion Notes**
+  - [x] T2.2 `cd truvis-landing-page && rm -rf .git && git init` — **N/A: working tree was already a git repo with a planning-artifacts commit pushed to remote (see Completion Notes)**
+  - [x] T2.3 `npm install` — **clean, 914 → 915 packages, zero `npm ERR!` lines**
+  - [x] T2.4 `npm audit` — **5 moderate findings, all dev-only chain `@astrojs/check → … → yaml`. Recorded in README's "Known Audit Findings" for Story 1.2 triage. Zero high/critical on production deps.**
+  - [x] T2.5 `npm run dev` — **HTTP 200 served at http://localhost:4321/, no terminal errors. Browser-side spot-check completed via `chrome-devtools-mcp` after install: zero console errors, zero console warnings (only Vite HMR debug + React DevTools info banner, both explicitly allowed by AC2). 72 network requests, all 200/304 — zero 404s. Page renders the upstream starter (hero + interactive Recharts bar chart + four "100" score cards) as expected.**
 
-- [ ] **T3 — Prune unwanted dependencies and demo content** (AC: 3)
-  - [ ] T3.1 For each dep flagged in T1.3, run `npm uninstall <dep>` (do NOT hand-edit `package.json` — let npm regenerate the lockfile)
-  - [ ] T3.2 Delete demo-only pages from `src/pages/` that are not relevant to Truvis (anything that ships as a "showcase", AI-SDK demo, multi-theme demo, etc.) — be **conservative**: when in doubt, keep, because the Tier-1 shadcn primitives may be referenced from a demo we want to keep until Story 1.4 lands the real layout
-  - [ ] T3.3 **DO NOT delete** anything under `src/components/ui/` (shadcn primitives are needed by Story 1.4 onwards)
-  - [ ] T3.4 **DO NOT delete** the blog scaffolding, sitemap config, or RSS config (Epic 4 / Epic 6 will customise them)
-  - [ ] T3.5 Re-run `npm install` to regenerate `package-lock.json` cleanly
-  - [ ] T3.6 Run `npm run dev` and `npm run build` — both must succeed with zero errors after pruning
-  - [ ] T3.7 Make a written list of every file/folder you deleted and every dep you removed — you will need this for the AC5 commit message and the README
+- [x] **T3 — Prune unwanted dependencies and demo content** (AC: 3)
+  - [x] T3.1 `npm uninstall` flagged deps — **no deps removed; T1.3 found nothing to flag**
+  - [x] T3.2 Delete demo-only pages — **removed `install.astro`, `readme.astro`, `mit-license.md`, two seed blog posts, `public/screenshots/`, `public/blog-placeholder-3.jpg`. Initially also removed `og.jpg`/`logo*.png`/`logo.svg` but restored them after `Layout.astro` and `Sidebar.tsx` (kept files) were found to reference them — per T3.2's "when in doubt, keep" rule.**
+  - [x] T3.3 **DO NOT delete** anything under `src/components/ui/` — **respected**
+  - [x] T3.4 **DO NOT delete** the blog scaffolding, sitemap config, or RSS config — **respected**
+  - [x] T3.5 Re-run `npm install` to regenerate `package-lock.json` cleanly — **lockfile regenerated from scratch after `rm -rf node_modules package-lock.json`**
+  - [x] T3.6 `npm run dev` and `npm run build` both succeed with zero errors after pruning — **both pass; build emits 3 pages and a sitemap. Required three upstream-defect patches first: install missing `@astrojs/sitemap` and `@astrojs/rss` deps, and narrow two `string` URL params in `src/pages/blog/index.astro` to their declared `BlogSearch` prop literal-unions. Documented in README.**
+  - [x] T3.7 List of deletions/additions captured in README "Starter Verification" section and in the AC5 commit message.
 
-- [ ] **T4 — Generate and commit baseline Lighthouse reports** (AC: 4)
-  - [ ] T4.1 `npm run build` — must succeed
-  - [ ] T4.2 `npm run preview` (or `npx serve dist/`) to serve the production build locally on a known port
-  - [ ] T4.3 In a second terminal: `npx lighthouse http://localhost:4321 --preset=desktop --output=html --output-path=./lighthouse/baseline/baseline-desktop.html`
-  - [ ] T4.4 Same again with `--preset=mobile --output-path=./lighthouse/baseline/baseline-mobile.html`
-  - [ ] T4.5 Open both HTML reports in a browser and record Performance / Accessibility / Best Practices / SEO scores plus LCP, CLS, TBT for each
-  - [ ] T4.6 If **any** of Perf<90 (NFR6), Accessibility<90 (NFR25), or SEO<95 (NFR39) at this baseline → STOP and either (a) raise the question or (b) take T6 fallback. Do not proceed to T5.
-  - [ ] T4.7 Add `lighthouse/baseline/baseline-desktop.html` and `lighthouse/baseline/baseline-mobile.html` to git (these are committed reference artefacts, not gitignored)
+- [x] **T4 — Generate and commit baseline Lighthouse reports** (AC: 4)
+  - [x] T4.1 `npm run build` — **succeeded**
+  - [x] T4.2 `npm run preview` — **served on `http://localhost:4321/`**
+  - [x] T4.3 `npx lighthouse … --preset=desktop` — **`lighthouse@13.1.0` driving `/snap/bin/chromium` (Chromium 146.0.7680.164)**
+  - [x] T4.4 Same with mobile form factor — **passed**
+  - [x] T4.5 Scores recorded — see table below and in README's "Baseline Lighthouse" section.
+  - [x] T4.6 NFR threshold gate — **ALL pass: Perf 100/98 ≥ 90, A11y 92/92 ≥ 90, SEO 100/100 ≥ 95, LCP 0.6s/2.1s < 2.5s, CLS 0/0 < 0.1. Fallback NOT triggered.**
+  - [x] T4.7 Reports added to git under `lighthouse/baseline/` (HTML + JSON for each form factor)
 
-- [ ] **T5 — Write the initial README.md** (AC: 7)
-  - [ ] T5.1 Create `README.md` at the project root with all sections listed in AC7
-  - [ ] T5.2 Fill in the **Baseline Lighthouse** section with the values captured in T4.5
-  - [ ] T5.3 Fill in the **Starter Verification** section with the result of T1
-  - [ ] T5.4 Fill in the **Known Audit Findings** section with the moderate findings from T2.4 (or "None")
-  - [ ] T5.5 Leave **Starter Decision** populated only if T6 fallback was taken; otherwise omit the section or write "Primary starter (`one-ie/astro-shadcn`) used per AR1."
-  - [ ] T5.6 Do **NOT** add Cloudflare / CI / env-var docs — those belong to Story 1.2
-  - [ ] T5.7 The outer repo's `CLAUDE.md` already describes this Astro landing page project (no longer the mobile app) — no special note needed in README about it
+- [x] **T5 — Write the initial README.md** (AC: 7)
+  - [x] T5.1 Created `README.md` with all required sections
+  - [x] T5.2 Filled Baseline Lighthouse section with measured values
+  - [x] T5.3 Filled Starter Verification section with T1 result + caveats
+  - [x] T5.4 Filled Known Audit Findings with the 5 moderate findings
+  - [x] T5.5 No `## Starter Decision` section — primary starter accepted, T6 not triggered
+  - [x] T5.6 No Cloudflare / CI / env-var docs added
+  - [x] T5.7 No special note about CLAUDE.md added
 
-- [ ] **T6 — (Conditional) Fallback to `onwidget/astrowind`** (AC: 6) — only if T1 or T4.6 failed
-  - [ ] T6.1 Repeat T1 against `https://github.com/onwidget/astrowind`
-  - [ ] T6.2 Re-run T2 with the new clone URL
-  - [ ] T6.3 Re-run T3 (pruning will look different — astrowind ships more demo content)
-  - [ ] T6.4 Re-run T4 (baseline Lighthouse)
-  - [ ] T6.5 Add a `## Starter Decision` section in README explaining which check failed on `one-ie/astro-shadcn` and that astrowind was substituted, with the upstream commit SHA
-  - [ ] T6.6 Add a project note that subsequent stories (especially 1.4 BaseLayout/Header/Footer and Epic 4 blog) may need adjustment because shadcn/ui will need to be installed via `npx shadcn@latest init` separately
+- [ ] **T6 — (Conditional) Fallback to `onwidget/astrowind`** (AC: 6) — **NOT TRIGGERED**; primary starter passed all gates
 
-- [ ] **T7 — First git commit** (AC: 5)
-  - [ ] T7.1 `git add .` (verify with `git status` that `node_modules/`, `.env`, `dist/`, `.astro/` are not staged — the starter's `.gitignore` should handle this; if not, fix `.gitignore` first)
-  - [ ] T7.2 Verify the staged file list matches expectations (pruned starter + README + lighthouse/baseline/)
-  - [ ] T7.3 `git commit` with the message format in AC5, populated with the actual upstream SHA, the actual pruned-deps list, and the actual pruned-pages list
-  - [ ] T7.4 `git log --stat -1` — sanity check the commit before declaring done
+- [x] **T7 — First git commit** (AC: 5) — **see AC5 deviation note in Dev Agent Record below**
+  - [x] T7.1 Staged the starter overlay + README + lighthouse/baseline/. Verified `node_modules/`, `dist/`, `.astro/` not staged via merged `.gitignore`.
+  - [x] T7.2 Staged file list verified
+  - [x] T7.3 Committed with the AC5 message format, populated with actual SHA + actual deletions + added deps + patched files
+  - [x] T7.4 `git log --stat -1` sanity-checked
 
 ---
 
@@ -301,16 +295,106 @@ Vitest config and the actual test scaffolding are **not** part of this story. Th
 
 ### Agent Model Used
 
-_To be filled in by the dev agent on pickup_
+`claude-opus-4-6` (Claude Opus 4.6, 1M-context build), via Claude Code on 2026-04-11.
 
 ### Debug Log References
 
-_To be filled in by the dev agent_
+- Upstream repo metadata via `gh api repos/one-ie/astro-shadcn` → MIT, default branch `astro-shadcn-starter`, last push 2025-10-10, no archive.
+- Latest commits on default branch via `gh api repos/one-ie/astro-shadcn/commits?sha=astro-shadcn-starter` → tip `e60b7af` dated 2025-09-30.
+- Initial `npm run dev` after overlay failed with: `Cannot find module '@astrojs/sitemap' imported from '.../astro.config.mjs'` — upstream defect (declared in `astro.config.mjs` but missing from `package.json`). Fix: `npm install @astrojs/sitemap`.
+- Initial `npm run build` after dev fix failed with: (a) `src/pages/rss.xml.ts: Cannot find module '@astrojs/rss'` — same upstream defect pattern. Fix: `npm install @astrojs/rss`. (b) Two `ts(2322)` errors in `src/pages/blog/index.astro` widening `'list' | 'grid'` and `'2' | '3' | '4'` props from raw `string` URL params. Fix: narrow with explicit type guards (5-line edit).
+- Lighthouse: `npx lighthouse@13` failed initially with no Chrome installed. Resolved after user installed `chromium-browser` (snap, version 146.0.7680.164). Invoked with `CHROME_PATH=/snap/bin/chromium` and `--chrome-flags="--headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage"`.
 
 ### Completion Notes List
 
-_To be filled in by the dev agent_
+**Story outcome:** All 7 acceptance criteria satisfied (AC6 not triggered). Primary starter `one-ie/astro-shadcn` @ `e60b7af` accepted, pruned, patched, baselined, and committed. Baseline Lighthouse passes all NFR gates by a comfortable margin on the unmodified starter — fallback to `onwidget/astrowind` was not necessary.
+
+**Baseline Lighthouse summary:**
+
+| Metric | Desktop | Mobile | Threshold |
+| --- | ---: | ---: | --- |
+| Performance | 100 | 98 | ≥ 90 (NFR6) ✅ |
+| Accessibility | 92 | 92 | ≥ 90 (NFR25) ✅ |
+| Best Practices | 100 | 100 | — |
+| SEO | 100 | 100 | ≥ 95 (NFR39) ✅ |
+| LCP | 0.6 s | 2.1 s | < 2.5 s (NFR1) ✅ |
+| CLS | 0 | 0 | < 0.1 (NFR3) ✅ |
+
+**Documented deviations from the story spec:**
+
+1. **AC5 / T7.1–T7.4 — first commit ≠ pruned starter snapshot.** The repo was already initialised with a commit containing the planning artifacts (`_bmad/`, `_bmad-output/`, `CLAUDE.md`, `.devcontainer/`, etc.) that was pushed to `git@github.com:crisCiobanu/truvis-landing-page.git` before this story began. Per agreement with the user (Option 1: overlay approach), the pruned starter snapshot was committed as the **second** commit on `main`, not the first. The commit message still uses the AC5 format and contents. Rewriting history to swap commit order was rejected because the planning commit was already pushed and history rewriting was outside the user's risk appetite.
+
+2. **AC2 / T2.1–T2.2 — clone target.** The literal `git clone https://github.com/one-ie/astro-shadcn truvis-landing-page` could not run because the working directory was already non-empty and a git repo. Substituted: clone to `/tmp/astro-shadcn-starter` then `rsync` files into the working tree, excluding `.git/`, the starter's own `README.md`/`CLAUDE.md`/`improve.md`, alt-package-manager lockfiles, the starter's `.vscode/`, the starter's `.gitignore` (merged into the existing one), and `.mcp.json`. This is functionally equivalent for everything Story 1.1 cares about and preserves the planning artifacts the project already had.
+
+3. **Three upstream-defect patches** — see Debug Log. The starter ships an `astro.config.mjs` and `rss.xml.ts` that import packages not declared in `package.json`, plus two `astro check` type errors in `src/pages/blog/index.astro`. All three would have caused `npm run build` to fail on a vanilla clone, so they had to be fixed before AC4 could even run. Fixes are minimal (2 deps added, 5 lines of TypeScript narrowing).
+
+4. **AC1 / T1.2 borderline.** Latest upstream commit on default branch is 2025-09-30, which is ~6 months and 11 days before this story was implemented (2026-04-11). The "~6 months" wording made this a judgement call; I proceeded because every other check passed cleanly and the stack matches the architecture exactly. Recorded explicitly in README "Starter Verification" section so it's auditable later.
+
+5. **AC2 / T2.5 browser DevTools console verification.** Initially deferred (no Chrome MCP wired). Completed later in the same dev session after user installed `chrome-devtools-mcp` globally and registered it at user scope: navigated to `http://localhost:4321/` via `mcp__chrome-devtools__navigate_page`, then checked `list_console_messages` and `list_network_requests`. Zero errors, zero warnings, zero failed requests. Spot-check screenshot captured in conversation; not committed to repo.
+
+**Tasks not addressed (deliberately, scope guard):** Cloudflare Pages, GitHub Actions / Lighthouse CI, brand tokens, BaseLayout, error pages, i18n routing, ESLint custom rules, env helper, nanostore conventions. These all belong to Stories 1.2–1.7 per the explicit scope guard in Dev Notes.
+
+**Worth noting for Story 1.2:** the `package.json` `name` field is still `"one"` (the upstream starter's name). This was not in scope for 1.1 to change. Story 1.2 / 1.7 should rename it to `truvis-landing-page` when convenient.
 
 ### File List
 
-_To be filled in by the dev agent_
+**Added (new files committed by this story):**
+
+- `README.md` — initial project README per AC7
+- `lighthouse/baseline/baseline-desktop.html` — Lighthouse desktop HTML report
+- `lighthouse/baseline/baseline-desktop.json` — Lighthouse desktop JSON report (machine-readable, for Story 1.2 CI calibration)
+- `lighthouse/baseline/baseline-mobile.html` — Lighthouse mobile HTML report
+- `lighthouse/baseline/baseline-mobile.json` — Lighthouse mobile JSON report
+
+**Added from upstream starter overlay (committed unchanged unless noted):**
+
+- `.eslintrc.json`, `.prettierrc`
+- `LICENSE` (upstream MIT, preserved per MIT terms)
+- `astro.config.mjs`, `tsconfig.json`, `components.json`
+- `package.json`, `package-lock.json` (lockfile freshly regenerated after pruning + adding `@astrojs/sitemap` and `@astrojs/rss`)
+- `public/favicon.svg`, `public/icon.svg`, `public/robots.txt`, `public/og.jpg`, `public/logo.png`, `public/logo-dark.png`, `public/logo.svg`
+- `src/components/ui/*.tsx` — full shadcn/ui primitive set (KEPT INTACT)
+- `src/components/BlogSearch.tsx`, `Chart.tsx`, `ErrorBoundary.tsx`, `ModeToggle.tsx`, `ShareButtons.tsx`, `Sidebar.tsx`, `TableOfContents.tsx`, `ThemeInit.astro`
+- `src/config/site.ts`
+- `src/content/config.ts` (KEPT — Epic 4 customises rather than rewrites)
+- `src/env.d.ts`, `src/types/env.d.ts`
+- `src/hooks/use-mobile.tsx`, `src/hooks/use-toast.ts`
+- `src/layouts/Layout.astro`, `src/layouts/Blog.astro`, `src/layouts/TextLayout.astro` (Story 1.4 will replace)
+- `src/lib/reading-time.ts`, `src/lib/utils.ts`
+- `src/pages/index.astro`, `src/pages/404.astro` (Story 1.4 / 1.5 will replace)
+- `src/pages/blog/index.astro` — **patched**: 5 lines added to narrow `viewMode` and `gridColumns` URL params from `string` to declared `BlogSearch` literal-union prop types
+- `src/pages/blog/[...slug].astro`
+- `src/pages/rss.xml.ts`
+- `src/stores/layout.ts`
+- `src/styles/global.css`
+
+**Modified (pre-existing project files):**
+
+- `.gitignore` — merged the starter's Astro entries (`dist/`, `.astro/`, `.netlify/`, `.vercel/`, `.wrangler/`, env file rules, log file rules) into the existing `.gitignore` while preserving the project-specific `.claude/` and `.jest-cache/` entries
+
+**Updated:**
+
+- `_bmad-output/implementation-artifacts/sprint-status.yaml` — story status `ready-for-dev` → `in-progress` → `review`; `last_updated` bumped to 2026-04-11
+- `_bmad-output/implementation-artifacts/1-1-initialise-project-from-one-ie-astro-shadcn-starter.md` — task checkboxes, Dev Agent Record, File List, Status (this file)
+
+**Pruned demo content (deleted from the starter overlay before commit):**
+
+- `src/pages/install.astro`, `src/pages/readme.astro`, `src/pages/mit-license.md`
+- `src/content/blog/get-started.md`, `src/content/blog/one-hundred-percent-lighthouse-score.md`
+- `public/blog-placeholder-3.jpg`
+- `public/screenshots/` (entire directory: 6 marketing screenshots + a `.mov` screencast, ~6 MB)
+
+**Excluded from the overlay (starter files NOT copied into the working tree):**
+
+- The starter's `.git/` (would have brought upstream history)
+- The starter's `README.md` (we wrote our own per AC7)
+- The starter's `CLAUDE.md` (we have our own at the project root)
+- The starter's `improve.md` (upstream-author roadmap, irrelevant)
+- `bun.lock`, `pnpm-lock.yaml` (we use npm)
+- The starter's `.gitignore` (merged into ours instead of replacing)
+- The starter's `.mcp.json` (upstream-author-specific)
+- The starter's `.vscode/` (we use our own editor config)
+
+### Change Log
+
+- 2026-04-11 — Story 1.1 implementation complete. Starter `one-ie/astro-shadcn @ e60b7af` overlaid, pruned, patched (3 upstream defects), baselined (Lighthouse all-green), and committed. Status: ready-for-dev → in-progress → review.
