@@ -32,6 +32,16 @@ const imageURL = new URL(image, Astro.site);
     <meta name="description" content={description} />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Preload the hero display font to minimise CLS (Story 1.3 AC2, NFR3). -->
+    <link
+      rel="preload"
+      href="/fonts/plus-jakarta-sans-variable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
     <title>{title}</title>
 
     <!-- Canonical URL -->
