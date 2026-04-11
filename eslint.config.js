@@ -14,6 +14,7 @@ import js from '@eslint/js';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import astroPlugin from 'eslint-plugin-astro';
+import globals from 'globals';
 
 export default [
   // Ignore build output, vendored tooling, and content that prettier
@@ -34,6 +35,17 @@ export default [
 
   // Base JS recommended rules, applied to .js / .cjs / .mjs.
   js.configs.recommended,
+
+  // Node.js scripts — one-off tooling under `scripts/` that runs with `node`.
+  // Expose the Node globals so ESLint's `no-undef` rule stops flagging
+  // `process`, `console`, `Buffer`, `fetch`, `URL`, etc.
+  {
+    files: ['scripts/**/*.{js,mjs,cjs}'],
+    languageOptions: {
+      globals: { ...globals.node },
+      sourceType: 'module',
+    },
+  },
 
   // TypeScript — both .ts and .tsx. Uses the recommended preset from
   // @typescript-eslint but turns off a few noisy rules that will be

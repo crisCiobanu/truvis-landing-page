@@ -177,6 +177,53 @@ Reports land in `.lighthouseci/` (gitignored). If the assertions fail locally, f
 - **Preview URLs:** Cloudflare GitHub app comments each PR with its unique preview URL.
 - **Production deploys:** Cloudflare Pages dashboard → _Deployments_ tab.
 
+## Brand tokens & self-hosted fonts (Story 1.3)
+
+The Truvis warm-editorial design tokens live in `src/styles/global.css` as a Tailwind v4 CSS-first `@theme` block. Values are mirrored from `_bmad-output/planning-artifacts/ux-design-hybrid.html` — that file is the visual source of truth; update it first, then mirror into `global.css`.
+
+### Self-hosted fonts
+
+Plus Jakarta Sans (display) and Inter (body) are self-hosted as variable WOFF2 files at stable URLs under `public/fonts/` so they can be preloaded from `<head>` without a hashed filename. The subsets are trimmed to Latin-1 Supplement + common punctuation/currency (EN / FR / DE coverage) to hit the per-file budget called out in NFR5:
+
+| File                                            | Size   | Coverage                            |
+| ----------------------------------------------- | ------ | ----------------------------------- |
+| `public/fonts/plus-jakarta-sans-variable.woff2` | ~17 KB | wght 400–800 variable, Latin subset |
+| `public/fonts/inter-variable.woff2`             | ~27 KB | wght 400–800 variable, Latin subset |
+
+Both files are `font-display: swap` with a system-font fallback stack (`-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`). Plus Jakarta Sans is preloaded from `src/layouts/Layout.astro` because it's the hero display font (NFR3).
+
+Regenerating the subsets is a one-off, reproducible operation:
+
+```sh
+npm install --no-save subset-font
+node scripts/subset-fonts.mjs
+```
+
+See `scripts/subset-fonts.mjs` for the exact Unicode ranges and weight axis bounds. `subset-font` pulls in a large HarfBuzz WASM blob, which is why it is deliberately kept out of `package.json` dependencies.
+
+### Contrast validation (WCAG 2.1 AA / NFR20)
+
+Computed with the WCAG 2.1 relative-luminance formula against the light-theme token values in `src/styles/global.css`. Body-text-grade pairings MUST be ≥ 4.5:1 (AA) or ≥ 7:1 (AAA). Decorative accents (amber, teal-bright, coral, severity-red/green) are listed for transparency but are reserved for non-text surfaces (backgrounds, buckets, severity dots) where contrast-AA-body rules do not apply.
+
+| Foreground (token)         | Background (token)    | Ratio   | Grade                 | Notes                                             |
+| -------------------------- | --------------------- | ------- | --------------------- | ------------------------------------------------- |
+| `primary` `#2E4057`        | `bg` `#FFFDF9`        | 10.40:1 | **AAA**               | Body copy — required pair (AC1)                   |
+| `primary-light` `#3B5068`  | `bg` `#FFFDF9`        | 8.16:1  | AAA                   | Secondary copy                                    |
+| `muted` `#5F6F7E`          | `bg` `#FFFDF9`        | 5.09:1  | AA                    | Meta / captions                                   |
+| `teal` `#3D7A8A`           | `bg` `#FFFDF9`        | 4.75:1  | **AA**                | Link / accent text — required pair (AC1)          |
+| `white` `#FFFFFF`          | `primary` `#2E4057`   | 10.57:1 | **AAA**               | Inverted text — required pair (AC1)               |
+| `white` `#FFFFFF`          | `teal` `#3D7A8A`      | 4.83:1  | AA                    | Primary CTA label on teal surface                 |
+| `primary` `#2E4057`        | `surface` `#F7F5F2`   | 9.71:1  | AAA                   | Cards                                             |
+| `primary` `#2E4057`        | `surface-2` `#FFF8EF` | 10.03:1 | AAA                   | Warm surface variant                              |
+| `primary` `#2E4057`        | `surface-3` `#EEF7F7` | 9.70:1  | AAA                   | Cool surface variant                              |
+| `severity.red` `#EF4444`   | `bg` `#FFFDF9`        | 3.70:1  | AA-large / decorative | Reserved for severity dots / icons, not body text |
+| `amber` `#F5A623`          | `bg` `#FFFDF9`        | 1.99:1  | decorative            | Highlight marker / badge background only          |
+| `teal-bright` `#2DA5A0`    | `bg` `#FFFDF9`        | 2.95:1  | decorative            | Background / icon only                            |
+| `coral` `#FF6B6B`          | `bg` `#FFFDF9`        | 2.73:1  | decorative            | Background / icon only                            |
+| `severity.green` `#22C55E` | `bg` `#FFFDF9`        | 2.24:1  | decorative            | Severity dot fill only, never body text           |
+
+**Result:** the three pairs explicitly required by Story 1.3 AC1 — primary-on-bg, teal-on-bg, white-on-primary — all exceed their targeted grades. Decorative accents are documented with their actual ratios so future stories treat them as icon / background tokens rather than text tokens.
+
 ## What is _not_ in this story
 
 The following are explicitly out of scope for Story 1.1 and live in their own stories — do not pre-implement them here:
