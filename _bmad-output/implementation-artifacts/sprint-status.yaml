@@ -1,0 +1,149 @@
+# generated: 2026-04-10
+# last_updated: 2026-04-10 (Epic 1 stories created — all 1.x ready-for-dev)
+# project: car-buy-assistant
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: {project-root}/_bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - SM typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-04-10
+last_updated: 2026-04-10
+project: car-buy-assistant
+project_key: NOKEY
+tracking_system: file-system
+story_location: "{project-root}/_bmad-output/implementation-artifacts"
+
+development_status:
+  # ─────────────────────────────────────────────────────────────
+  # Epic 1: Foundation & Internationalisation-Ready Shell
+  # ─────────────────────────────────────────────────────────────
+  epic-1: in-progress
+  1-1-initialise-project-from-one-ie-astro-shadcn-starter: ready-for-dev
+  1-2-provision-cloudflare-pages-and-ci-cd-with-lighthouse-budget-gates: ready-for-dev
+  1-3-apply-truvis-brand-tokens-and-typography-to-tailwind-config: ready-for-dev
+  1-4-build-baselayout-header-footer-mobilenav-drawer-and-sectioneyebrow-shell: ready-for-dev
+  1-5-build-branded-404-and-500-error-pages: ready-for-dev
+  1-6-wire-astro-built-in-i18n-routing-and-locale-detection-middleware: ready-for-dev
+  1-7-codify-accessibility-motion-text-expansion-and-component-conventions: ready-for-dev
+  epic-1-retrospective: optional
+
+  # ─────────────────────────────────────────────────────────────
+  # Epic 2: Conversion Story — Hero Through Footer CTA
+  # ─────────────────────────────────────────────────────────────
+  epic-2: backlog
+  2-1-build-herosection-with-micro-story-headline-phone-mockup-and-cta-slot: backlog
+  2-2-build-problemsection-with-statistics-and-css-only-fade-in: backlog
+  2-3-build-statcard-and-trustquotecard-tier-2-primitives-pre-launch-variants: backlog
+  2-4-build-inspectionstoryscroll-react-island-with-sticky-phone-mechanism-and-one-placeholder-scene: backlog
+  2-5-build-the-six-inspectionstoryscene-content-blocks-with-hard-stop-climax-variant: backlog
+  2-6-build-socialproofsection-with-pre-launch-market-statistics: backlog
+  2-7-build-blogpreviewssection-with-inline-placeholder-cards: backlog
+  2-8-build-faqsection-with-shadcn-accordion-and-placeholder-entries: backlog
+  2-9-build-footerctasection-and-compose-the-full-landing-page-with-cta-placeholder-slots: backlog
+  epic-2-retrospective: optional
+
+  # ─────────────────────────────────────────────────────────────
+  # Epic 3: Waitlist Capture & Confirmation Flow
+  # ─────────────────────────────────────────────────────────────
+  epic-3: backlog
+  3-1-provision-loops-esp-account-audience-double-opt-in-and-drip-series-shell: backlog
+  3-2-provision-cloudflare-turnstile-and-wire-site-and-secret-keys: backlog
+  3-3-build-post-api-waitlist-server-route-with-honeypot-turnstile-verification-email-validation-loops-proxy-and-retry: backlog
+  3-4-build-emailcaptureblock-composite-and-waitlistform-react-island-with-full-state-machine: backlog
+  3-5-replace-epic-2-cta-placeholder-slots-with-real-emailcaptureblock: backlog
+  3-6-build-waitlist-confirmed-confirmation-page-with-confirmationpagelayout-and-embedded-microsurvey: backlog
+  3-7-verify-end-to-end-double-opt-in-drip-enrolment-and-unsubscribe-via-loops-test-audience: backlog
+  epic-3-retrospective: optional
+
+  # ─────────────────────────────────────────────────────────────
+  # Epic 4: Blog & Cross-Platform Content API
+  # ─────────────────────────────────────────────────────────────
+  epic-4: backlog
+  4-1-define-blog-astro-content-collection-schema-lib-content-ts-blog-helpers-and-seed-three-placeholder-articles: backlog
+  4-2-build-blogpreviewcard-tier-2-composite: backlog
+  4-3-build-blog-index-page-with-category-filter-pills: backlog
+  4-4-build-blog-year-month-slug-dynamic-article-page-with-seo-metadata: backlog
+  4-5-build-related-articles-navigation-and-social-share-buttons-on-the-article-page: backlog
+  4-6-build-the-inline-blog-article-cta-block-with-pre-launch-waitlist-variant-and-post-launch-slot: backlog
+  4-7-replace-epic-2-blogpreviewssection-placeholder-with-real-blogpreviewcard-lib-content-ts-data: backlog
+  4-8-build-static-api-v1-blog-json-endpoints-with-vitest-contract-test-and-finalised-contract-md: backlog
+  4-9-configure-cloudflare-waf-rate-limiting-and-cdn-cache-headers-for-api-v1-blog: backlog
+  epic-4-retrospective: optional
+
+  # ─────────────────────────────────────────────────────────────
+  # Epic 5: Content Operations — CMS, Phase Toggle & Rebuild Pipeline
+  # ─────────────────────────────────────────────────────────────
+  epic-5: backlog
+  5-1-create-faq-testimonials-stats-and-sitecontent-content-collections-with-schemas-seeds-and-lib-content-ts-helpers: backlog
+  5-2-configure-keystatic-admin-ui-with-self-hosted-github-oauth-and-mirror-all-five-content-collections: backlog
+  5-3-build-lib-launch-phase-ts-wire-launch-phase-env-var-and-swap-every-epic-2-3-4-todo-epic-5-phase-hard-coded-constant: backlog
+  5-4-swap-epic-2-3-hard-coded-strings-and-placeholder-data-to-real-content-collection-reads: backlog
+  5-5-verify-keystatic-pr-deploy-pipeline-meets-fr34-and-nfr30-end-to-end: backlog
+  epic-5-retrospective: optional
+
+  # ─────────────────────────────────────────────────────────────
+  # Epic 6: Discoverability — SEO & Analytics
+  # ─────────────────────────────────────────────────────────────
+  epic-6: backlog
+  6-1-build-lib-structured-data-ts-helpers-and-wire-global-organization-website-json-ld-into-baselayout: backlog
+  6-2-wire-blogposting-json-ld-per-article-and-faqpage-json-ld-on-the-faq-section: backlog
+  6-3-configure-astrojs-sitemap-with-i18n-awareness-and-verify-regeneration-on-every-build: backlog
+  6-4-enforce-image-seo-conventions-alt-text-native-lazy-loading-and-responsive-image-pipeline: backlog
+  6-5-integrate-plausible-cloud-eu-and-build-the-lib-analytics-ts-trackevent-wrapper: backlog
+  6-6-wire-conversion-utm-micro-survey-custom-events-and-verify-analytics-continuity-across-phase-flip: backlog
+  6-7-seo-lighthouse-95-audit-and-analytics-dashboard-access-documentation: backlog
+  epic-6-retrospective: optional
+
+  # ─────────────────────────────────────────────────────────────
+  # Epic 7: Compliance, Privacy & Operational Reliability
+  # ─────────────────────────────────────────────────────────────
+  epic-7: backlog
+  7-1-wire-vanilla-cookieconsent-v3-in-inactive-mode-behind-cookie-consent-required-flag: backlog
+  7-2-build-privacy-policy-page-documenting-data-collection-processing-retention-and-visitor-rights: backlog
+  7-3-build-right-to-erasure-operational-runbook-for-loops-plausible-and-sentry: backlog
+  7-4-integrate-sentry-eu-with-astro-sdk-source-maps-and-release-tagging: backlog
+  7-5-document-integration-boundary-degradation-matrix-and-verify-each-fallback-works: backlog
+  7-6-wire-automated-alerting-for-build-failures-email-delivery-issues-and-integration-availability: backlog
+  7-7-final-gdpr-double-opt-in-compliance-close-out-audit: backlog
+  epic-7-retrospective: optional
+
+  # ─────────────────────────────────────────────────────────────
+  # Epic 8: Launch Readiness — Post-Launch Variants & Launch Checklist
+  # ─────────────────────────────────────────────────────────────
+  epic-8: backlog
+  8-1-build-post-launch-hero-and-footer-cta-variants-with-app-store-google-play-buttons: backlog
+  8-2-build-post-launch-appstoreratings-component-sourcing-rating-review-excerpts-from-a-static-cache: backlog
+  8-3-build-livestatswidget-v1-layout-slot-with-stale-but-served-fallback-contract-cloudflare-worker-kv-deferred-to-v1-1: backlog
+  8-4-configure-email-domain-spf-dkim-and-dmarc-and-complete-domain-warm-up: backlog
+  8-5-cut-production-dns-over-to-cloudflare-and-verify-zero-downtime-serving: backlog
+  8-6-phase-transition-rehearsal-verify-fr54-zero-downtime-analytics-continuity-on-preview: backlog
+  8-7-execute-the-launch-checklist-end-to-end-and-gate-the-production-phase-flip: backlog
+  epic-8-retrospective: optional
