@@ -8,6 +8,11 @@ dist/
 .astro/
 .lighthouseci/
 
+# Raw passthrough assets (favicons, robots.txt, OG images, etc.)
+# — per CLAUDE.md these are never hand-formatted and may include
+# binary or minified files that prettier can't parse.
+public/
+
 # Node / tooling caches
 node_modules/
 coverage/
