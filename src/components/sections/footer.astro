@@ -1,0 +1,147 @@
+---
+/**
+ * Site footer — Story 1.4 (AC3 / UX-DR9 / FR11)
+ *
+ * Columns: product · blog · legal (slots) · social placeholders.
+ * Column-stack on mobile, row on desktop. All tap targets ≥44×44px
+ * via padding-driven sizing (UX-DR26). Social hrefs are `#`
+ * placeholders — Epic 7 + Cristian's actual handles fill them.
+ */
+const year = new Date().getFullYear();
+
+interface FooterLink {
+  label: string;
+  href: string;
+}
+
+const productLinks: FooterLink[] = [
+  { label: 'Features', href: '/#features' },
+  { label: 'How it works', href: '/#how-it-works' },
+  { label: 'Pricing', href: '/#pricing' },
+];
+
+const blogLinks: FooterLink[] = [
+  { label: 'All articles', href: '/blog' },
+  { label: 'Buying guides', href: '/blog?category=buying-guides' },
+];
+
+// Placeholder legal links — Epic 7 replaces these with real pages.
+const legalLinks: FooterLink[] = [
+  { label: 'Privacy', href: '#' },
+  { label: 'Terms', href: '#' },
+];
+
+// Placeholder social links — FR11. Epic 7 / Cristian's handles fill these.
+const socialLinks: FooterLink[] = [
+  { label: 'Twitter / X', href: '#' },
+  { label: 'Instagram', href: '#' },
+  { label: 'TikTok', href: '#' },
+];
+---
+
+<footer
+  class="mt-16 border-t border-[var(--color-divider)] bg-[var(--color-surface)]"
+>
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 gap-8 md:grid-cols-4">
+      <div>
+        <h2
+          class="font-display text-sm font-semibold uppercase tracking-wide text-[var(--color-primary)]"
+        >
+          Product
+        </h2>
+        <ul class="mt-4 flex flex-col gap-1">
+          {
+            productLinks.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="inline-flex min-h-11 items-center py-2 text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-teal)] focus-visible:outline-2 focus-visible:outline-[var(--color-teal)] focus-visible:outline-offset-2"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h2
+          class="font-display text-sm font-semibold uppercase tracking-wide text-[var(--color-primary)]"
+        >
+          Blog
+        </h2>
+        <ul class="mt-4 flex flex-col gap-1">
+          {
+            blogLinks.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="inline-flex min-h-11 items-center py-2 text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-teal)] focus-visible:outline-2 focus-visible:outline-[var(--color-teal)] focus-visible:outline-offset-2"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h2
+          class="font-display text-sm font-semibold uppercase tracking-wide text-[var(--color-primary)]"
+        >
+          Legal
+        </h2>
+        {/* Epic 7 fills these slots with real pages. */}
+        <ul class="mt-4 flex flex-col gap-1">
+          {
+            legalLinks.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="inline-flex min-h-11 items-center py-2 text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-teal)] focus-visible:outline-2 focus-visible:outline-[var(--color-teal)] focus-visible:outline-offset-2"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h2
+          class="font-display text-sm font-semibold uppercase tracking-wide text-[var(--color-primary)]"
+        >
+          Follow
+        </h2>
+        <ul class="mt-4 flex flex-col gap-1">
+          {
+            socialLinks.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  rel="noopener me"
+                  class="inline-flex min-h-11 items-center py-2 text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-teal)] focus-visible:outline-2 focus-visible:outline-[var(--color-teal)] focus-visible:outline-offset-2"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div
+      class="mt-12 flex flex-col gap-2 border-t border-[var(--color-divider)] pt-6 text-sm text-[var(--color-muted)] sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p>&copy; {year} Truvis. All rights reserved.</p>
+      <p class="text-xs text-[var(--color-faint)]">
+        Built with Astro, shadcn/ui and Tailwind v4.
+      </p>
+    </div>
+  </div>
+</footer>

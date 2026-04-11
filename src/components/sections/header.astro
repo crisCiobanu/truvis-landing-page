@@ -1,0 +1,65 @@
+---
+/**
+ * Site header — Story 1.4 (AC2)
+ *
+ * Renders the desktop nav (shadcn NavigationMenu styling, Astro-only,
+ * zero JS) at `>=768px`. Below the `tablet` breakpoint we swap in the
+ * `<MobileNav client:idle />` island which owns the drawer UI and
+ * subscribes to `$mobileNavOpen` for cross-island state.
+ *
+ * `navItems` is declared once here and passed into the island as a
+ * prop — single source of truth (AC2).
+ */
+import MobileNav from '@/components/islands/mobile-nav';
+
+export interface NavItem {
+  label: string;
+  href: string;
+}
+
+const navItems: NavItem[] = [
+  { label: 'Home', href: '/' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'FAQ', href: '/#faq' },
+  { label: 'About', href: '/#about' },
+];
+---
+
+<header
+  class="sticky top-0 z-40 w-full border-b border-[var(--color-divider)] bg-[var(--color-bg)]/95 backdrop-blur supports-[backdrop-filter]:bg-[var(--color-bg)]/80"
+>
+  <div
+    class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8"
+  >
+    <a
+      href="/"
+      class="inline-flex items-center gap-2 font-display text-lg font-bold text-[var(--color-primary)] focus-visible:outline-2 focus-visible:outline-[var(--color-teal)] focus-visible:outline-offset-2"
+      aria-label="Truvis home"
+    >
+      Truvis
+    </a>
+
+    {/* Desktop nav — visible at >=768px (UX-DR10) */}
+    <nav aria-label="Primary" class="hidden md:flex">
+      <ul class="flex items-center gap-1">
+        {
+          navItems.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="inline-flex h-11 min-w-11 items-center rounded-md px-4 text-sm font-medium text-[var(--color-primary)] transition-colors hover:bg-[var(--color-surface-3)] hover:text-[var(--color-teal)] focus-visible:outline-2 focus-visible:outline-[var(--color-teal)] focus-visible:outline-offset-2"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    {/* Mobile trigger + drawer — hidden at >=768px */}
+    <div class="md:hidden">
+      <MobileNav client:idle navItems={navItems} />
+    </div>
+  </div>
+</header>

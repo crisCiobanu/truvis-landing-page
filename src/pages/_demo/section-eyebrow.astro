@@ -1,0 +1,39 @@
+---
+/**
+ * SectionEyebrow demo page — Story 1.4 (AC4)
+ *
+ * Storybook-style preview of both `SectionEyebrow` variants.
+ * Lives under `/_demo/` so it is excluded by `public/robots.txt`,
+ * and additionally emits `<meta name="robots" content="noindex, nofollow">`
+ * for belt-and-braces search-engine exclusion.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import EyebrowShell from '@/components/sections/section-eyebrow.astro';
+---
+
+<BaseLayout title="SectionEyebrow demo — Truvis">
+  <meta slot="head" name="robots" content="noindex, nofollow" />
+
+  <section class="mx-auto max-w-4xl px-4 py-16 sm:px-6">
+    <h1 class="font-display text-3xl font-bold text-[var(--color-primary)]">
+      SectionEyebrow demo
+    </h1>
+    <p class="mt-2 text-[var(--color-muted)]">
+      Storybook-style preview for the two shell variants. Not indexed.
+    </p>
+
+    <div class="mt-12 space-y-16">
+      <div class="rounded-lg bg-[var(--color-bg)] p-8 shadow-sm">
+        <EyebrowShell eyebrow="Light variant" variant="light">
+          <span slot="heading">How Truvis inspects your car</span>
+        </EyebrowShell>
+      </div>
+
+      <div class="rounded-lg bg-[var(--color-primary)] p-8 shadow-md">
+        <EyebrowShell eyebrow="Dark variant" variant="dark">
+          <span slot="heading">Trusted by thousands of buyers</span>
+        </EyebrowShell>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
