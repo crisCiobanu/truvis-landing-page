@@ -1,0 +1,148 @@
+---
+/**
+ * BaseLayout — Story 1.4 (AC1)
+ *
+ * The single semantic shell that wraps every non-error Truvis page.
+ * Provides:
+ *   - complete `<html lang>` / `<head>` scaffolding with title /
+ *     description / canonical / Open Graph / Twitter / JSON-LD slots
+ *     (Epic 6 fills the JSON-LD slot with structured data)
+ *   - semantic landmarks (`<header>` with `<nav>` → `<main>` → `<footer>`)
+ *   - a "Skip to main content" link that is the FIRST focusable element
+ *     (UX-DR27 / NFR21) — hidden until `:focus-visible`
+ *   - locale-aware `<html lang>` (Story 1.6 will drive the value via
+ *     `Astro.currentLocale`; for now we default to `en`)
+ *
+ * The layout reads brand tokens from Story 1.3 (`src/styles/global.css`).
+ * No inline colour overrides — every painted surface routes through a
+ * `var(--color-*)` custom property or Tailwind utility that resolves to
+ * one. Story 1.3 has already set `body { background: var(--color-bg) }`.
+ */
+import Header from '@/components/sections/header.astro';
+import Footer from '@/components/sections/footer.astro';
+import '@/styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  canonical?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+}
+
+const {
+  title,
+  description = 'Truvis — a smarter used-car inspection app. Know what you are buying.',
+  canonical,
+  ogImage = '/og.jpg',
+  ogType = 'website',
+} = Astro.props;
+
+// Prefer explicit `canonical` prop, otherwise derive from the current URL.
+// Astro.site may be undefined in dev; fall back to the request URL so we
+// never emit an empty `<link rel="canonical">`.
+const canonicalURL =
+  canonical ??
+  (Astro.site
+    ? new URL(Astro.url.pathname, Astro.site).toString()
+    : Astro.url.toString());
+
+const ogImageURL = Astro.site
+  ? new URL(ogImage, Astro.site).toString()
+  : ogImage;
+
+// Story 1.6 will drive locale dynamically via Astro's i18n routing.
+const lang = Astro.currentLocale ?? 'en';
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    {/* Preload the hero display font to minimise CLS (Story 1.3 / NFR3). */}
+    <link
+      rel="preload"
+      href="/fonts/plus-jakarta-sans-variable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    {/* Canonical URL (FR42) */}
+    <link rel="canonical" href={canonicalURL} />
+
+    {/* Open Graph */}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageURL} />
+
+    {/* Twitter */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+
+    {
+      /*
+       * JSON-LD structured data slot. Epic 6 (Story 6.1 / 6.2) fills
+       * this with Organization / WebSite / BlogPosting graphs.
+       */
+    }
+    <slot name="head-jsonld" />
+
+    {/* Per-page extra head content — meta robots, preconnects, etc. */}
+    <slot name="head" />
+  </head>
+
+  <body class="min-h-screen bg-[var(--color-bg)] font-sans antialiased">
+    {
+      /*
+       * Skip-to-main link. Must be the FIRST focusable element on the page
+       * (AC1 / UX-DR27). Hidden off-screen until it receives focus, then
+       * pops into view at the top-left with a visible teal button style.
+       */
+    }
+    <a href="#main" class="skip-link"> Skip to main content </a>
+
+    <Header />
+
+    <main id="main" tabindex="-1" class="focus:outline-none">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <style is:global>
+      /* Skip-link styles (UX-DR27) — off-screen until focused. */
+      .skip-link {
+        position: absolute;
+        top: -100px;
+        left: 1rem;
+        z-index: 100;
+        padding: 0.75rem 1rem;
+        border-radius: var(--radius-md, 0.5rem);
+        background-color: var(--color-teal);
+        color: #fff;
+        font-weight: 600;
+        text-decoration: none;
+        transition: top var(--duration-base, 250ms) ease;
+      }
+      .skip-link:focus,
+      .skip-link:focus-visible {
+        top: 1rem;
+        outline: 2px solid var(--color-amber);
+        outline-offset: 2px;
+      }
+    </style>
+  </body>
+</html>
