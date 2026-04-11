@@ -1,0 +1,76 @@
+---
+/**
+ * StatCard smoke page — Story 2.3 AC4
+ *
+ * Renders six StatCard instances (two per category) in a responsive
+ * grid so reviewers can eyeball every variant without mounting the
+ * component inside a real section. Not routable in production
+ * (Astro's `_` prefix on the parent folder excludes it).
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import StatCardComponent from '@/components/sections/stat-card.astro';
+---
+
+<BaseLayout
+  title="StatCard smoke test — Truvis (not indexed)"
+  description="Local-dev smoke page for the StatCard primitive. Not indexed."
+>
+  <meta slot="head" name="robots" content="noindex, nofollow" />
+
+  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="mb-12 border-l-4 border-[var(--color-amber)] pl-4">
+      <p
+        class="font-mono text-xs font-semibold tracking-widest text-[var(--color-teal)] uppercase"
+      >
+        Story 2.3 · AC4 · StatCard smoke
+      </p>
+      <h1
+        class="font-display mt-2 text-3xl font-bold text-[var(--color-primary)]"
+      >
+        StatCard — visual verification
+      </h1>
+      <p class="mt-3 max-w-2xl text-[var(--color-muted)]">
+        Six cards covering every category variant. Two cards include a
+        <code>source</code> prop (amber + coral) so you can see the "Source: …" micro-citation,
+        and one card passes a custom <code>class</code> override so you can see the
+        <code>cn()</code> merge in action.
+      </p>
+    </div>
+
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <StatCardComponent
+        category="teal"
+        value="€640"
+        label="Average hidden-defect cost on private-party sales"
+      />
+      <StatCardComponent
+        category="teal"
+        value="72%"
+        label="Of buyers skip any professional inspection"
+      />
+      <StatCardComponent
+        category="amber"
+        value="1 in 3"
+        label="Private-party cars hide an issue worth over €500"
+        source="placeholder market data"
+      />
+      <StatCardComponent
+        category="amber"
+        value="18 min"
+        label="Median Truvis inspection walk-through"
+      />
+      <StatCardComponent
+        category="coral"
+        value="€2,400"
+        label="Worst-case repair surfaced in a recent inspection"
+        source="placeholder case study"
+      />
+      <StatCardComponent
+        category="coral"
+        value="94%"
+        label="Of inspected cars reveal at least one undisclosed fault"
+        class="bg-[var(--color-surface-3)] p-8"
+      />
+    </div>
+  </section>
+</BaseLayout>

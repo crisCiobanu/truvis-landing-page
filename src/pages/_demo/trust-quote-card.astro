@@ -1,0 +1,73 @@
+---
+/**
+ * TrustQuoteCard smoke page — Story 2.3 AC8
+ *
+ * Renders two pre-launch TrustQuoteCard instances (one with `context`,
+ * one without) plus a third `phase="post"` stub card so reviewers can
+ * confirm the Epic 8 structural wiring does not throw. Not routable in
+ * production.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import TrustQuoteCardComponent from '@/components/sections/trust-quote-card.astro';
+---
+
+<BaseLayout
+  title="TrustQuoteCard smoke test — Truvis (not indexed)"
+  description="Local-dev smoke page for the TrustQuoteCard primitive. Not indexed."
+>
+  <meta slot="head" name="robots" content="noindex, nofollow" />
+
+  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="mb-12 border-l-4 border-[var(--color-amber)] pl-4">
+      <p
+        class="font-mono text-xs font-semibold tracking-widest text-[var(--color-teal)] uppercase"
+      >
+        Story 2.3 · AC8 · TrustQuoteCard smoke
+      </p>
+      <h1
+        class="font-display mt-2 text-3xl font-bold text-[var(--color-primary)]"
+      >
+        TrustQuoteCard — visual verification
+      </h1>
+      <p class="mt-3 max-w-2xl text-[var(--color-muted)]">
+        Two pre-launch variants and one Epic 8 structural stub. The stub should
+        render identical markup to the pre-launch variant and emit a hidden JSON
+        placeholder in the DOM.
+      </p>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-2">
+      <TrustQuoteCardComponent
+        quote="A third of private-party used cars in Europe hide at least one defect worth more than €500 to repair."
+        attribution="European Automobile Association, 2024 used-car survey"
+        context="independent industry body"
+      />
+      <TrustQuoteCardComponent
+        quote="Buyers who skip a professional inspection pay an average of €640 more in first-year repairs than buyers who don't."
+        attribution="Placeholder industry benchmark, 2024"
+      />
+    </div>
+
+    <div class="mt-12">
+      <p class="mb-3 text-xs text-[var(--color-muted)]">
+        phase="post" — Epic 8 stub (identical visual markup + hidden JSON
+        placeholder)
+      </p>
+      <div class="grid gap-6 lg:grid-cols-2">
+        <TrustQuoteCardComponent
+          phase="post"
+          quote="Truvis spotted a worn timing belt on the car I was about to buy. I walked away from a €2,400 repair bill."
+          attribution="Placeholder Truvis user, 2025"
+          context="post-launch testimonial placeholder"
+          rating={5}
+          authorImage={{
+            src: '/placeholder-avatar.jpg',
+            alt: 'Placeholder avatar',
+            width: 64,
+            height: 64,
+          }}
+        />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

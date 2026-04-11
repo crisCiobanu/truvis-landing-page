@@ -1,28 +1,23 @@
 ---
 /**
- * Home page — transitional shell (Story 1.4 T10)
+ * Home page — Epic 2 composition
  *
- * Wraps the landing page in the new `BaseLayout` so the header, skip
- * link, footer and semantic landmarks are exercised. Deliberately NO
- * Truvis marketing content yet — Epic 2 builds the real hero /
- * problem / story-scroll / etc. sections.
+ * Story 2.1 lands the first real marketing section (`HeroSection`) and
+ * replaces the transitional placeholder that Story 1.4 shipped. Later
+ * stories in Epic 2 (2.2 – 2.9) will append sections below the hero.
  */
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import HeroSection from '@/components/sections/hero-section.astro';
+import ProblemSection from '@/components/sections/problem-section.astro';
+import { t, type Locale } from '@/lib/i18n';
+
+const locale = (Astro.currentLocale ?? 'en') as Locale;
 ---
 
 <BaseLayout
-  title="Truvis — Smarter used-car inspections"
-  description="Truvis is a used-car inspection app that helps you know exactly what you are buying. Join the waitlist for early access."
+  title={t('landing.meta.title', locale)}
+  description={t('landing.meta.description', locale)}
 >
-  <section class="mx-auto max-w-3xl px-4 py-24 text-center sm:px-6">
-    <h1
-      class="font-display text-[length:var(--text-hero)] leading-tight font-bold text-[var(--color-primary)]"
-    >
-      A smarter way to inspect used cars.
-    </h1>
-    <p class="mt-6 text-lg text-[var(--color-muted)]">
-      Truvis is coming soon. The full landing page — hero, inspection story
-      scroll, social proof, waitlist — lands in Epic 2.
-    </p>
-  </section>
+  <HeroSection />
+  <ProblemSection />
 </BaseLayout>

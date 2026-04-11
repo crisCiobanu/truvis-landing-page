@@ -20,6 +20,10 @@
  */
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionEyebrow from '@/components/sections/section-eyebrow.astro';
+import HeroSection from '@/components/sections/hero-section.astro';
+import ProblemSection from '@/components/sections/problem-section.astro';
+import StatCard from '@/components/sections/stat-card.astro';
+import TrustQuoteCard from '@/components/sections/trust-quote-card.astro';
 import { Button } from '@/components/ui/button';
 
 // 140% padded variants of every user-facing shell string.
@@ -43,6 +47,17 @@ const padded = {
   },
   footerCopy:
     'Truvis — the smarter used-car inspection application. Know what you are really buying before you sign anything at all.',
+  // StatCard / TrustQuoteCard padded strings (Story 2.3 AC9, ~140%)
+  statValue: '€1,240 average',
+  statLabel:
+    'Average first-year repair cost on an uninspected private-party used car',
+  statSource: 'placeholder industry benchmark for stress test',
+  quoteBody:
+    'A third of private-party used cars in Europe hide at least one defect worth more than €500 to repair, and most buyers never find out until the first service.',
+  quoteAttribution:
+    'European Automobile Association, 2024 European used-car market survey',
+  quoteContext:
+    'independent industry body reporting on private-party transactions',
 };
 ---
 
@@ -184,6 +199,97 @@ const padded = {
           }
         </ul>
       </nav>
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* HeroSection (Story 2.1) — real component rendered in-place          */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 overflow-hidden rounded-lg ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-3 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        HeroSection · story 2.1 · 140% padded i18n strings (see note)
+      </p>
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-2 text-xs text-[var(--color-muted)]"
+      >
+        The hero below renders its copy through <code>t('landing.hero.*')</code>
+        against the live locale JSON. To stress-test with 140% padded strings, temporarily
+        pad the <code>hero</code> values in
+        <code>src/i18n/en/landing.json</code> and reload this page — the section must
+        not clip, truncate, or collapse at 375px, 768px, or 1280px viewport widths.
+      </p>
+      <HeroSection />
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* ProblemSection (Story 2.2) — real component rendered in-place       */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 overflow-hidden rounded-lg ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-3 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        ProblemSection · story 2.2 · live i18n strings (see note)
+      </p>
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-2 text-xs text-[var(--color-muted)]"
+      >
+        The section below renders real copy through <code
+          >t('landing.problem.*')</code
+        >
+        against the live locale JSON, inside its `max-w-2xl` body-text column. To
+        stress-test at 140% padding, temporarily pad the
+        <code>problem</code> values in
+        <code>src/i18n/en/landing.json</code> and reload — the section must not clip,
+        truncate, or collapse at 375px, 768px, or 1280px viewport widths, and the
+        background surface must transition cleanly from the hero above.
+      </p>
+      <ProblemSection />
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* StatCard (Story 2.3) — one instance, 140% padded props              */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 rounded-lg bg-[var(--color-surface)] p-8 ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="mb-4 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        StatCard · story 2.3 · 140% padded props
+      </p>
+      <div class="max-w-sm">
+        <StatCard
+          category="teal"
+          value={padded.statValue}
+          label={padded.statLabel}
+          source={padded.statSource}
+        />
+      </div>
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* TrustQuoteCard (Story 2.3) — one instance, 140% padded props        */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 rounded-lg bg-[var(--color-surface)] p-8 ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="mb-4 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        TrustQuoteCard · story 2.3 · 140% padded props
+      </p>
+      <div class="max-w-2xl">
+        <TrustQuoteCard
+          quote={padded.quoteBody}
+          attribution={padded.quoteAttribution}
+          context={padded.quoteContext}
+        />
+      </div>
     </div>
 
     {/* ------------------------------------------------------------------ */}

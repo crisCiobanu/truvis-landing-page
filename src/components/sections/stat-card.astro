@@ -1,0 +1,67 @@
+---
+/**
+ * StatCard — Story 2.3 / UX-DR21
+ *
+ * Presentational Tier-2 primitive. A number, a label, an optional
+ * source citation, and a 4px category-coloured top border. Consumed
+ * by Story 2.6 (SocialProofSection) and Epic 8 Story 8.3 (live-metrics
+ * variant).
+ *
+ * Content comes from the consumer via props — this primitive never
+ * calls `t()`. The consumer is responsible for i18n at the boundary.
+ *
+ * Imports are restricted to `@/components/ui/*` and `@/lib/*` (AR23).
+ */
+import { cn } from '@/lib/utils';
+
+interface Props {
+  value: string;
+  label: string;
+  source?: string;
+  category: 'teal' | 'amber' | 'coral';
+  phase?: 'pre' | 'post';
+  class?: string;
+}
+
+const {
+  value,
+  label,
+  source,
+  category,
+  phase = 'pre',
+  class: className = '',
+} = Astro.props;
+
+const borderClass = {
+  teal: 'border-t-[var(--color-teal)]',
+  amber: 'border-t-[var(--color-amber)]',
+  coral: 'border-t-[var(--color-coral)]',
+}[category];
+
+const defaults =
+  'flex flex-col items-start gap-2 rounded-[var(--radius-lg)] border-t-4 bg-[var(--color-bg)] p-6 shadow-[var(--shadow-sm)]';
+
+// TODO(epic-8): post-launch live-metrics variant hooks here
+// (phase === 'post' consumers will receive a live-stats payload)
+void phase;
+---
+
+<div class={cn(defaults, borderClass, className)}>
+  <p
+    class="font-display text-[length:var(--text-2xl)] leading-none font-bold text-[var(--color-primary)]"
+  >
+    {value}
+  </p>
+  <p
+    class="text-[length:var(--text-base)] font-medium text-[var(--color-primary)]"
+  >
+    {label}
+  </p>
+  {
+    source && (
+      <p class="mt-2 text-[length:var(--text-xs)] text-[var(--color-muted)]">
+        Source: {source}
+      </p>
+    )
+  }
+</div>
