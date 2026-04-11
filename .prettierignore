@@ -30,6 +30,9 @@ lighthouse/baseline/
 # Package manifests — npm owns the formatting
 package-lock.json
 
+# dotenv templates — prettier has no parser for KEY=value files
+.env.example
+
 # Human-edited project docs and design artefacts
 CLAUDE.md
 truvis-home-screen-refined.html

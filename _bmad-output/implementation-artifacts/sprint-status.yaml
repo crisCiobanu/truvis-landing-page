@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-04-10
-last_updated: 2026-04-11 (Story 1.6 implementation complete — status: in-progress → review)
+last_updated: 2026-04-11 (Story 1.7 implementation complete — status: in-progress → review)
 project: car-buy-assistant
 project_key: NOKEY
 tracking_system: file-system
@@ -52,7 +52,7 @@ development_status:
   1-4-build-baselayout-header-footer-mobilenav-drawer-and-sectioneyebrow-shell: review
   1-5-build-branded-404-and-500-error-pages: review
   1-6-wire-astro-built-in-i18n-routing-and-locale-detection-middleware: review
-  1-7-codify-accessibility-motion-text-expansion-and-component-conventions: ready-for-dev
+  1-7-codify-accessibility-motion-text-expansion-and-component-conventions: review
   epic-1-retrospective: optional
 
   # ─────────────────────────────────────────────────────────────

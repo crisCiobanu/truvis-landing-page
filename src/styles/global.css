@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-@plugin "@tailwindcss/typography";
+@plugin '@tailwindcss/typography';
 
 @variant dark (.dark &);
 
@@ -145,7 +145,7 @@
   --duration-slow: 400ms;
 }
 
-@source "./components/ui/**/*.{ts,tsx}";
+@source './components/ui/**/*.{ts,tsx}';
 
 /* ============================================================
    Base element styles

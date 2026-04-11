@@ -58,7 +58,7 @@ export function BlogSearch({
           className="max-w-md"
         />
         {searchQuery && (
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="text-muted-foreground mt-2 text-sm">
             Found {filteredPosts.length}{' '}
             {filteredPosts.length === 1 ? 'post' : 'posts'}
           </p>
@@ -66,11 +66,11 @@ export function BlogSearch({
       </div>
 
       {filteredPosts.length === 0 && searchQuery ? (
-        <div className="text-center py-12">
-          <p className="text-lg text-muted-foreground">
+        <div className="py-12 text-center">
+          <p className="text-muted-foreground text-lg">
             No posts found matching "{searchQuery}"
           </p>
-          <p className="text-sm text-muted-foreground mt-2">
+          <p className="text-muted-foreground mt-2 text-sm">
             Try a different search term
           </p>
         </div>
@@ -78,7 +78,7 @@ export function BlogSearch({
         <div
           className={
             viewMode === 'grid'
-              ? `grid gap-4 sm:gap-6 grid-cols-1 ${
+              ? `grid grid-cols-1 gap-4 sm:gap-6 ${
                   gridColumns === '2'
                     ? 'sm:grid-cols-2'
                     : gridColumns === '3'
@@ -97,7 +97,7 @@ export function BlogSearch({
             >
               <a
                 href={`/blog/${entry.slug}`}
-                className={`block hover:opacity-80 transition-opacity ${
+                className={`block transition-opacity hover:opacity-80 ${
                   viewMode === 'list' ? 'flex flex-1' : ''
                 }`}
               >
@@ -106,24 +106,24 @@ export function BlogSearch({
                     <img
                       src={entry.data.image}
                       alt={entry.data.title}
-                      className="w-full h-full object-cover"
+                      className="h-full w-full object-cover"
                     />
                   </div>
                 )}
-                <div className="p-6 flex-1">
-                  <div className="flex items-center gap-2 mb-4">
+                <div className="flex-1 p-6">
+                  <div className="mb-4 flex items-center gap-2">
                     <Badge variant="secondary">{entry.data.category}</Badge>
                     {entry.data.tags && entry.data.tags.length > 0 && (
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-muted-foreground text-xs">
                         {entry.data.tags.slice(0, 2).join(', ')}
                       </span>
                     )}
-                    <span className="text-sm text-muted-foreground flex items-center ml-auto">
-                      <Calendar className="w-4 h-4 mr-1" />
+                    <span className="text-muted-foreground ml-auto flex items-center text-sm">
+                      <Calendar className="mr-1 h-4 w-4" />
                       {formatDate(new Date(entry.data.date))}
                     </span>
                   </div>
-                  <h2 className="text-2xl font-bold mb-2">
+                  <h2 className="mb-2 text-2xl font-bold">
                     {entry.data.title}
                   </h2>
                   <p className="text-muted-foreground">
@@ -135,7 +135,7 @@ export function BlogSearch({
                     <img
                       src={entry.data.image}
                       alt={entry.data.title}
-                      className="w-full h-full object-cover"
+                      className="h-full w-full object-cover"
                     />
                   </div>
                 )}

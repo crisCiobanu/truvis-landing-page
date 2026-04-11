@@ -47,7 +47,7 @@ export function ShareButtons({ title, url }: ShareButtonsProps) {
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="text-sm font-medium text-muted-foreground">Share:</span>
+      <span className="text-muted-foreground text-sm font-medium">Share:</span>
 
       {isWebShareSupported && (
         <Button

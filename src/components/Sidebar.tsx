@@ -33,14 +33,14 @@ const DesktopSidebar = () => {
   return (
     <aside
       className={cn(
-        'fixed left-0 h-screen bg-[var(--sidebar-bg)] z-[60]',
-        'transition-all duration-300 ease-out flex flex-col group',
+        'fixed left-0 z-[60] h-screen bg-[var(--sidebar-bg)]',
+        'group flex flex-col transition-all duration-300 ease-out',
         'w-[64px] hover:w-64' // Fixed width for non-open state
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="h-16 flex items-center justify-center">
+      <div className="flex h-16 items-center justify-center">
         <img
           src={isHovered ? '/logo.svg' : '/icon.svg'}
           alt="Logo"
@@ -59,14 +59,14 @@ const DesktopSidebar = () => {
               aria-label={item.title}
               aria-current={isActive ? 'page' : undefined}
               className={cn(
-                'flex items-center h-12 px-4 gap-4',
-                'hover:bg-[var(--sidebar-hover)] text-[hsl(var(--sidebar-fg))]',
+                'flex h-12 items-center gap-4 px-4',
+                'text-[hsl(var(--sidebar-fg))] hover:bg-[var(--sidebar-hover)]',
                 'transition-colors duration-200',
                 isActive && 'bg-[var(--sidebar-active)]'
               )}
             >
-              <Icon className="w-5 h-5 min-w-[20px]" />
-              <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <Icon className="h-5 w-5 min-w-[20px]" />
+              <span className="opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 {item.title}
               </span>
             </a>
@@ -77,7 +77,7 @@ const DesktopSidebar = () => {
       <div className="p-4">
         <div className="flex items-center gap-4">
           <ModeToggle />
-          <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span className="opacity-0 transition-opacity duration-300 group-hover:opacity-100">
             Toggle Theme
           </span>
         </div>

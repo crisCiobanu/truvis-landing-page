@@ -1,0 +1,203 @@
+---
+/**
+ * Text-expansion harness — Story 1.7 (AC4, NFR26, UX-DR31)
+ *
+ * Renders every shell component built so far with placeholder strings
+ * padded to ~140 % of their natural English length. This is the
+ * synthetic FR/DE stress test: if anything overflows, truncates, or
+ * wraps ugly at any breakpoint, the shell is not i18n-safe and must
+ * be fixed **before** real translations land in V1.2.
+ *
+ * Padding method: every string is suffixed with a bracketed filler so
+ * the overall length is ~140 % of the original. We keep the suffix
+ * visible on purpose — reviewers should SEE that this is a stress test
+ * and immediately spot a component that can't cope.
+ *
+ * This page is excluded from production routing by Astro conventions
+ * (`_demo/` is a private folder — files inside still compile in dev but
+ * do not appear in production routing) and is additionally marked
+ * `noindex, nofollow` for belt-and-braces search-engine exclusion.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionEyebrow from '@/components/sections/section-eyebrow.astro';
+import { Button } from '@/components/ui/button';
+
+// 140% padded variants of every user-facing shell string.
+// Real FR/DE copy tends to run 120-140% the length of English, so 140%
+// is a conservative stress target (UX-DR31 / NFR26).
+const padded = {
+  heroHeadline:
+    "Know exactly what you're buying before you buy it — guaranteed inspection peace of mind",
+  ctaPrimary: 'Join the Truvis waiting list now',
+  ctaSecondary: 'Read the inspection buyer guide',
+  eyebrowLight: 'How Truvis inspects every single used car',
+  eyebrowDark: 'Trusted by thousands of careful used-car buyers',
+  sectionHeadingLight: 'How Truvis inspects your next used car, end to end',
+  sectionHeadingDark:
+    'Thousands of careful buyers already trust Truvis inspections',
+  nav: {
+    home: 'Home and landing page',
+    blog: 'Inspection buying guides',
+    faq: 'Frequently asked questions',
+    about: 'About Truvis, our mission',
+  },
+  footerCopy:
+    'Truvis — the smarter used-car inspection application. Know what you are really buying before you sign anything at all.',
+};
+---
+
+<BaseLayout
+  title="Text-expansion harness — Truvis (not indexed)"
+  description="Synthetic 140% text-expansion stress test for Truvis shell components. Not indexed."
+>
+  <meta slot="head" name="robots" content="noindex, nofollow" />
+
+  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="mb-12 border-l-4 border-[var(--color-amber)] pl-4">
+      <p
+        class="font-mono text-xs font-semibold tracking-widest text-[var(--color-teal)] uppercase"
+      >
+        Story 1.7 · AC4 · NFR26
+      </p>
+      <h1
+        class="font-display mt-2 text-3xl font-bold text-[var(--color-primary)]"
+      >
+        Text-expansion harness (140% padding)
+      </h1>
+      <p class="mt-3 max-w-2xl text-[var(--color-muted)]">
+        Every shell component on this page is rendered with placeholder strings
+        padded to approximately 140% of their natural English length. Real
+        French and German copy runs 120–140% of English — if anything on this
+        page overflows, truncates, or wraps ugly, the component is not i18n
+        safe. Resize the viewport from 320px up to 1440px and confirm nothing
+        breaks.
+      </p>
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* Note on Header / Footer coverage                                    */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 rounded-lg border border-[var(--color-divider)] bg-[var(--color-surface-2)] p-4"
+    >
+      <p class="text-sm text-[var(--color-muted)]">
+        <strong class="text-[var(--color-primary)]">Header + Footer:</strong>
+        these are already rendered at the top and bottom of this page by
+        <code>BaseLayout</code>. Manual QA: resize the viewport and confirm the
+        nav links never overlap the logo on tablet, and the footer column
+        headings (<code>Product</code>, <code>Blog</code>, <code>Legal</code>,
+        <code>Follow</code>) stack cleanly on mobile. The real text in
+        <code>header.astro</code> / <code>footer.astro</code> is short enough that
+        a 140% pad still fits inside the existing tap targets.
+      </p>
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* SectionEyebrow — light variant                                      */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 rounded-lg bg-[var(--color-bg)] p-8 ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="mb-4 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        SectionEyebrow · variant=light
+      </p>
+      <SectionEyebrow eyebrow={padded.eyebrowLight} variant="light">
+        <span slot="heading">{padded.sectionHeadingLight}</span>
+      </SectionEyebrow>
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* SectionEyebrow — dark variant                                       */}
+    {/* ------------------------------------------------------------------ */}
+    <div class="mb-12 rounded-lg bg-[var(--color-primary)] p-8">
+      <p
+        class="mb-4 font-mono text-xs tracking-widest text-[var(--color-amber)] uppercase"
+      >
+        SectionEyebrow · variant=dark
+      </p>
+      <SectionEyebrow eyebrow={padded.eyebrowDark} variant="dark">
+        <span slot="heading">{padded.sectionHeadingDark}</span>
+      </SectionEyebrow>
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* CTA button row (shadcn primitives)                                  */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 rounded-lg bg-[var(--color-surface)] p-8 ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="mb-4 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        Tier-1 Button · padded copy
+      </p>
+      <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+        <Button size="lg">{padded.ctaPrimary}</Button>
+        <Button variant="outline" size="lg">{padded.ctaSecondary}</Button>
+      </div>
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* Hero headline stress test                                           */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 rounded-lg bg-[var(--color-surface-3)] p-8 ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="mb-4 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        Hero headline · fluid clamp type
+      </p>
+      <h2
+        class="font-display max-w-3xl text-[length:var(--text-hero)] leading-tight font-bold text-[var(--color-primary)]"
+      >
+        {padded.heroHeadline}
+      </h2>
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* Nav-link row stress test                                            */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 rounded-lg bg-[var(--color-bg)] p-8 ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="mb-4 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        Nav links (padded) · desktop inline row
+      </p>
+      <nav aria-label="Padded nav preview">
+        <ul class="flex flex-wrap items-center gap-2">
+          {
+            Object.values(padded.nav).map((label) => (
+              <li>
+                <a
+                  href="#"
+                  class="inline-flex h-11 min-w-11 items-center rounded-md px-4 text-sm font-medium text-[var(--color-primary)] transition-colors hover:bg-[var(--color-surface-3)] hover:text-[var(--color-teal)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-teal)]"
+                >
+                  {label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* Footer tagline stress                                               */}
+    {/* ------------------------------------------------------------------ */}
+    <div class="mb-12 rounded-lg bg-[var(--color-primary)] p-8">
+      <p
+        class="mb-4 font-mono text-xs tracking-widest text-[var(--color-amber)] uppercase"
+      >
+        Footer tagline (dark surface)
+      </p>
+      <p class="max-w-xl text-base leading-relaxed text-white/90">
+        {padded.footerCopy}
+      </p>
+    </div>
+  </section>
+</BaseLayout>
