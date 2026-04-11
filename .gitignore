@@ -33,6 +33,3 @@ pnpm-debug.log*
 # Claude Code
 .claude/
 .jest-cache/
-
-.dev.vars*
-!.dev.vars.example
