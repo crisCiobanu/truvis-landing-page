@@ -167,9 +167,9 @@ Reports land in `.lighthouseci/` (gitignored). If the assertions fail locally, f
 3. Click _⋯_ → **Rollback to this deployment** → confirm.
 4. Cloudflare promotes the selected deployment to the production alias immediately.
 
-**Dry-run timing:** ≤ 2 minutes end-to-end (NFR38) — verified on a deliberate trivial commit + rollback exercise during Story 1.2 provisioning. Record the actual measured time below after the first real rollback drill:
+**Dry-run timing:** ≤ 2 minutes end-to-end (NFR38). Cloudflare Pages rollback is a cache-alias flip at the edge — no rebuild — which Cloudflare documents as taking seconds. The empirical drill was deferred during Story 1.2 T2.8; the architectural path above is the authoritative one and can be drilled at any time against the existing deployment history on `main`.
 
-> Last rollback drill: _pending T2.8 (see Story 1.2)_ — elapsed: _TBD_ — operator: _TBD_
+> Last rollback drill: _deferred (Story 1.2 T2.8)_ — elapsed: _not measured_ — operator: _TBD_
 
 ### Where things are
 
