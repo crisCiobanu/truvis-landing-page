@@ -11,6 +11,7 @@ import HeroSection from '@/components/sections/hero-section.astro';
 import ProblemSection from '@/components/sections/problem-section.astro';
 import InspectionStorySection from '@/components/sections/inspection-story-section.astro';
 import SocialProofSection from '@/components/sections/social-proof-section.astro';
+import BlogPreviewsSection from '@/components/sections/blog-previews-section.astro';
 import { t, type Locale } from '@/lib/i18n';
 
 const locale = (Astro.currentLocale ?? 'en') as Locale;
@@ -24,4 +25,5 @@ const locale = (Astro.currentLocale ?? 'en') as Locale;
   <ProblemSection />
   <InspectionStorySection />
   <SocialProofSection />
+  <BlogPreviewsSection />
 </BaseLayout>

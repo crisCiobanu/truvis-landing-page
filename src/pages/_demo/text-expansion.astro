@@ -26,6 +26,7 @@ import StatCard from '@/components/sections/stat-card.astro';
 import TrustQuoteCard from '@/components/sections/trust-quote-card.astro';
 import InspectionStorySection from '@/components/sections/inspection-story-section.astro';
 import SocialProofSection from '@/components/sections/social-proof-section.astro';
+import BlogPreviewsSection from '@/components/sections/blog-previews-section.astro';
 import { Button } from '@/components/ui/button';
 
 // 140% padded variants of every user-facing shell string.
@@ -355,6 +356,31 @@ const padded = {
         overflow.
       </p>
       <SocialProofSection />
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* BlogPreviewsSection (Story 2.7) — real component, live i18n        */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 overflow-hidden rounded-lg ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-3 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        BlogPreviewsSection · story 2.7 · live i18n strings (see note)
+      </p>
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-2 text-xs text-[var(--color-muted)]"
+      >
+        The section below renders real copy through
+        <code>t('landing.blogPreviews.*')</code>
+        against the live locale JSON. To stress-test at 140% padding, temporarily
+        pad the <code>blogPreviews</code> values in
+        <code>src/i18n/en/landing.json</code> and reload — confirm the 1/2/3 column
+        responsive grid reflows cleanly and the <code>line-clamp-2</code> excerpt
+        truncates without clipping the card footer.
+      </p>
+      <BlogPreviewsSection />
     </div>
 
     {/* ------------------------------------------------------------------ */}

@@ -88,5 +88,30 @@
       "attribution": "— Placeholder Attribution",
       "context": "V1 placeholder — replaced with a real testimonial or industry-publication quote in Epic 5."
     }
+  },
+  "blogPreviews": {
+    "eyebrow": "From the Truvis blog",
+    "headline": "Short reads that sharpen your eye before the test drive.",
+    "readArticleCta": "Read article",
+    "placeholderCards": {
+      "card1": {
+        "category": "Buying guides",
+        "title": "How to spot a rolled-back odometer in under 30 seconds.",
+        "excerpt": "Three visual tells most buyers miss, and the one service-history check that catches the fourth.",
+        "readTime": "4 min read"
+      },
+      "card2": {
+        "category": "Inspection deep-dives",
+        "title": "The 2017 Ford Focus EcoBoost coolant-line story, start to finish.",
+        "excerpt": "Why a €60 part is worth €1,200 in hidden repair risk, and what to listen for on the test drive.",
+        "readTime": "7 min read"
+      },
+      "card3": {
+        "category": "Negotiation",
+        "title": "Turning a failed inspection into a €500 price cut.",
+        "excerpt": "The three findings every seller respects, and the exact phrasing that gets you the discount without the argument.",
+        "readTime": "5 min read"
+      }
+    }
   }
 }
