@@ -1,0 +1,104 @@
+---
+/**
+ * TrustQuoteCard — Story 2.3 / UX-DR22
+ *
+ * Presentational Tier-2 primitive. A pull quote with attribution.
+ * Two phases:
+ *   - 'pre'  (default): warm-amber decorative quote glyph, italic
+ *            editorial treatment, source attribution.
+ *   - 'post': structural stub for Epic 8 Story 8.2 — today it renders
+ *            the identical pre-launch markup PLUS a hidden JSON
+ *            placeholder carrying the `rating` + `authorImage` props so
+ *            the contract is load-bearing. Full author-photo + star
+ *            rating treatment lands in Epic 8.
+ *
+ * Content comes from the consumer via props — this primitive never
+ * calls `t()`. The consumer is responsible for i18n at the boundary.
+ *
+ * Imports are restricted to `@/components/ui/*` and `@/lib/*` (AR23).
+ */
+import { cn } from '@/lib/utils';
+
+interface AuthorImage {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+}
+
+interface Props {
+  quote: string;
+  attribution: string;
+  context?: string;
+  phase?: 'pre' | 'post';
+  /** Post-launch only — structural wiring; full styling in Epic 8 Story 8.2. */
+  rating?: 1 | 2 | 3 | 4 | 5;
+  /** Post-launch only — structural wiring; full styling in Epic 8 Story 8.2. */
+  authorImage?: AuthorImage;
+  class?: string;
+}
+
+const {
+  quote,
+  attribution,
+  context,
+  phase = 'pre',
+  rating,
+  authorImage,
+  class: className = '',
+} = Astro.props;
+
+const defaults =
+  'relative flex flex-col rounded-[var(--radius-lg)] bg-[var(--color-bg)] p-8 shadow-[var(--shadow-sm)]';
+---
+
+<figure class={cn(defaults, className)}>
+  {/* Decorative amber quote glyph — top-left, aria-hidden */}
+  <svg
+    class="mb-4 h-10 w-10"
+    viewBox="0 0 40 40"
+    fill="var(--color-amber)"
+    aria-hidden="true"
+  >
+    <path
+      d="M12 10h8v8h-4c0 3 1 5 4 6l-1 4c-5-1-7-4-7-10v-8zm16 0h8v8h-4c0 3 1 5 4 6l-1 4c-5-1-7-4-7-10v-8z"
+    ></path>
+  </svg>
+
+  <blockquote
+    class="font-display text-[length:var(--text-lg)] leading-relaxed text-[var(--color-primary)] italic"
+  >
+    {quote}
+  </blockquote>
+
+  <div class="mt-6 mb-4 h-px w-12 bg-[var(--color-amber)]" aria-hidden="true">
+  </div>
+
+  <figcaption>
+    <p
+      class="text-[length:var(--text-sm)] font-semibold text-[var(--color-primary)]"
+    >
+      {attribution}
+    </p>
+    {
+      context && (
+        <p class="text-[length:var(--text-xs)] text-[var(--color-muted)]">
+          {context}
+        </p>
+      )
+    }
+  </figcaption>
+
+  {
+    /* TODO(epic-8): render authorImage + star rating per UX-DR22 and Story 8.2 */
+  }
+  {
+    phase === 'post' && (
+      <script
+        type="application/json"
+        data-epic-8-placeholder
+        set:html={JSON.stringify({ rating, authorImage })}
+      />
+    )
+  }
+</figure>
