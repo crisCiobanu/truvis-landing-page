@@ -139,7 +139,7 @@ The README does **not** yet document Cloudflare Pages setup, env vars, or CI —
   - [x] T2.2 `cd truvis-landing-page && rm -rf .git && git init` — **N/A: working tree was already a git repo with a planning-artifacts commit pushed to remote (see Completion Notes)**
   - [x] T2.3 `npm install` — **clean, 914 → 915 packages, zero `npm ERR!` lines**
   - [x] T2.4 `npm audit` — **5 moderate findings, all dev-only chain `@astrojs/check → … → yaml`. Recorded in README's "Known Audit Findings" for Story 1.2 triage. Zero high/critical on production deps.**
-  - [x] T2.5 `npm run dev` — **HTTP 200 served at http://localhost:4321/, no terminal errors. Browser-side console verification deferred (no Chrome MCP wired yet at time of dev); user spot-check recommended at review time.**
+  - [x] T2.5 `npm run dev` — **HTTP 200 served at http://localhost:4321/, no terminal errors. Browser-side spot-check completed via `chrome-devtools-mcp` after install: zero console errors, zero console warnings (only Vite HMR debug + React DevTools info banner, both explicitly allowed by AC2). 72 network requests, all 200/304 — zero 404s. Page renders the upstream starter (hero + interactive Recharts bar chart + four "100" score cards) as expected.**
 
 - [x] **T3 — Prune unwanted dependencies and demo content** (AC: 3)
   - [x] T3.1 `npm uninstall` flagged deps — **no deps removed; T1.3 found nothing to flag**
@@ -330,7 +330,7 @@ Vitest config and the actual test scaffolding are **not** part of this story. Th
 
 4. **AC1 / T1.2 borderline.** Latest upstream commit on default branch is 2025-09-30, which is ~6 months and 11 days before this story was implemented (2026-04-11). The "~6 months" wording made this a judgement call; I proceeded because every other check passed cleanly and the stack matches the architecture exactly. Recorded explicitly in README "Starter Verification" section so it's auditable later.
 
-5. **AC2 / T2.5 browser DevTools console verification.** I cannot drive a browser interactively to confirm "zero console errors". I verified the dev server returns HTTP 200 with full HTML body via `curl`, and there were no errors in the dev server's terminal output. Browser-side spot-check is recommended at code-review time once the user has wired up their planned Chrome MCP.
+5. **AC2 / T2.5 browser DevTools console verification.** Initially deferred (no Chrome MCP wired). Completed later in the same dev session after user installed `chrome-devtools-mcp` globally and registered it at user scope: navigated to `http://localhost:4321/` via `mcp__chrome-devtools__navigate_page`, then checked `list_console_messages` and `list_network_requests`. Zero errors, zero warnings, zero failed requests. Spot-check screenshot captured in conversation; not committed to repo.
 
 **Tasks not addressed (deliberately, scope guard):** Cloudflare Pages, GitHub Actions / Lighthouse CI, brand tokens, BaseLayout, error pages, i18n routing, ESLint custom rules, env helper, nanostore conventions. These all belong to Stories 1.2–1.7 per the explicit scope guard in Dev Notes.
 
