@@ -11,6 +11,13 @@ import Layout from '../layouts/Layout.astro';
     <div
       class="max-w-[64rem] flex flex-col items-center gap-4 text-center mx-auto"
     >
+      <!-- INTENTIONAL REGRESSION for Story 1.2 T4.6 — 600 KB blocking
+           script pushes total page weight over the 500 KB NFR5 budget
+           so the Lighthouse CI gate fails and blocks merge. Scripts are
+           chosen over images so the bytes fully land in Lighthouse's
+           resource-summary audit (images only partially download under
+           simulated throttling). Reverted after the gate is proven. -->
+      <script src="/regression-test.js" is:inline></script>
       <h1 class="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
         Build beautiful websites with Astro 5 and shadcn/ui
       </h1>
