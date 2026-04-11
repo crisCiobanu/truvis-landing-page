@@ -28,6 +28,7 @@ import InspectionStorySection from '@/components/sections/inspection-story-secti
 import SocialProofSection from '@/components/sections/social-proof-section.astro';
 import BlogPreviewsSection from '@/components/sections/blog-previews-section.astro';
 import FaqSection from '@/components/sections/faq-section.astro';
+import FooterCtaSection from '@/components/sections/footer-cta-section.astro';
 import { Button } from '@/components/ui/button';
 
 // 140% padded variants of every user-facing shell string.
@@ -412,6 +413,29 @@ const padded = {
         the narrow <code>max-w-3xl</code> container, and the chevron colour is warm-amber.
       </p>
       <FaqSection />
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* FooterCtaSection (Story 2.9) — real component, live i18n strings   */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 overflow-hidden rounded-lg ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-3 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        FooterCtaSection · story 2.9 · live i18n strings (see note)
+      </p>
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-2 text-xs text-[var(--color-muted)]"
+      >
+        The dark-primary bookend below renders real copy through
+        <code>t('landing.footerCta.*')</code>. Pad those values in
+        <code>en/landing.json</code> and reload — confirm the centred
+        <code>max-w-3xl</code> container wraps cleanly, white-on-primary contrast
+        holds, and the disabled placeholder button stays centred.
+      </p>
+      <FooterCtaSection />
     </div>
 
     {/* ------------------------------------------------------------------ */}

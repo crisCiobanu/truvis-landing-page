@@ -147,5 +147,16 @@
         "answer": "Inspection data stays on your device indefinitely unless you delete it. If you enable cloud sync, you can delete every record from the app settings. Deletion is immediate, verifiable, and permanent. See our privacy policy for the full data lifecycle."
       }
     }
+  },
+  "midCta": {
+    "srHeading": "Join the Truvis waitlist",
+    "lede": "Like what you're reading? Join the waitlist and we'll let you know the moment Truvis lands.",
+    "ctaPlaceholder": "Join the waitlist"
+  },
+  "footerCta": {
+    "eyebrow": "Ready to buy smarter?",
+    "headline": "Your next car deserves a second opinion.",
+    "subheadline": "Truvis is launching soon. Join the waitlist and get an early-access discount on the pocket inspector that pays for itself.",
+    "ctaPlaceholder": "Join the waitlist"
   }
 }
