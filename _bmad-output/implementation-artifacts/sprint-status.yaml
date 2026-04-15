@@ -1,5 +1,5 @@
 # generated: 2026-04-10
-# last_updated: 2026-04-11 (Story 2.9 → review — Epic 2 complete)
+# last_updated: 2026-04-15 (Stories 4.1–4.9 → ready-for-dev — Epic 4 fully storied)
 # project: car-buy-assistant
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-04-10
-last_updated: 2026-04-11 (Story 2.9 → review — Epic 2 complete)
+last_updated: 2026-04-15 (Story 4.6 → ready-for-dev — Epic 4 in-progress)
 project: car-buy-assistant
 project_key: NOKEY
 tracking_system: file-system
@@ -73,29 +73,29 @@ development_status:
   # ─────────────────────────────────────────────────────────────
   # Epic 3: Waitlist Capture & Confirmation Flow
   # ─────────────────────────────────────────────────────────────
-  epic-3: backlog
-  3-1-provision-loops-esp-account-audience-double-opt-in-and-drip-series-shell: backlog
-  3-2-provision-cloudflare-turnstile-and-wire-site-and-secret-keys: backlog
-  3-3-build-post-api-waitlist-server-route-with-honeypot-turnstile-verification-email-validation-loops-proxy-and-retry: backlog
-  3-4-build-emailcaptureblock-composite-and-waitlistform-react-island-with-full-state-machine: backlog
-  3-5-replace-epic-2-cta-placeholder-slots-with-real-emailcaptureblock: backlog
-  3-6-build-waitlist-confirmed-confirmation-page-with-confirmationpagelayout-and-embedded-microsurvey: backlog
-  3-7-verify-end-to-end-double-opt-in-drip-enrolment-and-unsubscribe-via-loops-test-audience: backlog
+  epic-3: in-progress
+  3-1-provision-loops-esp-account-audience-double-opt-in-and-drip-series-shell: ready-for-dev
+  3-2-provision-cloudflare-turnstile-and-wire-site-and-secret-keys: ready-for-dev
+  3-3-build-post-api-waitlist-server-route-with-honeypot-turnstile-verification-email-validation-loops-proxy-and-retry: ready-for-dev
+  3-4-build-emailcaptureblock-composite-and-waitlistform-react-island-with-full-state-machine: ready-for-dev
+  3-5-replace-epic-2-cta-placeholder-slots-with-real-emailcaptureblock: ready-for-dev
+  3-6-build-waitlist-confirmed-confirmation-page-with-confirmationpagelayout-and-embedded-microsurvey: ready-for-dev
+  3-7-verify-end-to-end-double-opt-in-drip-enrolment-and-unsubscribe-via-loops-test-audience: ready-for-dev
   epic-3-retrospective: optional
 
   # ─────────────────────────────────────────────────────────────
   # Epic 4: Blog & Cross-Platform Content API
   # ─────────────────────────────────────────────────────────────
-  epic-4: backlog
-  4-1-define-blog-astro-content-collection-schema-lib-content-ts-blog-helpers-and-seed-three-placeholder-articles: backlog
-  4-2-build-blogpreviewcard-tier-2-composite: backlog
-  4-3-build-blog-index-page-with-category-filter-pills: backlog
-  4-4-build-blog-year-month-slug-dynamic-article-page-with-seo-metadata: backlog
-  4-5-build-related-articles-navigation-and-social-share-buttons-on-the-article-page: backlog
-  4-6-build-the-inline-blog-article-cta-block-with-pre-launch-waitlist-variant-and-post-launch-slot: backlog
-  4-7-replace-epic-2-blogpreviewssection-placeholder-with-real-blogpreviewcard-lib-content-ts-data: backlog
-  4-8-build-static-api-v1-blog-json-endpoints-with-vitest-contract-test-and-finalised-contract-md: backlog
-  4-9-configure-cloudflare-waf-rate-limiting-and-cdn-cache-headers-for-api-v1-blog: backlog
+  epic-4: in-progress
+  4-1-define-blog-astro-content-collection-schema-lib-content-ts-blog-helpers-and-seed-three-placeholder-articles: ready-for-dev
+  4-2-build-blogpreviewcard-tier-2-composite: ready-for-dev
+  4-3-build-blog-index-page-with-category-filter-pills: ready-for-dev
+  4-4-build-blog-year-month-slug-dynamic-article-page-with-seo-metadata: ready-for-dev
+  4-5-build-related-articles-navigation-and-social-share-buttons-on-the-article-page: ready-for-dev
+  4-6-build-the-inline-blog-article-cta-block-with-pre-launch-waitlist-variant-and-post-launch-slot: ready-for-dev
+  4-7-replace-epic-2-blogpreviewssection-placeholder-with-real-blogpreviewcard-lib-content-ts-data: ready-for-dev
+  4-8-build-static-api-v1-blog-json-endpoints-with-vitest-contract-test-and-finalised-contract-md: ready-for-dev
+  4-9-configure-cloudflare-waf-rate-limiting-and-cdn-cache-headers-for-api-v1-blog: ready-for-dev
   epic-4-retrospective: optional
 
   # ─────────────────────────────────────────────────────────────
