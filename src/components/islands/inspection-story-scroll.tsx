@@ -170,18 +170,28 @@ export default function InspectionStoryScroll({
       {/* Right column — sticky phone (≥768px only)                     */}
       {/* ------------------------------------------------------------ */}
       <div
-        className={`hidden md:sticky md:top-[10vh] md:block md:h-[80vh] md:self-start${
+        className={`hidden md:sticky md:top-[10vh] md:block md:h-[80vh] md:self-start ${styles['phone-column']}${
           isClimaxActive ? ` ${styles['phone-column--climax']}` : ''
         }`}
       >
         <PhoneFrame>
+          {/* The aria-live container must be a STABLE element that is
+              never unmounted — if the live region itself remounts (via a
+              React `key` change), screen readers silently discard it and
+              never announce the new content. The keyed inner div triggers
+              the CSS crossfade animation via React remount while the
+              outer region persists across scene changes. */}
           <div
-            key={currentScene?.id ?? 'empty'}
             role="region"
+            aria-label="Current inspection scene"
             aria-live="polite"
-            className={styles['phone-screen-content']}
           >
-            {currentScene?.phoneContent}
+            <div
+              key={currentScene?.id ?? 'empty'}
+              className={styles['phone-screen-content']}
+            >
+              {currentScene?.phoneContent}
+            </div>
           </div>
         </PhoneFrame>
 
