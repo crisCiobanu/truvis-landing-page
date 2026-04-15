@@ -91,16 +91,24 @@
   padding-left: 1.5rem;
 }
 
-.phone-column--climax {
-  /* Resting state — identity transform so reduced-motion users and
-     the global kill-switch in global.css land on an unscaled phone. */
+/*
+   The phone column needs a base transition so that removing the climax
+   class (scrolling from scene 5 to scene 6) animates smoothly back to
+   scale(1) instead of snapping. The transition lives on the persistent
+   `.phone-column` class; the `--climax` modifier only overrides the
+   transform value.
+*/
+.phone-column {
   transform: scale(1);
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  .phone-column {
+    transition: transform var(--duration-base) ease-out;
+  }
+
   .phone-column--climax {
     transform: scale(1.02);
-    transition: transform var(--duration-base) ease-out;
     will-change: transform;
   }
 }
