@@ -1,0 +1,111 @@
+---
+/**
+ * BlogPreviewsSection — Story 2.7 (UX-DR7, FR6, AR23)
+ *
+ * Tier-2 pure-Astro composite sitting on the warm-grey
+ * `--color-surface` slot of the Epic-2 colour rhythm (between the
+ * white social proof and the white FAQ). Renders three inline
+ * placeholder preview cards in a responsive 1 / 2 / 3 column grid.
+ * Zero `client:*`, zero JavaScript.
+ *
+ * V1 ships inline placeholder cards. Real BlogPreviewCard + blog
+ * Content Collection + getBlogPreviews() land in Epic 4 (Stories 4.1,
+ * 4.2, 4.7). The _blog-preview-placeholder.astro partial below is
+ * throwaway scaffolding — Story 4.7 will delete it.
+ *
+ * Every visible string routes through `t('landing.blogPreviews.*',
+ * locale)`. No hard-coded marketing copy.
+ */
+import SectionEyebrow from '@/components/sections/section-eyebrow.astro';
+import BlogPreviewPlaceholder from '@/components/sections/_blog-preview-placeholder.astro';
+import { t, type Locale } from '@/lib/i18n';
+
+const locale = (Astro.currentLocale ?? 'en') as Locale;
+const readArticleCta = t('landing.blogPreviews.readArticleCta', locale);
+---
+
+<section
+  aria-labelledby="blog-previews-heading"
+  class="bg-[var(--color-surface)]"
+>
+  <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <div class="flex max-w-2xl flex-col items-start gap-4">
+      <SectionEyebrow
+        variant="light"
+        eyebrow={t('landing.blogPreviews.eyebrow', locale)}
+      />
+      <h2
+        id="blog-previews-heading"
+        class="font-display text-[length:var(--text-2xl)] leading-tight font-bold text-[var(--color-primary)]"
+      >
+        {t('landing.blogPreviews.headline', locale)}
+      </h2>
+    </div>
+
+    {
+      /*
+       * TODO(epic-4): replace this placeholder block with real
+       *   import BlogPreviewCard from '@/components/blog/blog-preview-card.astro';
+       *   import { getBlogPreviews } from '@/lib/content';
+       *
+       *   const previews = await getBlogPreviews(locale, { limit: 3 });
+       *
+       * Epic 4 Story 4.7 owns this migration. It will also delete
+       * _blog-preview-placeholder.astro and the landing.blogPreviews.placeholderCards
+       * i18n block (real blog data comes from the blog Content Collection, not i18n).
+       */
+    }
+    <div
+      class="mt-10 grid gap-6 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:gap-8"
+    >
+      <BlogPreviewPlaceholder
+        category={t(
+          'landing.blogPreviews.placeholderCards.card1.category',
+          locale
+        )}
+        title={t('landing.blogPreviews.placeholderCards.card1.title', locale)}
+        excerpt={t(
+          'landing.blogPreviews.placeholderCards.card1.excerpt',
+          locale
+        )}
+        readTime={t(
+          'landing.blogPreviews.placeholderCards.card1.readTime',
+          locale
+        )}
+        readArticleCta={readArticleCta}
+      />
+      <BlogPreviewPlaceholder
+        category={t(
+          'landing.blogPreviews.placeholderCards.card2.category',
+          locale
+        )}
+        title={t('landing.blogPreviews.placeholderCards.card2.title', locale)}
+        excerpt={t(
+          'landing.blogPreviews.placeholderCards.card2.excerpt',
+          locale
+        )}
+        readTime={t(
+          'landing.blogPreviews.placeholderCards.card2.readTime',
+          locale
+        )}
+        readArticleCta={readArticleCta}
+      />
+      <BlogPreviewPlaceholder
+        category={t(
+          'landing.blogPreviews.placeholderCards.card3.category',
+          locale
+        )}
+        title={t('landing.blogPreviews.placeholderCards.card3.title', locale)}
+        excerpt={t(
+          'landing.blogPreviews.placeholderCards.card3.excerpt',
+          locale
+        )}
+        readTime={t(
+          'landing.blogPreviews.placeholderCards.card3.readTime',
+          locale
+        )}
+        readArticleCta={readArticleCta}
+      />
+    </div>
+  </div>
+</section>

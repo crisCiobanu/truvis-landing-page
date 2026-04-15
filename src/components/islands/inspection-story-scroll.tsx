@@ -32,10 +32,6 @@ import {
 
 import styles from './inspection-story-scroll.module.css';
 
-// TODO(story-2-5): extend InspectionStoryScene with an optional
-// `variant: 'standard' | 'climax'` field for the Hard Stop scene-5
-// layout. Do NOT add the field here — Story 2.5 owns the variant's
-// visual treatment and should extend this interface when it ships.
 export interface InspectionStoryScene {
   /** Stable unique id — used as React `key` on the phone-screen
    * content container so the crossfade replays on scene change. */
@@ -43,9 +39,21 @@ export interface InspectionStoryScene {
   /** Short human-readable label, e.g. "Scene 1 — Walkaround". Used
    * by the progress indicator's screen-reader label. */
   label: string;
-  /** Rendered inside the phone screen AND, on mobile, inline under
-   * the narrative copy. Typically supplied by the consumer as JSX. */
-  children: ReactNode;
+  /** Scene copy rendered in the scrollable **left column** (dark
+   * primary background). Owns the scene eyebrow, heading, narrative
+   * and benefit line — the white-on-dark narrative block. */
+  narrative: ReactNode;
+  /** Mini-composition rendered **inside the phone screen** (light
+   * surface-3 background). Shows the visual-only representation of
+   * the scene (badges, severity rows, gauges, etc.) — does NOT
+   * duplicate the narrative copy. Also used as the inline phone
+   * instance on mobile under the narrative. */
+  phoneContent: ReactNode;
+  /** Visual-layout override. `'climax'` is used for scene 5 (Hard
+   *  Stop Protocol) per UX-DR13 — centred narrative column, severity-
+   *  red accent border, subtle sticky-phone scale. Defaults to
+   *  `'standard'` when omitted. Story 2.5 owns the climax treatment. */
+  variant?: 'standard' | 'climax';
 }
 
 export interface InspectionStoryScrollProps {
@@ -98,6 +106,7 @@ export default function InspectionStoryScroll({
   }, [scenes]);
 
   const currentScene = scenes[current] ?? scenes[0];
+  const isClimaxActive = currentScene?.variant === 'climax';
 
   return (
     <div className="md:grid md:grid-cols-[1fr_minmax(280px,360px)] md:gap-12">
@@ -116,19 +125,24 @@ export default function InspectionStoryScroll({
       {/* Left column — scrollable narrative                            */}
       {/* ------------------------------------------------------------ */}
       <div>
-        {scenes.map((scene, i) => (
-          <div
-            key={scene.id}
-            ref={(el) => {
-              slotRefs.current[i] = el;
-            }}
-            data-scene-slot
-            data-scene-index={i}
-            className={`${styles['scene-slot']} py-10 md:min-h-[70vh]`}
-          >
-            {scene.children}
+        {scenes.map((scene, i) => {
+          const variant = scene.variant ?? 'standard';
+          const climaxClass =
+            variant === 'climax' ? ` ${styles['scene-slot--climax']}` : '';
+          return (
+            <div
+              key={scene.id}
+              ref={(el) => {
+                slotRefs.current[i] = el;
+              }}
+              data-scene-slot
+              data-scene-index={i}
+              data-scene-variant={variant}
+              className={`${styles['scene-slot']}${climaxClass} py-10 md:min-h-[70vh]`}
+            >
+              {scene.narrative}
 
-            {/* Mobile (<768px): render an inline phone instance under
+              {/* Mobile (<768px): render an inline phone instance under
                  the narrative copy. The sticky phone in the right
                  column is hidden at this breakpoint.
 
@@ -140,21 +154,26 @@ export default function InspectionStoryScroll({
                  column already announces. Scene-change announcements
                  on mobile come from the single sr-only live counter
                  rendered below, which reflects `$currentScene`. */}
-            <div className="mt-8 md:hidden" aria-hidden="true">
-              <PhoneFrame>
-                <div className={styles['phone-screen-content']}>
-                  {scene.children}
-                </div>
-              </PhoneFrame>
+              <div className="mt-8 md:hidden" aria-hidden="true">
+                <PhoneFrame>
+                  <div className={styles['phone-screen-content']}>
+                    {scene.phoneContent}
+                  </div>
+                </PhoneFrame>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* ------------------------------------------------------------ */}
       {/* Right column — sticky phone (≥768px only)                     */}
       {/* ------------------------------------------------------------ */}
-      <div className="hidden md:sticky md:top-[10vh] md:block md:h-[80vh] md:self-start">
+      <div
+        className={`hidden md:sticky md:top-[10vh] md:block md:h-[80vh] md:self-start${
+          isClimaxActive ? ` ${styles['phone-column--climax']}` : ''
+        }`}
+      >
         <PhoneFrame>
           <div
             key={currentScene?.id ?? 'empty'}
@@ -162,7 +181,7 @@ export default function InspectionStoryScroll({
             aria-live="polite"
             className={styles['phone-screen-content']}
           >
-            {currentScene?.children}
+            {currentScene?.phoneContent}
           </div>
         </PhoneFrame>
 

@@ -24,6 +24,11 @@ import HeroSection from '@/components/sections/hero-section.astro';
 import ProblemSection from '@/components/sections/problem-section.astro';
 import StatCard from '@/components/sections/stat-card.astro';
 import TrustQuoteCard from '@/components/sections/trust-quote-card.astro';
+import InspectionStorySection from '@/components/sections/inspection-story-section.astro';
+import SocialProofSection from '@/components/sections/social-proof-section.astro';
+import BlogPreviewsSection from '@/components/sections/blog-previews-section.astro';
+import FaqSection from '@/components/sections/faq-section.astro';
+import FooterCtaSection from '@/components/sections/footer-cta-section.astro';
 import { Button } from '@/components/ui/button';
 
 // 140% padded variants of every user-facing shell string.
@@ -290,6 +295,147 @@ const padded = {
           context={padded.quoteContext}
         />
       </div>
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* InspectionStorySection (Story 2.5) — real component rendered       */}
+    {/* in-place with live i18n strings. Stress-test by temporarily        */}
+    {/* padding `landing.inspectionStory.*` in en/landing.json and         */}
+    {/* reloading — confirm no clipping at 375/768/1280px and that the     */}
+    {/* climax scene's centred layout with severity-red accent border      */}
+    {/* holds under 140% padding.                                          */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 overflow-hidden rounded-lg ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-3 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        InspectionStorySection · story 2.5 · live i18n strings (see note)
+      </p>
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-2 text-xs text-[var(--color-muted)]"
+      >
+        The section below renders real copy through <code
+          >t('landing.inspectionStory.*')</code
+        >
+        against the live locale JSON, with the Story 2.4 sticky-phone mechanism hydrated
+        in-place. To stress-test at 140% padding, temporarily pad the <code
+          >inspectionStory</code
+        > values in
+        <code>src/i18n/en/landing.json</code> and reload — confirm no clipping, no
+        horizontal scroll, and that scene 5's climax layout (centred column, severity-red
+        accent border) still holds at 375/768/1280px viewport widths.
+      </p>
+      <InspectionStorySection />
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* SocialProofSection (Story 2.6) — real component rendered in-place  */}
+    {/* with live i18n strings. Stress-test by temporarily padding         */}
+    {/* `landing.socialProof.*` in en/landing.json and reloading — confirm */}
+    {/* no clipping at 375/768/1280px, the three-column stats grid         */}
+    {/* collapses cleanly below 768px, and the quote card stays within     */}
+    {/* max-w-3xl and wraps naturally.                                     */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 overflow-hidden rounded-lg ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-3 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        SocialProofSection · story 2.6 · live i18n strings (see note)
+      </p>
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-2 text-xs text-[var(--color-muted)]"
+      >
+        The section below renders real copy through
+        <code>t('landing.socialProof.*')</code>
+        against the live locale JSON. To stress-test at 140% padding, temporarily
+        pad the <code>socialProof</code> values in
+        <code>src/i18n/en/landing.json</code> and reload — confirm the three-column
+        stats grid collapses cleanly below 768px and the quote card wraps without
+        overflow.
+      </p>
+      <SocialProofSection />
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* BlogPreviewsSection (Story 2.7) — real component, live i18n        */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 overflow-hidden rounded-lg ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-3 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        BlogPreviewsSection · story 2.7 · live i18n strings (see note)
+      </p>
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-2 text-xs text-[var(--color-muted)]"
+      >
+        The section below renders real copy through
+        <code>t('landing.blogPreviews.*')</code>
+        against the live locale JSON. To stress-test at 140% padding, temporarily
+        pad the <code>blogPreviews</code> values in
+        <code>src/i18n/en/landing.json</code> and reload — confirm the 1/2/3 column
+        responsive grid reflows cleanly and the <code>line-clamp-2</code> excerpt
+        truncates without clipping the card footer.
+      </p>
+      <BlogPreviewsSection />
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* FaqSection (Story 2.8) — real component, live i18n strings         */}
+    {/* Note: the accordion is collapsed by default; to stress-test answer */}
+    {/* wrapping under 140% padding, open each trigger manually in the    */}
+    {/* harness preview, or pad `landing.faq.items.*.answer` in           */}
+    {/* en/landing.json and then open each item.                          */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 overflow-hidden rounded-lg ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-3 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        FaqSection · story 2.8 · live i18n strings (see note)
+      </p>
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-2 text-xs text-[var(--color-muted)]"
+      >
+        The section below renders real FAQ entries through
+        <code>t('landing.faq.*')</code>
+        against the live locale JSON. To stress-test at 140% padding, temporarily
+        pad <code>landing.faq.items.*.question</code> and
+        <code>landing.faq.items.*.answer</code> in
+        <code>src/i18n/en/landing.json</code>, reload, and open each accordion
+        item — confirm long questions wrap cleanly, long answers do not break
+        the narrow <code>max-w-3xl</code> container, and the chevron colour is warm-amber.
+      </p>
+      <FaqSection />
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
+    {/* FooterCtaSection (Story 2.9) — real component, live i18n strings   */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 overflow-hidden rounded-lg ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-3 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        FooterCtaSection · story 2.9 · live i18n strings (see note)
+      </p>
+      <p
+        class="border-b border-[var(--color-divider)] bg-[var(--color-surface-2)] px-4 py-2 text-xs text-[var(--color-muted)]"
+      >
+        The dark-primary bookend below renders real copy through
+        <code>t('landing.footerCta.*')</code>. Pad those values in
+        <code>en/landing.json</code> and reload — confirm the centred
+        <code>max-w-3xl</code> container wraps cleanly, white-on-primary contrast
+        holds, and the disabled placeholder button stays centred.
+      </p>
+      <FooterCtaSection />
     </div>
 
     {/* ------------------------------------------------------------------ */}

@@ -1,0 +1,55 @@
+---
+/**
+ * InspectionStorySection — Story 2.5 (UX-DR13, AR23, AR27)
+ *
+ * Tier-2 Astro section that hosts the scroll-driven inspection-story
+ * island on the landing page. This is the canonical consumer of the
+ * Story 2.4 `InspectionStoryScroll` mechanism — replacing the
+ * reviewer-only `/_demo/inspection-story` scaffolding.
+ *
+ * Colour rhythm: this section sits on the dark primary `#2E4057`
+ * background per UX-DR13 and the Epic 2 palette rhythm documented in
+ * Story 1.7. It is framed with a dark-variant `SectionEyebrow`.
+ *
+ * Heading hierarchy: the section owns one `<h2>` (the eyebrow heading)
+ * and defers `<h3>` ownership to each scene inside the island wrapper.
+ * The page's `<h1>` stays with the hero.
+ *
+ * Hydration: the React island below mounts with `client:visible` —
+ * never `client:load`. The section is always below the fold on `/`.
+ *
+ * i18n: every visible string routes through
+ * `t('landing.inspectionStory.*', locale)`. Hard-coded marketing
+ * strings are forbidden here.
+ */
+import SectionEyebrow from '@/components/sections/section-eyebrow.astro';
+import InspectionStoryScenes from '@/components/islands/inspection-story-scenes';
+import { t, type Locale } from '@/lib/i18n';
+
+const locale = (Astro.currentLocale ?? 'en') as Locale;
+---
+
+<section
+  aria-labelledby="inspection-story-heading"
+  class="bg-[var(--color-primary)]"
+>
+  <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <div class="mb-12 flex max-w-2xl flex-col items-start gap-4">
+      <SectionEyebrow
+        variant="dark"
+        eyebrow={t('landing.inspectionStory.eyebrow', locale)}
+      />
+      <h2
+        id="inspection-story-heading"
+        class="font-display text-[length:var(--text-2xl)] leading-tight font-bold text-white"
+      >
+        {t('landing.inspectionStory.headline', locale)}
+      </h2>
+      <p class="text-[length:var(--text-lg)] text-white/80">
+        {t('landing.inspectionStory.subheadline', locale)}
+      </p>
+    </div>
+
+    <InspectionStoryScenes client:visible locale={locale} />
+  </div>
+</section>

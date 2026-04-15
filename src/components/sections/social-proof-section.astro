@@ -1,0 +1,97 @@
+---
+/**
+ * SocialProofSection — Story 2.6 (UX-DR6, FR4, AR23)
+ *
+ * Tier-2 pure-Astro composite sitting on the white `--color-bg` slot
+ * of the Epic-2 colour rhythm (between the dark-primary inspection
+ * story and the surface blog previews). Renders three pre-launch
+ * market-statistic `StatCard`s in a responsive grid plus one
+ * pre-launch `TrustQuoteCard`. Zero `client:*` directives, zero JS.
+ *
+ * V1 ships FR4 only. FR5's post-launch testimonial variant is
+ * "variant slot ready" — see <slot name="post-launch-testimonial" />
+ * and Epic 8 Story 8.2. Epic 5 Story 5.1 migrates the hard-coded
+ * i18n values to `stats` / `testimonials` Content Collections via
+ * `src/lib/content.ts`, and Epic 5 Story 5.3 ships
+ * `src/lib/launch-phase.ts` at which point the commented-out
+ * `isPostLaunch()` block below becomes live code.
+ *
+ * Every visible string routes through `t('landing.socialProof.*',
+ * locale)`. No hard-coded marketing copy.
+ */
+// V1 ships FR4 only. FR5's post-launch testimonial variant is "variant slot ready" — see <slot name="post-launch-testimonial" /> and Epic 8 Story 8.2.
+// TODO(epic-5): source stats + testimonial from Content Collections
+// via lib/content.ts once Epic 5 Story 5.1 ships.
+import SectionEyebrow from '@/components/sections/section-eyebrow.astro';
+import StatCard from '@/components/sections/stat-card.astro';
+import TrustQuoteCard from '@/components/sections/trust-quote-card.astro';
+import { t, type Locale } from '@/lib/i18n';
+
+const locale = (Astro.currentLocale ?? 'en') as Locale;
+---
+
+<section aria-labelledby="social-proof-heading" class="bg-[var(--color-bg)]">
+  <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <div class="flex max-w-2xl flex-col items-start gap-4">
+      <SectionEyebrow
+        variant="light"
+        eyebrow={t('landing.socialProof.eyebrow', locale)}
+      />
+      <h2
+        id="social-proof-heading"
+        class="font-display text-[length:var(--text-2xl)] leading-tight font-bold text-[var(--color-primary)]"
+      >
+        {t('landing.socialProof.headline', locale)}
+      </h2>
+    </div>
+
+    {
+      /* Three explicit StatCard tags — see Story 2.6 Dev Notes for the
+        rationale (distinct category colours, grep-friendly static
+        keys, matches problem-section.astro's three-body pattern). */
+    }
+    <div class="mt-10 grid gap-6 md:mt-12 md:grid-cols-3 md:gap-8">
+      <StatCard
+        category="teal"
+        value={t('landing.socialProof.stats.stat1.value', locale)}
+        label={t('landing.socialProof.stats.stat1.label', locale)}
+        source={t('landing.socialProof.stats.stat1.source', locale)}
+      />
+      <StatCard
+        category="amber"
+        value={t('landing.socialProof.stats.stat2.value', locale)}
+        label={t('landing.socialProof.stats.stat2.label', locale)}
+        source={t('landing.socialProof.stats.stat2.source', locale)}
+      />
+      <StatCard
+        category="coral"
+        value={t('landing.socialProof.stats.stat3.value', locale)}
+        label={t('landing.socialProof.stats.stat3.label', locale)}
+        source={t('landing.socialProof.stats.stat3.source', locale)}
+      />
+    </div>
+
+    <div class="mx-auto mt-12 max-w-3xl md:mt-16">
+      {
+        /*
+         * TODO(epic-5): once src/lib/launch-phase.ts ships (Story 5.3),
+         * switch the rendered quote variant on isPostLaunch():
+         *
+         *   import { isPostLaunch } from '@/lib/launch-phase';
+         *   const phase = isPostLaunch() ? 'post' : 'pre';
+         *
+         * Epic 8 Story 8.2 will then fill
+         * <slot name="post-launch-testimonial" /> with the real
+         * post-launch TrustQuoteCard and this section will switch on
+         * phase automatically. At V1 we hard-code the 'pre' path.
+         */
+      }
+      <TrustQuoteCard
+        quote={t('landing.socialProof.quote.text', locale)}
+        attribution={t('landing.socialProof.quote.attribution', locale)}
+        context={t('landing.socialProof.quote.context', locale)}
+      />
+      <slot name="post-launch-testimonial" />
+    </div>
+  </div>
+</section>

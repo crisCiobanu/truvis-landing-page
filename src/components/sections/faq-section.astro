@@ -1,0 +1,55 @@
+---
+/**
+ * FaqSection — Story 2.8 (UX-DR8, FR6, AR23, AR27)
+ *
+ * Tier-2 Astro composite that hosts the shadcn Accordion via a React
+ * hydration-root island (`FaqAccordion`). Sits on the white
+ * `--color-bg` slot of the Epic-2 colour rhythm (between the surface
+ * blog previews and the dark-primary footer CTA). Uses the narrower
+ * `max-w-3xl` container because single-column reading content reads
+ * best at a constrained ~80-character width.
+ *
+ * V1 ships placeholder FAQ entries from landing.faq.items. Real faq
+ * Content Collection is Epic 5 Story 5.1. JSON-LD FAQPage is Epic 6
+ * Story 6.2. This file owns neither.
+ *
+ * The `.faq-section` class on the outer wrapper is a namespacing hook
+ * for the amber-chevron CSS rule in `src/styles/global.css` (added by
+ * this story — UX-DR8 chevron accent colour).
+ */
+import SectionEyebrow from '@/components/sections/section-eyebrow.astro';
+import FaqAccordion from '@/components/islands/faq-accordion';
+import { t, type Locale } from '@/lib/i18n';
+
+const locale = (Astro.currentLocale ?? 'en') as Locale;
+---
+
+<section aria-labelledby="faq-heading" class="faq-section bg-[var(--color-bg)]">
+  <div class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <div class="mb-10 flex flex-col items-start gap-4 lg:mb-12">
+      <SectionEyebrow
+        variant="light"
+        eyebrow={t('landing.faq.eyebrow', locale)}
+      />
+      <h2
+        id="faq-heading"
+        class="font-display text-[length:var(--text-2xl)] leading-tight font-bold text-[var(--color-primary)]"
+      >
+        {t('landing.faq.headline', locale)}
+      </h2>
+    </div>
+
+    {
+      /*
+       * TODO(epic-5): source FAQ items from the faq Content Collection
+       *   via lib/content.ts getFaqItems() instead of landing.faq.items
+       *   i18n. Epic 5 Story 5.1 creates the collection and the helper.
+       *
+       * TODO(epic-6): inject faqJsonLd(faqItems) via BaseLayout's JSON-LD
+       *   slot so the FAQ section emits FAQPage structured data per FR41.
+       *   Epic 6 Story 6.2 creates lib/structured-data.ts and the helper.
+       */
+    }
+    <FaqAccordion client:idle locale={locale} />
+  </div>
+</section>

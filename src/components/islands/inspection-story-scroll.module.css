@@ -65,3 +65,42 @@
     transform: translateY(0);
   }
 }
+
+/* ------------------------------------------------------------
+   Climax variant — scene 5 (Hard Stop Protocol) per UX-DR13.
+   Added by Story 2.5. Two visual concerns:
+
+   1. `.scene-slot--climax` centres the narrative column within
+      the section, constrains its max-width, and draws a 4px
+      severity-red accent border down the left edge. These rules
+      are applied unconditionally (not gated by reduced motion)
+      because they are static layout, not animation.
+
+   2. `.phone-column--climax` applies a subtle `scale(1.02)` to
+      the sticky-phone wrapper ONLY when the current scene is the
+      climax scene (the consumer toggles this class on/off). The
+      transform is gated under
+      `@media (prefers-reduced-motion: no-preference)` so
+      reduced-motion users see the phone at its resting scale.
+   ------------------------------------------------------------ */
+.scene-slot--climax {
+  max-width: 640px;
+  margin-inline: auto;
+  text-align: center;
+  border-left: 4px solid var(--color-severity-red);
+  padding-left: 1.5rem;
+}
+
+.phone-column--climax {
+  /* Resting state — identity transform so reduced-motion users and
+     the global kill-switch in global.css land on an unscaled phone. */
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .phone-column--climax {
+    transform: scale(1.02);
+    transition: transform var(--duration-base) ease-out;
+    will-change: transform;
+  }
+}
