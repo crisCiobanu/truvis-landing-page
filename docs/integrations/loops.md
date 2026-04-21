@@ -82,12 +82,12 @@ The `transactionalId` is the ID of the double opt-in template created in the Loo
 
 **Audience:** `waitlist-v1` (ID stored in `LOOPS_AUDIENCE_ID` env var)
 
-| Field              | Type   | Purpose                                      | Set by    |
-| ------------------ | ------ | -------------------------------------------- | --------- |
-| `signupSource`     | string | CTA slot identifier (`'hero'`, `'mid'`, `'footer'`) | Story 3.3 |
-| `microSurveyAnswer`| string | Single-question micro-survey response        | Story 3.6 |
-| `locale`           | string | Visitor's locale (`'en'`, `'fr'`, `'de'`)    | Story 3.3 |
-| `launchPhase`      | string | Current launch phase, default `'pre'`        | Story 3.3 |
+| Field               | Type   | Purpose                                             | Set by    |
+| ------------------- | ------ | --------------------------------------------------- | --------- |
+| `signupSource`      | string | CTA slot identifier (`'hero'`, `'mid'`, `'footer'`) | Story 3.3 |
+| `microSurveyAnswer` | string | Single-question micro-survey response               | Story 3.6 |
+| `locale`            | string | Visitor's locale (`'en'`, `'fr'`, `'de'`)           | Story 3.3 |
+| `launchPhase`       | string | Current launch phase, default `'pre'`               | Story 3.3 |
 
 ---
 
@@ -95,18 +95,18 @@ The `transactionalId` is the ID of the double opt-in template created in the Loo
 
 All four required operations (NFR27) are verified available:
 
-| Operation       | Method                                                                 |
-| --------------- | ---------------------------------------------------------------------- |
-| Add contact     | `POST /contacts/create` -- direct API call from `/api/waitlist`        |
-| Confirm opt-in  | Built-in Loops confirmation flow (link in transactional email)         |
-| Enrol in drip   | Automatic -- "subscribed" event triggers `waitlist-drip-v1` automation |
-| Unsubscribe     | Built-in Loops unsubscribe footer link + `DELETE /contacts/{id}` API   |
+| Operation      | Method                                                                 |
+| -------------- | ---------------------------------------------------------------------- |
+| Add contact    | `POST /contacts/create` -- direct API call from `/api/waitlist`        |
+| Confirm opt-in | Built-in Loops confirmation flow (link in transactional email)         |
+| Enrol in drip  | Automatic -- "subscribed" event triggers `waitlist-drip-v1` automation |
+| Unsubscribe    | Built-in Loops unsubscribe footer link + `DELETE /contacts/{id}` API   |
 
 ---
 
 ## Environment Variables
 
-| Variable           | Scope       | Location               | Notes                    |
-| ------------------ | ----------- | ---------------------- | ------------------------ |
-| `LOOPS_API_KEY`    | Server-only | CF Pages env (Secret)  | Never client-exposed     |
-| `LOOPS_AUDIENCE_ID`| Server-only | CF Pages env           | Maps to `waitlist-v1`    |
+| Variable            | Scope       | Location              | Notes                 |
+| ------------------- | ----------- | --------------------- | --------------------- |
+| `LOOPS_API_KEY`     | Server-only | CF Pages env (Secret) | Never client-exposed  |
+| `LOOPS_AUDIENCE_ID` | Server-only | CF Pages env          | Maps to `waitlist-v1` |
