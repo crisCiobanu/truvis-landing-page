@@ -7,7 +7,12 @@
  */
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { getOptional, getRequired, parseBoolean } from './env';
+import {
+  getOptional,
+  getRequired,
+  getTurnstileConfig,
+  parseBoolean,
+} from './env';
 
 describe('src/lib/env.ts', () => {
   const originalEnv = { ...process.env };
@@ -56,6 +61,36 @@ describe('src/lib/env.ts', () => {
 
     it('returns empty string when missing and no fallback is supplied', () => {
       expect(getOptional('TRUVIS_TEST_OPTIONAL')).toBe('');
+    });
+  });
+
+  describe('getTurnstileConfig', () => {
+    beforeEach(() => {
+      delete process.env.PUBLIC_TURNSTILE_SITE_KEY;
+      delete process.env.TURNSTILE_SECRET_KEY;
+    });
+
+    it('returns both keys when both env vars are set', () => {
+      process.env.PUBLIC_TURNSTILE_SITE_KEY = 'site-key-123';
+      process.env.TURNSTILE_SECRET_KEY = 'secret-key-456';
+      expect(getTurnstileConfig()).toEqual({
+        siteKey: 'site-key-123',
+        secretKey: 'secret-key-456',
+      });
+    });
+
+    it('throws when PUBLIC_TURNSTILE_SITE_KEY is missing', () => {
+      process.env.TURNSTILE_SECRET_KEY = 'secret-key-456';
+      expect(() => getTurnstileConfig()).toThrow(/PUBLIC_TURNSTILE_SITE_KEY/);
+    });
+
+    it('throws when TURNSTILE_SECRET_KEY is missing', () => {
+      process.env.PUBLIC_TURNSTILE_SITE_KEY = 'site-key-123';
+      expect(() => getTurnstileConfig()).toThrow(/TURNSTILE_SECRET_KEY/);
+    });
+
+    it('throws when both keys are missing', () => {
+      expect(() => getTurnstileConfig()).toThrow(/PUBLIC_TURNSTILE_SITE_KEY/);
     });
   });
 

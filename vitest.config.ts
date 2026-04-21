@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 // Story 1.7 will expand this with coverage thresholds / DOM testing.
 export default defineConfig({
   test: {
-    include: ['src/**/*.test.ts'],
+    include: ['src/**/*.test.ts', 'tests/**/*.test.ts'],
     environment: 'node',
     globals: false,
   },

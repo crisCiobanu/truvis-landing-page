@@ -1,6 +1,6 @@
 # Story 3.3: Build POST `/api/waitlist` server route with honeypot, Turnstile verification, email validation, Loops proxy and retry
 
-Status: ready-for-dev
+Status: done
 
 <!-- Validation optional. Run validate-create-story for a quality check before dev-story. -->
 
@@ -206,37 +206,49 @@ Scope boundaries:
 
 ## Tasks
 
-- [ ] Task 1 (AC: 1): Create `src/pages/api/waitlist.ts` with POST export, typed request/response interfaces, and JSON parsing with error handling
-- [ ] Task 2 (AC: 5, 6, 7): Create `src/lib/loops.ts` — Loops API client (server-side only)
-  - [ ] Subtask 2.1: Define `LoopsResult` type and `addContact()` function signature
-  - [ ] Subtask 2.2: Implement POST to Loops contacts/create endpoint with auth header and custom fields
-  - [ ] Subtask 2.3: Handle duplicate detection — map Loops conflict response to `duplicate` code
-  - [ ] Subtask 2.4: Handle pending/unconfirmed contacts — map to `duplicate` with re-send semantics
-  - [ ] Subtask 2.5: Implement exponential backoff retry wrapper (3 attempts, ~300/700/1500ms delays)
-  - [ ] Subtask 2.6: Respect `Retry-After` header on 429 responses
-  - [ ] Subtask 2.7: Add TODO comments for Sentry (epic-7) and KV queue (v1.1)
-- [ ] Task 3 (AC: 3): Create `src/lib/turnstile.ts` — Turnstile verification helper (server-side only)
-  - [ ] Subtask 3.1: Define `TurnstileResult` type and `verifyTurnstileToken()` function signature
-  - [ ] Subtask 3.2: Implement POST to CF siteverify endpoint with JSON body
-  - [ ] Subtask 3.3: Handle missing token (reject without calling API)
-  - [ ] Subtask 3.4: Propagate error codes from CF response
-- [ ] Task 4 (AC: 2): Implement honeypot check as first validation step in the route — silent `200` success on bot detection, no downstream calls
-- [ ] Task 5 (AC: 3): Wire Turnstile verification as second validation step in the route — call `verifyTurnstileToken()`, return 400 on failure
-- [ ] Task 6 (AC: 4): Implement email regex validation — trim, lowercase, reject malformed with 400
-- [ ] Task 7 (AC: 5, 6): Wire Loops contact creation — call `addContact()` with custom fields, map result codes to response
-- [ ] Task 8 (AC: 8): Add structured console logging throughout the route — start timer on entry, log on every exit path, no PII
-- [ ] Task 9 (AC: 1): Add catch-all try/catch returning `500 { ok: false, code: 'server_error' }` with `console.error` (no body content)
-- [ ] Task 10 (AC: 9): Create `tests/api/waitlist.test.ts` with comprehensive mock-based tests
-  - [ ] Subtask 10.1: Test setup — mock fetch, set env vars, import route handler
-  - [ ] Subtask 10.2: Honeypot rejection (silent success, fetch not called)
-  - [ ] Subtask 10.3: Turnstile failure (invalid token → 400)
-  - [ ] Subtask 10.4: Invalid email (malformed → 400)
-  - [ ] Subtask 10.5: New subscribe success (Loops 200 → route 200 success)
-  - [ ] Subtask 10.6: Duplicate contact (Loops conflict → route 200 duplicate)
-  - [ ] Subtask 10.7: Pending contact resend (Loops pending → route 200 duplicate)
-  - [ ] Subtask 10.8: ESP 500 retry eventually-fails (3x 500 → route 502)
-  - [ ] Subtask 10.9: ESP 429 with Retry-After eventually-succeeds (429 then 200 → route 200)
-  - [ ] Subtask 10.10: ESP network error eventually-fails (3x throw → route 502)
+- [x] Task 1 (AC: 1): Create `src/pages/api/waitlist.ts` with POST export, typed request/response interfaces, and JSON parsing with error handling
+- [x] Task 2 (AC: 5, 6, 7): Create `src/lib/loops.ts` — Loops API client (server-side only)
+  - [x] Subtask 2.1: Define `LoopsResult` type and `addContact()` function signature
+  - [x] Subtask 2.2: Implement POST to Loops contacts/create endpoint with auth header and custom fields
+  - [x] Subtask 2.3: Handle duplicate detection — map Loops conflict response to `duplicate` code
+  - [x] Subtask 2.4: Handle pending/unconfirmed contacts — map to `duplicate` with re-send semantics
+  - [x] Subtask 2.5: Implement exponential backoff retry wrapper (3 attempts, ~300/700/1500ms delays)
+  - [x] Subtask 2.6: Respect `Retry-After` header on 429 responses
+  - [x] Subtask 2.7: Add TODO comments for Sentry (epic-7) and KV queue (v1.1)
+- [x] Task 3 (AC: 3): Create `src/lib/turnstile.ts` — Turnstile verification helper (server-side only)
+  - [x] Subtask 3.1: Define `TurnstileResult` type and `verifyTurnstileToken()` function signature
+  - [x] Subtask 3.2: Implement POST to CF siteverify endpoint with JSON body
+  - [x] Subtask 3.3: Handle missing token (reject without calling API)
+  - [x] Subtask 3.4: Propagate error codes from CF response
+- [x] Task 4 (AC: 2): Implement honeypot check as first validation step in the route — silent `200` success on bot detection, no downstream calls
+- [x] Task 5 (AC: 3): Wire Turnstile verification as second validation step in the route — call `verifyTurnstileToken()`, return 400 on failure
+- [x] Task 6 (AC: 4): Implement email regex validation — trim, lowercase, reject malformed with 400
+- [x] Task 7 (AC: 5, 6): Wire Loops contact creation — call `addContact()` with custom fields, map result codes to response
+- [x] Task 8 (AC: 8): Add structured console logging throughout the route — start timer on entry, log on every exit path, no PII
+- [x] Task 9 (AC: 1): Add catch-all try/catch returning `500 { ok: false, code: 'server_error' }` with `console.error` (no body content)
+- [x] Task 10 (AC: 9): Create `tests/api/waitlist.test.ts` with comprehensive mock-based tests
+  - [x] Subtask 10.1: Test setup — mock fetch, set env vars, import route handler
+  - [x] Subtask 10.2: Honeypot rejection (silent success, fetch not called)
+  - [x] Subtask 10.3: Turnstile failure (invalid token → 400)
+  - [x] Subtask 10.4: Invalid email (malformed → 400)
+  - [x] Subtask 10.5: New subscribe success (Loops 200 → route 200 success)
+  - [x] Subtask 10.6: Duplicate contact (Loops conflict → route 200 duplicate)
+  - [x] Subtask 10.7: Pending contact resend (Loops pending → route 200 duplicate)
+  - [x] Subtask 10.8: ESP 500 retry eventually-fails (3x 500 → route 502)
+  - [x] Subtask 10.9: ESP 429 with Retry-After eventually-succeeds (429 then 200 → route 200)
+  - [x] Subtask 10.10: ESP network error eventually-fails (3x throw → route 502)
+
+### Review Findings
+
+- [x] [Review][Patch] P1: Add `remoteip` to Turnstile `verifyTurnstileToken` — pass client IP from request headers to prevent token replay [`src/lib/turnstile.ts`, `src/pages/api/waitlist.ts`]
+- [x] [Review][Patch] P2: Pending response message should not claim "re-sent confirmation email" — change to non-committal message [`src/pages/api/waitlist.ts:196-201`]
+- [x] [Review][Patch] P3: Cap `Retry-After` delay with `Math.min(val, 5000)` to prevent worker hang on large values [`src/lib/loops.ts:59-61`]
+- [x] [Review][Patch] P4: Add `export const prerender = false` — required for server-rendered API route in `output: 'static'` mode [`src/pages/api/waitlist.ts`]
+- [x] [Review][Patch] P5: Wrap `.json()` in try/catch on Loops 400 handler — non-JSON body causes incorrect retry as network error [`src/lib/loops.ts:139-141`]
+- [x] [Review][Patch] P6: Wrap `.json()` in try/catch on Loops success handler — non-JSON body on success retries and could cause duplicate creation [`src/lib/loops.ts:128-131`]
+- [x] [Review][Patch] P7: Check `response.ok` before parsing Turnstile JSON — non-2xx HTML error page throws misleading `network-error` [`src/lib/turnstile.ts:51-59`]
+- [x] [Review][Patch] P8: Log `code: 'pending'` instead of `code: 'duplicate'` for pending Loops results — enables ops to distinguish in metrics [`src/pages/api/waitlist.ts:188-189`]
+- [x] [Review][Patch] P9: Pass `retryCount` to `logCompletion` on `esp_unavailable` path — AC8 schema specifies it [`src/pages/api/waitlist.ts`]
 
 ## Dev Notes
 
@@ -352,15 +364,24 @@ The route must execute validations in this exact order (cheapest/fastest first):
 
 ### Agent Model Used
 
-<!-- Filled in by dev agent after implementation -->
+Claude Opus 4.6 (1M context)
 
 ### Debug Log References
 
-<!-- Filled in by dev agent after implementation -->
+- All 54 tests pass (9 new waitlist tests + 45 existing) — no regressions
+- ESLint: 0 errors, 0 warnings after removing unused `isRetryable` helper
+- Prettier: all files formatted
 
 ### Completion Notes List
 
-<!-- Filled in by dev agent after implementation -->
+- Created `src/lib/loops.ts` — Loops ESP client with `addContact()`, exponential backoff retry (3 attempts, ~300/700/1500ms), `Retry-After` header support, duplicate/pending detection via 409 and 400 response body parsing, TODO markers for Sentry (epic-7) and KV queue (v1.1)
+- Created `src/lib/turnstile.ts` — Turnstile server-side verifier with `verifyTurnstileToken()`, missing-token fast-reject, error code propagation from CF response
+- Created `src/pages/api/waitlist.ts` — POST-only Astro API route with 5-step validation pipeline (parse → honeypot → turnstile → email → loops), typed `WaitlistRequest`/`WaitlistResponse` interfaces, structured JSON logging on every exit path (no PII), catch-all error handler
+- Created `tests/api/waitlist.test.ts` — 9 comprehensive mock-based tests covering all AC9 scenarios with `vi.useFakeTimers()` for retry delay tests
+- Updated `vitest.config.ts` to include `tests/**/*.test.ts` in addition to `src/**/*.test.ts`
+- Validation pipeline order matches story spec: honeypot first (cheapest), then Turnstile, then email regex, then Loops
+- HTTP status codes follow epic AC (200/400/502/500), not the architecture doc's "always 200" convention
+- All env access via `getRequired()`/`getOptional()` from `@/lib/env` — no direct `import.meta.env` or `process.env`
 
 ### File List
 
@@ -371,9 +392,10 @@ The route must execute validations in this exact order (cheapest/fastest first):
 - `tests/api/waitlist.test.ts`
 
 **Modified:**
+- `vitest.config.ts` (added `tests/**/*.test.ts` to include pattern)
 - `_bmad-output/implementation-artifacts/sprint-status.yaml`
 - `_bmad-output/implementation-artifacts/3-3-build-post-api-waitlist-server-route-with-honeypot-turnstile-verification-email-validation-loops-proxy-and-retry.md`
 
 ## Change Log
 
-<!-- Entries added by dev agent and reviewers as work progresses -->
+- 2026-04-21: Story 3.3 implemented — all 10 tasks complete, 9 tests passing, all ACs satisfied (Claude Opus 4.6)
