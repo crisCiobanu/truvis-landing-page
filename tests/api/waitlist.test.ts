@@ -36,7 +36,11 @@ function makeRequest(body: Record<string, unknown>): Request {
 
 /** Extract the parsed JSON body and status from a Response. */
 async function parseResponse(res: Response) {
-  const json = (await res.json()) as Record<string, unknown>;
+  const json = (await res.json()) as {
+    ok: boolean;
+    code: string;
+    message?: string;
+  };
   return { status: res.status, ...json };
 }
 
