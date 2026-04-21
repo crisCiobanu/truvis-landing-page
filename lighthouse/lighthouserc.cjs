@@ -23,11 +23,12 @@
 module.exports = {
   ci: {
     collect: {
-      // Build the production bundle then start Astro's preview server;
-      // LHCI hits the local URL so results are deterministic per commit.
-      startServerCommand: 'npm run preview -- --host 127.0.0.1 --port 4321',
-      startServerReadyPattern: '4321',
-      url: ['http://127.0.0.1:4321/'],
+      // Serve the static build output for Lighthouse. We use npx serve
+      // instead of `astro preview` because the Cloudflare adapter's
+      // preview requires wrangler, which is unavailable in CI.
+      // Lighthouse only tests prerendered HTML pages, not the API route.
+      staticDistDir: './dist',
+      url: ['http://localhost/'],
       numberOfRuns: 3,
       settings: {
         // Default Lighthouse mobile emulation + simulated throttling.

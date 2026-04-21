@@ -70,6 +70,21 @@ export function getOptional(key: string, fallback = ''): string {
 }
 
 /**
+ * Cloudflare Turnstile configuration — Story 3.2 (AR13, NFR12, NFR15)
+ *
+ * `siteKey` is client-readable (`PUBLIC_` prefix) — pass it to the
+ * Turnstile widget in the form island. `secretKey` is server-only (no
+ * `PUBLIC_` prefix) — use it exclusively in the `siteverify` call from
+ * the `/api/waitlist` route. Never expose `secretKey` to client code.
+ */
+export function getTurnstileConfig(): { siteKey: string; secretKey: string } {
+  return {
+    siteKey: getRequired('PUBLIC_TURNSTILE_SITE_KEY'),
+    secretKey: getRequired('TURNSTILE_SECRET_KEY'),
+  };
+}
+
+/**
  * Parse a boolean env var. Accepts the strings `"true"` / `"false"`
  * (case-insensitive) and the JS booleans `true` / `false`. Anything
  * else — including a missing key — is treated as `false`.

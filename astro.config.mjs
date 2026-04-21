@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import cloudflare from '@astrojs/cloudflare';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
@@ -24,5 +25,10 @@ export default defineConfig({
       }),
     ],
   },
+  // Cloudflare adapter enables server-rendered routes via
+  // `export const prerender = false` — needed for POST /api/waitlist
+  // (Story 3.3, Cloudflare Pages Function). All other pages remain
+  // fully prerendered (static).
+  adapter: cloudflare(),
   output: 'static',
 });

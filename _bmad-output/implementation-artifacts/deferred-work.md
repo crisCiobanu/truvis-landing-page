@@ -13,3 +13,7 @@ This file aggregates items flagged during code review or dev that are real but n
 - **`startServerReadyPattern: '4321'` substring-match fragility** — tighten to `http://127\.0\.0\.1:4321` regex next time LHCI tooling is touched.
 - **NFR5 wording says "500 KB" but enforcement is 500 KiB (512 000 bytes)** — per decision during 1.2 review, keep the gate and tighten PRD wording to "500 KiB" on the next PRD touch (likely Story 6.7 perf re-audit or Epic 5 content-ops pass).
 - **`--max-warnings=0` on `npm run lint`** — starter has 2 pre-existing warnings (`src/hooks/use-toast.ts`, `src/stores/layout.ts`) that must be fixed first; Story 1.7 convention pass should fix the warnings and add `--max-warnings=0` to the lint script in the same commit.
+
+## Deferred from: code review of 3-2-provision-cloudflare-turnstile-and-wire-site-and-secret-keys (2026-04-21)
+
+- **Whitespace-only env values pass `getRequired()` validation** — `getRequired()` in `src/lib/env.ts:52` checks `=== ''` but not `.trim()`. A value like `"  "` would pass validation and propagate as a valid key, causing confusing downstream errors (e.g., Turnstile `siteverify` rejection). Pre-existing gap in the helper, not introduced by Story 3.2.

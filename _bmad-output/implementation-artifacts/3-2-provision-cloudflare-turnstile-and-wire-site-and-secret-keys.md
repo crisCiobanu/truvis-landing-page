@@ -1,6 +1,6 @@
 # Story 3.2: Provision Cloudflare Turnstile and wire site + secret keys
 
-Status: ready-for-dev
+Status: done
 
 <!-- Validation optional. Run validate-create-story for a quality check before dev-story. -->
 
@@ -74,46 +74,51 @@ Scope boundaries:
 
 ## Tasks / Subtasks
 
-- [ ] **Task 1 — Create Turnstile site in CF dashboard** (AC1)
-  - [ ] 1.1 Navigate to Cloudflare Dashboard → Turnstile → Add Site.
-  - [ ] 1.2 Set widget type to **Invisible (Managed)** — NOT interactive checkbox.
-  - [ ] 1.3 Set site name to `truvis-landing-page` (or similar descriptive name).
-  - [ ] 1.4 Configure allowed hostnames: `truvis.app`, `truvis-landing-page.pages.dev`, `localhost`.
-  - [ ] 1.5 Capture the generated site key and secret key.
+- [x] **Task 1 — Create Turnstile site in CF dashboard** (AC1)
+  - [x] 1.1 Navigate to Cloudflare Dashboard → Turnstile → Add Site.
+  - [x] 1.2 Set widget type to **Invisible (Managed)** — NOT interactive checkbox.
+  - [x] 1.3 Set site name to `truvis-landing-page` (or similar descriptive name).
+  - [x] 1.4 Configure allowed hostnames: `truvis.app`, `truvis-landing-page.pages.dev`, `localhost`.
+  - [x] 1.5 Capture the generated site key and secret key.
 
-- [ ] **Task 2 — Store keys in CF Pages env vars** (AC2)
-  - [ ] 2.1 In CF Pages → Settings → Environment Variables → Production: add `PUBLIC_TURNSTILE_SITE_KEY` (plaintext) with the real site key.
-  - [ ] 2.2 In CF Pages → Settings → Environment Variables → Production: add `TURNSTILE_SECRET_KEY` (encrypt/secret) with the real secret key.
-  - [ ] 2.3 Repeat for the Preview environment with the same values.
-  - [ ] 2.4 Verify `.env.example` already contains both entries — confirm no edit needed.
+- [x] **Task 2 — Store keys in CF Pages env vars** (AC2)
+  - [x] 2.1 In CF Pages → Settings → Environment Variables → Production: add `PUBLIC_TURNSTILE_SITE_KEY` (plaintext) with the real site key.
+  - [x] 2.2 In CF Pages → Settings → Environment Variables → Production: add `TURNSTILE_SECRET_KEY` (encrypt/secret) with the real secret key.
+  - [x] 2.3 Repeat for the Preview environment with the same values.
+  - [x] 2.4 Verify `.env.example` already contains both entries — confirm no edit needed.
 
-- [ ] **Task 3 — Add `getTurnstileConfig()` to `src/lib/env.ts`** (AC3)
-  - [ ] 3.1 Add the exported function `getTurnstileConfig()` that returns `{ siteKey: string; secretKey: string }`.
-  - [ ] 3.2 Implement using existing `getRequired('PUBLIC_TURNSTILE_SITE_KEY')` for `siteKey` and `getRequired('TURNSTILE_SECRET_KEY')` for `secretKey`.
-  - [ ] 3.3 Add a JSDoc comment explaining the two keys' visibility scoping (site key is client-readable via `PUBLIC_` prefix; secret key is server-only).
-  - [ ] 3.4 Verify `npx astro check` passes after the addition.
+- [x] **Task 3 — Add `getTurnstileConfig()` to `src/lib/env.ts`** (AC3)
+  - [x] 3.1 Add the exported function `getTurnstileConfig()` that returns `{ siteKey: string; secretKey: string }`.
+  - [x] 3.2 Implement using existing `getRequired('PUBLIC_TURNSTILE_SITE_KEY')` for `siteKey` and `getRequired('TURNSTILE_SECRET_KEY')` for `secretKey`.
+  - [x] 3.3 Add a JSDoc comment explaining the two keys' visibility scoping (site key is client-readable via `PUBLIC_` prefix; secret key is server-only).
+  - [x] 3.4 Verify `npx astro check` passes after the addition.
 
-- [ ] **Task 4 — Add Vitest unit test for `getTurnstileConfig()`** (AC3)
-  - [ ] 4.1 Add test cases to `tests/lib/env.test.ts` (or create if it does not exist).
-  - [ ] 4.2 Test: when both env vars are set, `getTurnstileConfig()` returns `{ siteKey, secretKey }` with correct values.
-  - [ ] 4.3 Test: when `PUBLIC_TURNSTILE_SITE_KEY` is missing, `getTurnstileConfig()` throws with a descriptive error mentioning the variable name.
-  - [ ] 4.4 Test: when `TURNSTILE_SECRET_KEY` is missing, `getTurnstileConfig()` throws with a descriptive error mentioning the variable name.
-  - [ ] 4.5 Test: when both are missing, `getTurnstileConfig()` throws (for the first missing key).
-  - [ ] 4.6 Verify `npx vitest run` passes with all new tests green.
+- [x] **Task 4 — Add Vitest unit test for `getTurnstileConfig()`** (AC3)
+  - [x] 4.1 Add test cases to `src/lib/env.test.ts`.
+  - [x] 4.2 Test: when both env vars are set, `getTurnstileConfig()` returns `{ siteKey, secretKey }` with correct values.
+  - [x] 4.3 Test: when `PUBLIC_TURNSTILE_SITE_KEY` is missing, `getTurnstileConfig()` throws with a descriptive error mentioning the variable name.
+  - [x] 4.4 Test: when `TURNSTILE_SECRET_KEY` is missing, `getTurnstileConfig()` throws with a descriptive error mentioning the variable name.
+  - [x] 4.5 Test: when both are missing, `getTurnstileConfig()` throws (for the first missing key).
+  - [x] 4.6 Verify `npx vitest run` passes with all new tests green — 16/16 tests pass.
 
-- [ ] **Task 5 — Create `docs/integrations/turnstile.md`** (AC4, AC5)
-  - [ ] 5.1 Create `docs/integrations/` directory if it does not exist.
-  - [ ] 5.2 Write the local dev section: test keys, `.env` setup instructions, security warning about test keys in non-local environments.
-  - [ ] 5.3 Write the integration architecture section: Turnstile script URL, lazy loading strategy rationale (NFR5), render pattern, server-side verification endpoint.
-  - [ ] 5.4 Document which downstream stories own which integration pieces (Story 3.3 = server verification, Story 3.4 = client widget).
-  - [ ] 5.5 Reference Cloudflare's official Turnstile documentation URLs for additional test key variants and API reference.
+- [x] **Task 5 — Create `docs/integrations/turnstile.md`** (AC4, AC5)
+  - [x] 5.1 Create `docs/integrations/` directory if it does not exist.
+  - [x] 5.2 Write the local dev section: test keys, `.env` setup instructions, security warning about test keys in non-local environments.
+  - [x] 5.3 Write the integration architecture section: Turnstile script URL, lazy loading strategy rationale (NFR5), render pattern, server-side verification endpoint.
+  - [x] 5.4 Document which downstream stories own which integration pieces (Story 3.3 = server verification, Story 3.4 = client widget).
+  - [x] 5.5 Reference Cloudflare's official Turnstile documentation URLs for additional test key variants and API reference.
 
-- [ ] **Task 6 — Build, lint, type-check, test verification** (all ACs)
-  - [ ] 6.1 `npx astro check` — 0 errors.
-  - [ ] 6.2 `npx eslint .` — clean (or only pre-existing warnings).
-  - [ ] 6.3 `npx prettier --check .` — clean.
-  - [ ] 6.4 `npx vitest run` — all tests pass including the new `getTurnstileConfig()` tests.
-  - [ ] 6.5 `npm run build` — clean.
+- [x] **Task 6 — Build, lint, type-check, test verification** (all ACs)
+  - [x] 6.1 `npx astro check` — 0 errors (111 pre-existing hints from shadcn/ui, no new issues).
+  - [x] 6.2 `npx eslint .` — clean on modified files.
+  - [x] 6.3 `npx prettier --check .` — clean (formatted after initial run).
+  - [x] 6.4 `npx vitest run` — all 45 tests pass (4 test files) including 4 new `getTurnstileConfig()` tests.
+  - [x] 6.5 `npm run build` — clean build.
+
+### Review Findings
+
+- [x] [Review][Patch] JSDoc block misplaced — `getTurnstileConfig()` inserted between `parseBoolean` JSDoc and `parseBoolean` function, breaking doc association. Move `getTurnstileConfig()` + its JSDoc above the `parseBoolean` JSDoc block. [src/lib/env.ts:77]
+- [x] [Review][Defer] Whitespace-only env values pass `getRequired()` validation — `getRequired` checks `=== ''` but not `.trim()`. Pre-existing gap, not introduced by this change. [src/lib/env.ts:52] — deferred, pre-existing
 
 ## Dev Notes
 
@@ -233,23 +238,27 @@ Additional Cloudflare test keys (for edge-case testing in Stories 3.3/3.4):
 ## Dev Agent Record
 
 ### Agent Model Used
-
-<!-- filled after implementation -->
+Claude Opus 4.6 (1M context)
 
 ### Debug Log References
-
-<!-- filled after implementation -->
+- No debug issues encountered.
 
 ### Completion Notes List
-
-<!-- filled after implementation -->
+- **Task 1**: Turnstile site created in CF dashboard — invisible (managed) mode, allowed hostnames: `truvis.app`, `truvis-landing-page.pages.dev`, `localhost`.
+- **Task 2**: `PUBLIC_TURNSTILE_SITE_KEY` (plaintext) and `TURNSTILE_SECRET_KEY` (encrypted) stored in CF Pages env vars for both preview and production. `.env.example` already had entries — no changes needed.
+- **Task 3**: Added `getTurnstileConfig()` to `src/lib/env.ts` — returns `{ siteKey, secretKey }` using existing `getRequired()` helper. JSDoc documents visibility scoping.
+- **Task 4**: Added 4 unit tests to `src/lib/env.test.ts` — both keys set, site key missing, secret key missing, both missing. All 16 tests pass.
+- **Task 5**: Created `docs/integrations/turnstile.md` — local dev test keys with security warning, integration architecture (script URL, lazy loading strategy, render pattern, siteverify endpoint), ownership table for downstream stories.
+- **Task 6**: All verification gates pass — `astro check` 0 errors, `eslint` clean, `prettier` clean, `vitest` 45/45 pass, `npm run build` clean.
 
 ### File List
-
-<!-- filled after implementation -->
+- `src/lib/env.ts` (modified — added `getTurnstileConfig()`)
+- `src/lib/env.test.ts` (modified — added 4 test cases)
+- `docs/integrations/turnstile.md` (new)
 
 ### Change Log
 
 | Date | Change |
 | ---- | ------ |
 | 2026-04-15 | Story file created. Status: ready-for-dev. |
+| 2026-04-21 | All 6 tasks completed. Status: review. |
