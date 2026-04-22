@@ -50,26 +50,7 @@ const locale = (Astro.currentLocale ?? 'en') as Locale;
         {t('landing.hero.subheadline', locale)}
       </p>
 
-      {
-        /*
-         * CTA slot — Epic 3 handoff contract. The wrapper `<div>` data-*
-         * attributes MUST stay exactly as-is; Story 3.5 targets them verbatim
-         * when it swaps in the real <EmailCaptureBlock slot="cta" variant="hero" />.
-         */
-      }
-      <slot name="cta">
-        <div data-cta-slot="hero" data-testid="hero-cta-slot">
-          <button
-            type="button"
-            disabled
-            aria-disabled="true"
-            class="inline-flex items-center rounded-md bg-[var(--color-teal)] px-6 py-3 font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-teal)] disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            {t('landing.hero.ctaPlaceholder', locale)}
-            <span class="sr-only"> — coming soon, form wires in Epic 3</span>
-          </button>
-        </div>
-      </slot>
+      <slot name="cta" />
     </div>
 
     {

@@ -382,7 +382,9 @@ export default function WaitlistForm({
       <div
         className={cn(
           'flex-1',
-          variant === 'inline' ? 'min-w-0' : 'w-full sm:flex-1'
+          variant === 'inline'
+            ? 'min-w-0'
+            : 'w-full sm:min-w-[280px] sm:flex-[2]'
         )}
       >
         <label
@@ -451,7 +453,8 @@ export default function WaitlistForm({
         type="submit"
         disabled={isButtonDisabled}
         className={cn(
-          'h-11 min-w-[160px] px-6 text-base font-semibold whitespace-nowrap',
+          showVisibleLabel && 'sm:mt-6',
+          'h-11 shrink-0 px-6 text-base font-semibold whitespace-nowrap',
           'disabled:cursor-not-allowed disabled:opacity-50',
           isFooter
             ? 'bg-[var(--color-amber)] text-[var(--color-primary)] hover:bg-[var(--color-amber-light)]'

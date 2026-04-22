@@ -10,10 +10,8 @@
  * deliberate editorial variances from the Epic-2 default
  * `max-w-6xl` / left-aligned sections.
  *
- * V1 ships the disabled "Join the waitlist" placeholder as the default
- * <slot name="cta"> fallback. Epic 3 Story 3.5 replaces it with
- * <EmailCaptureBlock slot="cta" variant="footer" /> via a find-and-
- * replace of data-cta-slot="footer".
+ * The `<slot name="cta">` receives the real `<EmailCaptureBlock>`
+ * from `index.astro` (wired in Story 3.5).
  */
 import SectionEyebrow from '@/components/sections/section-eyebrow.astro';
 import { t, type Locale } from '@/lib/i18n';
@@ -40,27 +38,8 @@ const locale = (Astro.currentLocale ?? 'en') as Locale;
         {t('landing.footerCta.subheadline', locale)}
       </p>
 
-      {
-        /*
-         * TODO(epic-3): <slot name="cta"> is replaced by
-         * <EmailCaptureBlock slot="cta" variant="footer" /> via a
-         * find-and-replace of data-cta-slot="footer" (Story 3.5).
-         */
-      }
       <div class="mt-2 inline-flex justify-center">
-        <slot name="cta">
-          <div data-cta-slot="footer" data-testid="footer-cta-slot">
-            <button
-              type="button"
-              disabled
-              aria-disabled="true"
-              class="inline-flex items-center rounded-md bg-[var(--color-teal)] px-6 py-3 font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-teal)] disabled:cursor-not-allowed disabled:opacity-70"
-            >
-              {t('landing.footerCta.ctaPlaceholder', locale)}
-              <span class="sr-only"> — coming soon, form wires in Epic 3</span>
-            </button>
-          </div>
-        </slot>
+        <slot name="cta" />
       </div>
     </div>
   </div>
