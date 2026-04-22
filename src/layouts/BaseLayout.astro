@@ -20,6 +20,7 @@
  */
 import Header from '@/components/sections/header.astro';
 import Footer from '@/components/sections/footer.astro';
+import { Toaster } from '@/components/ui/sonner';
 import '@/styles/global.css';
 
 interface Props {
@@ -121,6 +122,9 @@ const lang = Astro.currentLocale ?? 'en';
     </main>
 
     <Footer />
+
+    {/* Single Toaster instance for toast notifications (Story 3.4) */}
+    <Toaster client:idle position="bottom-center" />
 
     <style is:global>
       /* Skip-link styles (UX-DR27) — off-screen until focused. */
