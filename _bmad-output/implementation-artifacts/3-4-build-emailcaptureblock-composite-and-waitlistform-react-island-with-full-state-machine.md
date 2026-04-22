@@ -1,6 +1,6 @@
 # Story 3.4: Build EmailCaptureBlock composite and WaitlistForm React island with full state machine
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -112,62 +112,77 @@ so that **I can join the waitlist with minimal friction, receive clear feedback 
 
 ## Tasks / Subtasks
 
-- [ ] **Task 1 — Create `src/components/forms/email-capture-block.astro` with three variant layouts** (AC: 1)
-  - [ ] T1.1 Define typed props interface: `variant`, `headline?`, `trustMicroCopy?`, `signupSource`
-  - [ ] T1.2 Hero variant: contextual headline above form, horizontal layout on desktop (flex-row), stacked on mobile (flex-col), trust micro-copy below
-  - [ ] T1.3 Inline variant: compact single-line layout (email + button side-by-side at all breakpoints), no headline, no trust copy
-  - [ ] T1.4 Footer variant: dark `bg-[#2E4057]` background, white text, amber `bg-[#F5A623]` submit button override via CSS variable or class
-  - [ ] T1.5 Conditionally render `client:load` for hero variant, `client:visible` for inline/footer — use Astro conditional rendering pattern (separate `<WaitlistForm>` tags per branch, since `client:*` directives cannot be dynamic expressions)
-  - [ ] T1.6 Pass `variant`, `signupSource`, and any variant-specific className to the island
+- [x] **Task 1 — Create `src/components/forms/email-capture-block.astro` with three variant layouts** (AC: 1)
+  - [x] T1.1 Define typed props interface: `variant`, `headline?`, `trustMicroCopy?`, `signupSource`
+  - [x] T1.2 Hero variant: contextual headline above form, horizontal layout on desktop (flex-row), stacked on mobile (flex-col), trust micro-copy below
+  - [x] T1.3 Inline variant: compact single-line layout (email + button side-by-side at all breakpoints), no headline, no trust copy
+  - [x] T1.4 Footer variant: dark `bg-[#2E4057]` background, white text, amber `bg-[#F5A623]` submit button override via CSS variable or class
+  - [x] T1.5 Conditionally render `client:load` for hero variant, `client:visible` for inline/footer — use Astro conditional rendering pattern (separate `<WaitlistForm>` tags per branch, since `client:*` directives cannot be dynamic expressions)
+  - [x] T1.6 Pass `variant`, `signupSource`, and any variant-specific className to the island
 
-- [ ] **Task 2 — Create `src/components/islands/waitlist-form.tsx` with form markup** (AC: 2)
-  - [ ] T2.1 Define props type: `{ signupSource: 'hero' | 'mid' | 'footer'; className?: string; variant: 'hero' | 'inline' | 'footer' }`
-  - [ ] T2.2 Hidden honeypot field: `<input name="website" tabIndex={-1} autoComplete="off" style={{ display: 'none' }} aria-hidden="true" />`
-  - [ ] T2.3 Email input: `type="email"`, `autoComplete="email"`, `inputMode="email"`, `required`, `className` with `text-[16px]` minimum (iOS zoom prevention)
-  - [ ] T2.4 Submit button with conditional content: default label vs. spinner + "Submitting..." text based on state
-  - [ ] T2.5 Spinner component: inline SVG or Tailwind animate-spin on a small circle, sized to match button text
+- [x] **Task 2 — Create `src/components/islands/waitlist-form.tsx` with form markup** (AC: 2)
+  - [x] T2.1 Define props type: `{ signupSource: 'hero' | 'mid' | 'footer'; className?: string; variant: 'hero' | 'inline' | 'footer' }`
+  - [x] T2.2 Hidden honeypot field: `<input name="website" tabIndex={-1} autoComplete="off" style={{ display: 'none' }} aria-hidden="true" />`
+  - [x] T2.3 Email input: `type="email"`, `autoComplete="email"`, `inputMode="email"`, `required`, `className` with `text-[16px]` minimum (iOS zoom prevention)
+  - [x] T2.4 Submit button with conditional content: default label vs. spinner + "Submitting..." text based on state
+  - [x] T2.5 Spinner component: inline SVG or Tailwind animate-spin on a small circle, sized to match button text
 
-- [ ] **Task 3 — Implement Turnstile lazy script injection** (AC: 3)
-  - [ ] T3.1 Module-level `let turnstileLoaded = false` and `let turnstileScriptPromise: Promise<void> | null = null` for idempotent loading
-  - [ ] T3.2 `loadTurnstileScript()` function: creates `<script>` tag, appends to `document.head`, returns a promise that resolves on script `onload` and rejects on `onerror` or 10s timeout
-  - [ ] T3.3 On island mount (`useEffect`), call `loadTurnstileScript()`, then call `window.turnstile.render(containerRef, { sitekey, callback, 'error-callback' })` in invisible managed mode
-  - [ ] T3.4 Store Turnstile token in component state; set submit button disabled until token is non-null
-  - [ ] T3.5 On Turnstile error or timeout, dispatch `turnstile_failed` action and show toast
+- [x] **Task 3 — Implement Turnstile lazy script injection** (AC: 3)
+  - [x] T3.1 Module-level `let turnstileLoaded = false` and `let turnstileScriptPromise: Promise<void> | null = null` for idempotent loading
+  - [x] T3.2 `loadTurnstileScript()` function: creates `<script>` tag, appends to `document.head`, returns a promise that resolves on script `onload` and rejects on `onerror` or 10s timeout
+  - [x] T3.3 On island mount (`useEffect`), call `loadTurnstileScript()`, then call `window.turnstile.render(containerRef, { sitekey, callback, 'error-callback' })` in invisible managed mode
+  - [x] T3.4 Store Turnstile token in component state; set submit button disabled until token is non-null
+  - [x] T3.5 On Turnstile error or timeout, dispatch `turnstile_failed` action and show toast
 
-- [ ] **Task 4 — Implement state machine with `useReducer`** (AC: 4)
-  - [ ] T4.1 Define state type: `{ status: 'idle' | 'focused' | 'validating' | 'submitting' | 'success' | 'client_error' | 'api_error'; email: string; errorMessage: string | null; turnstileToken: string | null }`
-  - [ ] T4.2 Define action types: `FOCUS`, `BLUR_VALIDATE`, `SET_EMAIL`, `SUBMIT`, `SUBMIT_SUCCESS`, `SUBMIT_DUPLICATE`, `SUBMIT_ERROR`, `SET_TURNSTILE_TOKEN`, `TURNSTILE_FAILED`, `CLEAR_ERROR`
-  - [ ] T4.3 Client-side email validation: HTML5 `validity.valid` check + regex `/^[^\s@]+@[^\s@]+\.[^\s@]+$/` on blur and on submit; invalid triggers `client_error` with `invalidEmail` message
-  - [ ] T4.4 Submit handler: check honeypot field (if filled, silently fake success — navigate to confirmed page), attach Turnstile token, POST to `/api/waitlist` with JSON body `{ email, signupSource, honeypot, turnstileToken }`
-  - [ ] T4.5 Success handling: if response `code === 'success'`, navigate to `/{localePrefix}waitlist-confirmed?email=<encoded>`; if `code === 'duplicate'`, dispatch `SUBMIT_DUPLICATE`
-  - [ ] T4.6 Error handling: dispatch `SUBMIT_ERROR` with mapped i18n error string, show Sonner toast, call `window.turnstile.reset()` to refresh token for retry
-  - [ ] T4.7 Preserve user input on all error states (never clear the email field on error)
+- [x] **Task 4 — Implement state machine with `useReducer`** (AC: 4)
+  - [x] T4.1 Define state type: `{ status: 'idle' | 'focused' | 'validating' | 'submitting' | 'success' | 'client_error' | 'api_error'; email: string; errorMessage: string | null; turnstileToken: string | null }`
+  - [x] T4.2 Define action types: `FOCUS`, `BLUR_VALIDATE`, `SET_EMAIL`, `SUBMIT`, `SUBMIT_SUCCESS`, `SUBMIT_DUPLICATE`, `SUBMIT_ERROR`, `SET_TURNSTILE_TOKEN`, `TURNSTILE_FAILED`, `CLEAR_ERROR`
+  - [x] T4.3 Client-side email validation: HTML5 `validity.valid` check + regex `/^[^\s@]+@[^\s@]+\.[^\s@]+$/` on blur and on submit; invalid triggers `client_error` with `invalidEmail` message
+  - [x] T4.4 Submit handler: check honeypot field (if filled, silently fake success — navigate to confirmed page), attach Turnstile token, POST to `/api/waitlist` with JSON body `{ email, signupSource, honeypot, turnstileToken }`
+  - [x] T4.5 Success handling: if response `code === 'success'`, navigate to `/{localePrefix}waitlist-confirmed?email=<encoded>`; if `code === 'duplicate'`, dispatch `SUBMIT_DUPLICATE`
+  - [x] T4.6 Error handling: dispatch `SUBMIT_ERROR` with mapped i18n error string, show Sonner toast, call `window.turnstile.reset()` to refresh token for retry
+  - [x] T4.7 Preserve user input on all error states (never clear the email field on error)
 
-- [ ] **Task 5 — Add i18n strings to all three locale files** (AC: 5)
-  - [ ] T5.1 Add `landing.waitlist.heroHeadline`, `landing.waitlist.placeholder`, `landing.waitlist.submit`, `landing.waitlist.submitting`, `landing.waitlist.emailLabel` to `src/i18n/en/landing.json`
-  - [ ] T5.2 Add `landing.waitlist.trustMicroCopy` to `src/i18n/en/landing.json`
-  - [ ] T5.3 Add `landing.waitlist.errors.invalidEmail`, `errors.duplicate`, `errors.turnstileFailed`, `errors.espUnavailable`, `errors.serverError`, `errors.honeypotTriggered` to `src/i18n/en/landing.json`
-  - [ ] T5.4 Mirror all keys in `src/i18n/fr/landing.json` with placeholder English values
-  - [ ] T5.5 Mirror all keys in `src/i18n/de/landing.json` with placeholder English values
+- [x] **Task 5 — Add i18n strings to all three locale files** (AC: 5)
+  - [x] T5.1 Add `landing.waitlist.heroHeadline`, `landing.waitlist.placeholder`, `landing.waitlist.submit`, `landing.waitlist.submitting`, `landing.waitlist.emailLabel` to `src/i18n/en/landing.json`
+  - [x] T5.2 Add `landing.waitlist.trustMicroCopy` to `src/i18n/en/landing.json`
+  - [x] T5.3 Add `landing.waitlist.errors.invalidEmail`, `errors.duplicate`, `errors.turnstileFailed`, `errors.espUnavailable`, `errors.serverError`, `errors.honeypotTriggered` to `src/i18n/en/landing.json`
+  - [x] T5.4 Mirror all keys in `src/i18n/fr/landing.json` with placeholder English values
+  - [x] T5.5 Mirror all keys in `src/i18n/de/landing.json` with placeholder English values
 
-- [ ] **Task 6 — Accessibility audit and wiring** (AC: 6)
-  - [ ] T6.1 Email input label: visible `<label>` in hero variant, `<label className="sr-only">` in inline/footer — controlled by variant prop
-  - [ ] T6.2 Wire `aria-invalid="true"` on email input when state is `client_error`
-  - [ ] T6.3 Wire `aria-describedby` on email input pointing to the error message element's `id`
-  - [ ] T6.4 Add `aria-live="polite"` region that shows "Submitting..." text during `submitting` state (visually hidden via `sr-only`)
-  - [ ] T6.5 Ensure Enter key submits the form (native `<form>` + `<button type="submit">` behaviour — no custom key handler needed)
-  - [ ] T6.6 Ensure input and button meet 44x44px minimum touch target via padding/min-height
-  - [ ] T6.7 Run axe-core on the demo page and fix any violations
+- [x] **Task 6 — Accessibility audit and wiring** (AC: 6)
+  - [x] T6.1 Email input label: visible `<label>` in hero variant, `<label className="sr-only">` in inline/footer — controlled by variant prop
+  - [x] T6.2 Wire `aria-invalid="true"` on email input when state is `client_error`
+  - [x] T6.3 Wire `aria-describedby` on email input pointing to the error message element's `id`
+  - [x] T6.4 Add `aria-live="polite"` region that shows "Submitting..." text during `submitting` state (visually hidden via `sr-only`)
+  - [x] T6.5 Ensure Enter key submits the form (native `<form>` + `<button type="submit">` behaviour — no custom key handler needed)
+  - [x] T6.6 Ensure input and button meet 44x44px minimum touch target via padding/min-height
+  - [x] T6.7 Run axe-core on the demo page and fix any violations
 
-- [ ] **Task 7 — Create `src/pages/_demo/email-capture.astro` demo page** (AC: 7)
-  - [ ] T7.1 Import `BaseLayout` and `EmailCaptureBlock`
-  - [ ] T7.2 Render hero variant with `signupSource="hero"`
-  - [ ] T7.3 Render inline variant with `signupSource="mid"`
-  - [ ] T7.4 Render footer variant with `signupSource="footer"`
-  - [ ] T7.5 Add section headings between variants for visual separation
+- [x] **Task 7 — Create `src/pages/_demo/email-capture.astro` demo page** (AC: 7)
+  - [x] T7.1 Import `BaseLayout` and `EmailCaptureBlock`
+  - [x] T7.2 Render hero variant with `signupSource="hero"`
+  - [x] T7.3 Render inline variant with `signupSource="mid"`
+  - [x] T7.4 Render footer variant with `signupSource="footer"`
+  - [x] T7.5 Add section headings between variants for visual separation
 
-- [ ] **Task 8 — Add analytics TODO comment** (AC: 6)
-  - [ ] T8.1 Add `// TODO(epic-6): trackEvent('waitlist_signup', { signupSource })` at the success branch in the submit handler
+- [x] **Task 8 — Add analytics TODO comment** (AC: 6)
+  - [x] T8.1 Add `// TODO(epic-6): trackEvent('waitlist_signup', { signupSource })` at the success branch in the submit handler
+
+### Review Findings
+
+- [x] [Review][Decision] Toast position hardcoded `bottom-center`; AC4 requires responsive `top-right` on desktop — deferred, Sonner does not support responsive positions natively; accepted as-is per dev notes
+- [x] [Review][Patch] Turnstile script promise never reset on rejection — FIXED: reset `turnstileScriptPromise = null` on error/timeout
+- [x] [Review][Patch] `TURNSTILE_FAILED` does not null the token — FIXED: added `turnstileToken: null` to TURNSTILE_FAILED case
+- [x] [Review][Patch] Honeypot redirect leaks email in URL query string — FIXED: removed email param from honeypot redirect
+- [x] [Review][Patch] Empty-field submit dispatches `BLUR_VALIDATE` which silently short-circuits to `idle` — FIXED: added dedicated CLIENT_ERROR action for submit validation
+- [x] [Review][Patch] Multiple `<Toaster>` instances (one per island) — FIXED: moved single Toaster to BaseLayout.astro
+- [x] [Review][Patch] `SUBMIT_DUPLICATE` duplicate message colour — FIXED: duplicate shows in teal (info), errors in severity-red
+- [x] [Review][Patch] `turnstile.reset()` called without widget ID — FIXED: store widget ID from render() and pass to reset()
+- [x] [Review][Patch] Dead code: `isFooter` colour branch inside `showVisibleLabel` block — FIXED: removed unreachable isFooter branch
+- [x] [Review][Defer] Honeypot `display:none` may be bypassed by some browser autofill heuristics — deferred, low severity
+- [x] [Review][Defer] `turnstileScriptPromise` persists across Vite HMR in dev — deferred, dev-only
+- [x] [Review][Defer] Turnstile `siteverify` Content-Type may need form-encoded (Story 3.3 code) — deferred, pre-existing
 
 ## Dev Notes
 
@@ -304,6 +319,35 @@ src/layouts/BaseLayout.astro   ← May need <Toaster> from Sonner if not already
 ## Dev Agent Record
 
 ### Agent Model Used
+Claude Opus 4.6 (1M context)
+
 ### Debug Log References
+- Fixed TS error: `import.meta` cast needed `as unknown as Record<string, string>` for `import.meta.env`
+- Fixed Sonner Toaster: removed `next-themes` dependency (Next.js-only), hardcoded `theme="light"` for Astro
+- Prettier auto-formatted 3 new files
+
 ### Completion Notes List
+- Created EmailCaptureBlock Astro composite with hero/inline/footer variants and conditional hydration directives
+- Created WaitlistForm React island with full useReducer state machine (idle/focused/validating/submitting/success/client_error/api_error)
+- Implemented Turnstile lazy script injection with idempotent module-level promise pattern
+- Honeypot field silently fakes success for bots (client-side + server-side)
+- Error code mapping from API response codes to i18n error strings with Sonner toast notifications
+- All accessibility wiring: visible/sr-only labels, aria-invalid, aria-describedby, aria-live polite region
+- 44px min touch targets on input (h-11) and button (h-11)
+- i18n strings added to en/fr/de landing.json (FR/DE are placeholder English per V1 convention)
+- Demo page renders all three variants at /_demo/email-capture
+- TODO(epic-6) analytics comment placed at success branch
+- All tests pass (54/54), build succeeds, 0 TS errors, lint clean
+
 ### File List
+- `src/components/forms/email-capture-block.astro` (new)
+- `src/components/islands/waitlist-form.tsx` (new)
+- `src/pages/_demo/email-capture.astro` (new)
+- `src/components/ui/sonner.tsx` (modified — removed next-themes dependency)
+- `src/i18n/en/landing.json` (modified — added waitlist.* keys)
+- `src/i18n/fr/landing.json` (modified — mirrored waitlist.* keys)
+- `src/i18n/de/landing.json` (modified — mirrored waitlist.* keys)
+- `_bmad-output/implementation-artifacts/sprint-status.yaml` (modified)
+
+### Change Log
+- 2026-04-22: Story 3.4 implemented — EmailCaptureBlock composite, WaitlistForm island with state machine, Turnstile, honeypot, i18n, accessibility, demo page

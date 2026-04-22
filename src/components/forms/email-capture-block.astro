@@ -1,0 +1,84 @@
+---
+/**
+ * EmailCaptureBlock — Story 3.4 (AC1)
+ *
+ * Tier 2 Astro composite that wraps the WaitlistForm React island in
+ * one of three layout variants: hero, inline, or footer.
+ *
+ * Hydration strategy:
+ *   - hero: client:load (above-fold, conversion-critical — AR27)
+ *   - inline / footer: client:visible (lazy hydration)
+ *
+ * Astro does not support dynamic client:* directives, so each hydration
+ * strategy gets its own <WaitlistForm> tag in a conditional branch.
+ */
+import WaitlistForm from '@/components/islands/waitlist-form.tsx';
+import { t, type Locale } from '@/lib/i18n';
+
+interface Props {
+  variant: 'hero' | 'inline' | 'footer';
+  headline?: string;
+  trustMicroCopy?: string;
+  signupSource: 'hero' | 'mid' | 'footer';
+}
+
+const { variant, headline, trustMicroCopy, signupSource } = Astro.props;
+const locale = (Astro.currentLocale ?? 'en') as Locale;
+
+const resolvedHeadline = headline ?? t('landing.waitlist.heroHeadline', locale);
+const resolvedTrustCopy =
+  trustMicroCopy ?? t('landing.waitlist.trustMicroCopy', locale);
+---
+
+{/* ── Hero variant ──────────────────────────────────────────────── */}
+{
+  variant === 'hero' && (
+    <div class="w-full">
+      {resolvedHeadline && (
+        <p class="mb-3 text-[length:var(--text-lg)] font-medium text-[var(--color-primary)]">
+          {resolvedHeadline}
+        </p>
+      )}
+      <WaitlistForm
+        client:load
+        signupSource={signupSource}
+        variant={variant}
+        locale={locale}
+      />
+      {resolvedTrustCopy && (
+        <p class="mt-3 text-[length:var(--text-sm)] text-[var(--color-muted)]">
+          {resolvedTrustCopy}
+        </p>
+      )}
+    </div>
+  )
+}
+
+{/* ── Inline variant ────────────────────────────────────────────── */}
+{
+  variant === 'inline' && (
+    <div class="w-full">
+      <WaitlistForm
+        client:visible
+        signupSource={signupSource}
+        variant={variant}
+        locale={locale}
+      />
+    </div>
+  )
+}
+
+{/* ── Footer variant ────────────────────────────────────────────── */}
+{
+  variant === 'footer' && (
+    <div class="w-full rounded-lg bg-[#2E4057] p-6 sm:p-8">
+      <WaitlistForm
+        client:visible
+        signupSource={signupSource}
+        variant={variant}
+        locale={locale}
+        className="text-white"
+      />
+    </div>
+  )
+}

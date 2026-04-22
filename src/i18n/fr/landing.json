@@ -153,6 +153,22 @@
     "lede": "Like what you're reading? Join the waitlist and we'll let you know the moment Truvis lands.",
     "ctaPlaceholder": "Join the waitlist"
   },
+  "waitlist": {
+    "heroHeadline": "Be the first to inspect smarter.",
+    "placeholder": "Enter your email address",
+    "submit": "Join the Waitlist",
+    "submitting": "Submitting...",
+    "trustMicroCopy": "No spam. Unsubscribe anytime. We respect your inbox like we respect your budget.",
+    "emailLabel": "Email address",
+    "errors": {
+      "invalidEmail": "Please enter a valid email address.",
+      "duplicate": "You're already on the list!",
+      "turnstileFailed": "Security verification failed. Please refresh and try again.",
+      "espUnavailable": "Our email service is temporarily unavailable. Please try again in a moment.",
+      "serverError": "Something went wrong. Please try again.",
+      "honeypotTriggered": "honeypot"
+    }
+  },
   "footerCta": {
     "eyebrow": "Ready to buy smarter?",
     "headline": "Your next car deserves a second opinion.",

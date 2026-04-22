@@ -1,0 +1,74 @@
+---
+/**
+ * EmailCaptureBlock smoke page — Story 3.4 AC7
+ *
+ * Renders all three EmailCaptureBlock variants (hero, inline, footer)
+ * with distinct signupSource values for visual and functional verification.
+ * Not routable in production (Astro's `_` prefix excludes it).
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import EmailCaptureBlock from '@/components/forms/email-capture-block.astro';
+---
+
+<BaseLayout
+  title="EmailCaptureBlock smoke test — Truvis (not indexed)"
+  description="Local-dev smoke page for the EmailCaptureBlock composite. Not indexed."
+>
+  <meta slot="head" name="robots" content="noindex, nofollow" />
+
+  <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="mb-12 border-l-4 border-[var(--color-amber)] pl-4">
+      <p
+        class="font-mono text-xs font-semibold tracking-widest text-[var(--color-teal)] uppercase"
+      >
+        Story 3.4 · AC7 · EmailCaptureBlock smoke
+      </p>
+      <h1
+        class="font-display mt-2 text-3xl font-bold text-[var(--color-primary)]"
+      >
+        EmailCaptureBlock — visual verification
+      </h1>
+      <p class="mt-3 max-w-2xl text-[var(--color-muted)]">
+        Three variants of the email capture block: hero (with headline + trust
+        copy), inline (compact single-line), and footer (dark background, amber
+        button).
+      </p>
+    </div>
+
+    <div class="space-y-16">
+      {/* ── Hero variant ── */}
+      <div>
+        <h2
+          class="font-display mb-4 text-xl font-semibold text-[var(--color-primary)]"
+        >
+          Hero variant
+        </h2>
+        <div class="rounded-lg border border-[var(--color-border)] p-6">
+          <EmailCaptureBlock variant="hero" signupSource="hero" />
+        </div>
+      </div>
+
+      {/* ── Inline variant ── */}
+      <div>
+        <h2
+          class="font-display mb-4 text-xl font-semibold text-[var(--color-primary)]"
+        >
+          Inline variant
+        </h2>
+        <div class="rounded-lg border border-[var(--color-border)] p-6">
+          <EmailCaptureBlock variant="inline" signupSource="mid" />
+        </div>
+      </div>
+
+      {/* ── Footer variant ── */}
+      <div>
+        <h2
+          class="font-display mb-4 text-xl font-semibold text-[var(--color-primary)]"
+        >
+          Footer variant
+        </h2>
+        <EmailCaptureBlock variant="footer" signupSource="footer" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
