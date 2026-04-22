@@ -169,6 +169,32 @@
       "honeypotTriggered": "honeypot"
     }
   },
+  "confirmation": {
+    "headline": "You're in.",
+    "subtext": "We've sent a confirmation email to {email}. Check your inbox.",
+    "subtextFallback": "Check your inbox for our confirmation email.",
+    "shareHeadline": "Know someone who's car shopping?",
+    "shareMessage": "I just joined the Truvis waitlist — a used-car inspection app that looks really useful. Check it out: {siteUrl}",
+    "share": {
+      "whatsapp": "Share via WhatsApp",
+      "copyLink": "Copy link",
+      "copied": "Copied!"
+    },
+    "microSurvey": {
+      "question": "What brought you here today?",
+      "options": [
+        "Looking for inspection tips",
+        "Been burned before",
+        "A friend recommended Truvis",
+        "Just curious for now",
+        "Other"
+      ],
+      "send": "Send",
+      "skip": "Skip",
+      "thanks": "Thanks! This helps us help you."
+    },
+    "noscriptFallback": "Thanks for joining!"
+  },
   "footerCta": {
     "eyebrow": "Ready to buy smarter?",
     "headline": "Your next car deserves a second opinion.",

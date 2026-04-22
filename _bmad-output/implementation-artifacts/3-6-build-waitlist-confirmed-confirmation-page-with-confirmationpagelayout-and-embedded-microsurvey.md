@@ -1,6 +1,6 @@
 # Story 3.6: Build /waitlist-confirmed confirmation page with ConfirmationPageLayout and embedded MicroSurvey
 
-Status: ready-for-dev
+Status: review
 
 <!-- Validation optional. Run validate-create-story for a quality check before dev-story. -->
 
@@ -153,68 +153,68 @@ Scope boundaries:
 
 ## Tasks / Subtasks
 
-- [ ] **Task 1 — Create `src/pages/waitlist-confirmed.astro` with BaseLayout and centered layout** (AC: 1, 2)
-  - [ ] T1.1 Import `BaseLayout`, extract `email` from `Astro.url.searchParams`, validate email shape (contains `@` and `.`), HTML-escape via Astro auto-escaping (no `set:html`)
-  - [ ] T1.2 Render centered `<main>` with `max-w-[560px] mx-auto` and appropriate vertical padding
-  - [ ] T1.3 Teal-slate checkmark inline SVG: `<svg>` element with `aria-hidden="true"`, circle + checkmark path in teal (`#3D7A8A`), total markup under 1KB
-  - [ ] T1.4 `<h1>` wired to `t('landing.confirmation.headline')` — "You're in."
-  - [ ] T1.5 Conditional subtext: if email is valid, render `t('landing.confirmation.subtext')` with `{email}` placeholder replaced; otherwise render `t('landing.confirmation.subtextFallback')`
-  - [ ] T1.6 Set page `<title>` to "You're in | Truvis" and add `<meta name="robots" content="noindex, nofollow" />`
+- [x] **Task 1 — Create `src/pages/waitlist-confirmed.astro` with BaseLayout and centered layout** (AC: 1, 2)
+  - [x] T1.1 Import `BaseLayout`, extract `email` from `Astro.url.searchParams`, validate email shape (contains `@` and `.`), HTML-escape via Astro auto-escaping (no `set:html`)
+  - [x] T1.2 Render centered `<main>` with `max-w-[560px] mx-auto` and appropriate vertical padding
+  - [x] T1.3 Teal-slate checkmark inline SVG: `<svg>` element with `aria-hidden="true"`, circle + checkmark path in teal (`#3D7A8A`), total markup under 1KB
+  - [x] T1.4 `<h1>` wired to `t('landing.confirmation.headline')` — "You're in."
+  - [x] T1.5 Conditional subtext: if email is valid, render `t('landing.confirmation.subtext')` with `{email}` placeholder replaced; otherwise render `t('landing.confirmation.subtextFallback')`
+  - [x] T1.6 Set page `<title>` to "You're in | Truvis" and add `<meta name="robots" content="noindex, nofollow" />`
 
-- [ ] **Task 2 — Build social share block** (AC: 3)
-  - [ ] T2.1 Section headline `<h2>` wired to `t('landing.confirmation.shareHeadline')`
-  - [ ] T2.2 WhatsApp share link: `<a href="https://wa.me/?text=${encodeURIComponent(shareMessage)}" target="_blank" rel="noopener noreferrer">` with i18n label `landing.confirmation.share.whatsapp`
-  - [ ] T2.3 "Copy link" button: `<button>` wrapping an Astro `<script>` tag or inline React island for the Clipboard API interaction; `navigator.clipboard.writeText(siteUrl)` in a try/catch; on success, swap label to "Copied!" for ~2s via `setTimeout`; on failure, show fallback selectable text with the URL
-  - [ ] T2.4 Read `PUBLIC_SITE_URL` via `src/lib/env.ts` for both the share message and copy-link target
-  - [ ] T2.5 Ensure both interactive elements have `min-h-[44px] min-w-[44px]` touch targets and are keyboard-accessible
-  - [ ] T2.6 Add `// TODO(epic-6): trackEvent('confirmation_share_click', { channel: 'whatsapp' })` and `// TODO(epic-6): trackEvent('confirmation_share_click', { channel: 'copy_link' })` comments
+- [x] **Task 2 — Build social share block** (AC: 3)
+  - [x] T2.1 Section headline `<h2>` wired to `t('landing.confirmation.shareHeadline')`
+  - [x] T2.2 WhatsApp share link: `<a href="https://wa.me/?text=${encodeURIComponent(shareMessage)}" target="_blank" rel="noopener noreferrer">` with i18n label `landing.confirmation.share.whatsapp`
+  - [x] T2.3 "Copy link" button: `<button>` wrapping an Astro `<script>` tag or inline React island for the Clipboard API interaction; `navigator.clipboard.writeText(siteUrl)` in a try/catch; on success, swap label to "Copied!" for ~2s via `setTimeout`; on failure, show fallback selectable text with the URL
+  - [x] T2.4 Read `PUBLIC_SITE_URL` via `src/lib/env.ts` for both the share message and copy-link target
+  - [x] T2.5 Ensure both interactive elements have `min-h-[44px] min-w-[44px]` touch targets and are keyboard-accessible
+  - [x] T2.6 Add `// TODO(epic-6): trackEvent('confirmation_share_click', { channel: 'whatsapp' })` and `// TODO(epic-6): trackEvent('confirmation_share_click', { channel: 'copy_link' })` comments
 
-- [ ] **Task 3 — Create `src/components/islands/micro-survey.tsx` React island** (AC: 4)
-  - [ ] T3.1 Define props: `{ email?: string; question: string; options: string[]; sendLabel: string; skipLabel: string; thanksMessage: string }`
-  - [ ] T3.2 If `email` prop is falsy, render nothing (return `null`)
-  - [ ] T3.3 Radio-card UI: `role="radiogroup"` with `aria-labelledby` pointing to question `<h2>` `id`; each option is `<label>` wrapping `<input type="radio">` with visual card styling (border, selected teal highlight)
-  - [ ] T3.4 State: `useState` for `selectedOption`, `status` (`idle` | `submitting` | `done`)
-  - [ ] T3.5 "Send" primary button: disabled when no option selected or status is `submitting`; shows spinner during `submitting`
-  - [ ] T3.6 "Skip" ghost link: on click, sets status to `done` without API call
-  - [ ] T3.7 Submit handler: `POST /api/micro-survey` with `{ email, answer: selectedOption }`; on success or failure, set status to `done` (always show thanks)
-  - [ ] T3.8 Done state: render `thanksMessage` text in place of the form
+- [x] **Task 3 — Create `src/components/islands/micro-survey.tsx` React island** (AC: 4)
+  - [x] T3.1 Define props: `{ email?: string; question: string; options: string[]; sendLabel: string; skipLabel: string; thanksMessage: string }`
+  - [x] T3.2 If `email` prop is falsy, render nothing (return `null`)
+  - [x] T3.3 Radio-card UI: `role="radiogroup"` with `aria-labelledby` pointing to question `<h2>` `id`; each option is `<label>` wrapping `<input type="radio">` with visual card styling (border, selected teal highlight)
+  - [x] T3.4 State: `useState` for `selectedOption`, `status` (`idle` | `submitting` | `done`)
+  - [x] T3.5 "Send" primary button: disabled when no option selected or status is `submitting`; shows spinner during `submitting`
+  - [x] T3.6 "Skip" ghost link: on click, sets status to `done` without API call
+  - [x] T3.7 Submit handler: `POST /api/micro-survey` with `{ email, answer: selectedOption }`; on success or failure, set status to `done` (always show thanks)
+  - [x] T3.8 Done state: render `thanksMessage` text in place of the form
 
-- [ ] **Task 4 — Create `src/pages/api/micro-survey.ts` server route** (AC: 5)
-  - [ ] T4.1 Export single `POST` function matching `APIRoute` signature
-  - [ ] T4.2 Parse JSON body, validate `email` and `answer` are non-empty strings; return `400` if invalid
-  - [ ] T4.3 Implement in-memory rate limit Map: `Map<string, number[]>` keyed by email, storing timestamps; reject with `429` if >3 in 60s window; add `// TODO(v1.1): move rate limiting to Cloudflare KV for persistence`
-  - [ ] T4.4 Call `updateContact(email, { microSurveyAnswer: answer })` from `src/lib/loops.ts` — if `updateContact` doesn't exist yet, add it to `loops.ts` using the Loops API `PUT /v1/contacts/update` endpoint
-  - [ ] T4.5 Return `200 { ok: true, code: 'success' }` on success, `502 { ok: false, code: 'esp_unavailable' }` on Loops failure
-  - [ ] T4.6 Read `LOOPS_API_KEY` via `getRequired('LOOPS_API_KEY')` — never `import.meta.env` directly
+- [x] **Task 4 — Create `src/pages/api/micro-survey.ts` server route** (AC: 5)
+  - [x] T4.1 Export single `POST` function matching `APIRoute` signature
+  - [x] T4.2 Parse JSON body, validate `email` and `answer` are non-empty strings; return `400` if invalid
+  - [x] T4.3 Implement in-memory rate limit Map: `Map<string, number[]>` keyed by email, storing timestamps; reject with `429` if >3 in 60s window; add `// TODO(v1.1): move rate limiting to Cloudflare KV for persistence`
+  - [x] T4.4 Call `updateContact(email, { microSurveyAnswer: answer })` from `src/lib/loops.ts` — if `updateContact` doesn't exist yet, add it to `loops.ts` using the Loops API `PUT /v1/contacts/update` endpoint
+  - [x] T4.5 Return `200 { ok: true, code: 'success' }` on success, `502 { ok: false, code: 'esp_unavailable' }` on Loops failure
+  - [x] T4.6 Read `LOOPS_API_KEY` via `getRequired('LOOPS_API_KEY')` — never `import.meta.env` directly
 
-- [ ] **Task 5 — Create `tests/api/micro-survey.test.ts` Vitest unit test** (AC: 8)
-  - [ ] T5.1 Mock `src/lib/loops.ts` `updateContact` function via `vi.mock`
-  - [ ] T5.2 Test valid request returns `200` with `code: 'success'` and correct `updateContact` call shape
-  - [ ] T5.3 Test missing `email` or `answer` returns `400` with `code: 'validation_error'`
-  - [ ] T5.4 Test Loops failure returns `502` with `code: 'esp_unavailable'`
-  - [ ] T5.5 Test rate limit: 4th request within 60s from same email returns `429` with `code: 'rate_limited'`
+- [x] **Task 5 — Create `tests/api/micro-survey.test.ts` Vitest unit test** (AC: 8)
+  - [x] T5.1 Mock `src/lib/loops.ts` `updateContact` function via `vi.mock`
+  - [x] T5.2 Test valid request returns `200` with `code: 'success'` and correct `updateContact` call shape
+  - [x] T5.3 Test missing `email` or `answer` returns `400` with `code: 'validation_error'`
+  - [x] T5.4 Test Loops failure returns `502` with `code: 'esp_unavailable'`
+  - [x] T5.5 Test rate limit: 4th request within 60s from same email returns `429` with `code: 'rate_limited'`
 
-- [ ] **Task 6 — Add i18n strings to all three locale files** (AC: 6)
-  - [ ] T6.1 Add `landing.confirmation.headline`, `landing.confirmation.subtext`, `landing.confirmation.subtextFallback` to `src/i18n/en/landing.json`
-  - [ ] T6.2 Add `landing.confirmation.shareHeadline`, `landing.confirmation.shareMessage`, `landing.confirmation.share.whatsapp`, `landing.confirmation.share.copyLink`, `landing.confirmation.share.copied` to `src/i18n/en/landing.json`
-  - [ ] T6.3 Add `landing.confirmation.microSurvey.question`, `landing.confirmation.microSurvey.options` (as JSON array), `landing.confirmation.microSurvey.send`, `landing.confirmation.microSurvey.skip`, `landing.confirmation.microSurvey.thanks` to `src/i18n/en/landing.json`
-  - [ ] T6.4 Add `landing.confirmation.noscriptFallback` to `src/i18n/en/landing.json`
-  - [ ] T6.5 Mirror all keys in `src/i18n/fr/landing.json` with placeholder English values
-  - [ ] T6.6 Mirror all keys in `src/i18n/de/landing.json` with placeholder English values
+- [x] **Task 6 — Add i18n strings to all three locale files** (AC: 6)
+  - [x] T6.1 Add `landing.confirmation.headline`, `landing.confirmation.subtext`, `landing.confirmation.subtextFallback` to `src/i18n/en/landing.json`
+  - [x] T6.2 Add `landing.confirmation.shareHeadline`, `landing.confirmation.shareMessage`, `landing.confirmation.share.whatsapp`, `landing.confirmation.share.copyLink`, `landing.confirmation.share.copied` to `src/i18n/en/landing.json`
+  - [x] T6.3 Add `landing.confirmation.microSurvey.question`, `landing.confirmation.microSurvey.options` (as JSON array), `landing.confirmation.microSurvey.send`, `landing.confirmation.microSurvey.skip`, `landing.confirmation.microSurvey.thanks` to `src/i18n/en/landing.json`
+  - [x] T6.4 Add `landing.confirmation.noscriptFallback` to `src/i18n/en/landing.json`
+  - [x] T6.5 Mirror all keys in `src/i18n/fr/landing.json` with placeholder English values
+  - [x] T6.6 Mirror all keys in `src/i18n/de/landing.json` with placeholder English values
 
-- [ ] **Task 7 — Wire `<noscript>` fallback and embed micro-survey island in page** (AC: 4, 7)
-  - [ ] T7.1 In `waitlist-confirmed.astro`, embed `<MicroSurvey>` island with `client:visible`, passing `email`, `question`, `options`, `sendLabel`, `skipLabel`, `thanksMessage` props resolved from i18n
-  - [ ] T7.2 Wrap island slot in `<noscript>` fallback: "Thanks for joining!" from `t('landing.confirmation.noscriptFallback')`
+- [x] **Task 7 — Wire `<noscript>` fallback and embed micro-survey island in page** (AC: 4, 7)
+  - [x] T7.1 In `waitlist-confirmed.astro`, embed `<MicroSurvey>` island with `client:visible`, passing `email`, `question`, `options`, `sendLabel`, `skipLabel`, `thanksMessage` props resolved from i18n
+  - [x] T7.2 Wrap island slot in `<noscript>` fallback: "Thanks for joining!" from `t('landing.confirmation.noscriptFallback')`
 
-- [ ] **Task 8 — Accessibility audit** (AC: 7)
-  - [ ] T8.1 Verify single `<h1>`, `<h2>` for share block and micro-survey question, no skipped levels
-  - [ ] T8.2 Verify all interactive elements have focus-visible indicators
-  - [ ] T8.3 Verify all touch targets meet 44x44px minimum
-  - [ ] T8.4 Run axe-core and fix any violations
+- [x] **Task 8 — Accessibility audit** (AC: 7)
+  - [x] T8.1 Verify single `<h1>`, `<h2>` for share block and micro-survey question, no skipped levels
+  - [x] T8.2 Verify all interactive elements have focus-visible indicators
+  - [x] T8.3 Verify all touch targets meet 44x44px minimum
+  - [x] T8.4 Run axe-core and fix any violations
 
-- [ ] **Task 9 — Lighthouse CI budget verification** (AC: 7)
-  - [ ] T9.1 Ensure page passes Performance >= 90, Accessibility >= 90, SEO >= 95
-  - [ ] T9.2 Verify LCP < 2.5s, CLS < 0.1
+- [x] **Task 9 — Lighthouse CI budget verification** (AC: 7)
+  - [x] T9.1 Ensure page passes Performance >= 90, Accessibility >= 90, SEO >= 95
+  - [x] T9.2 Verify LCP < 2.5s, CLS < 0.1
 
 ## Dev Notes
 
@@ -350,6 +350,31 @@ src/lib/loops.ts           <- Add updateContact() if not already present from St
 ## Dev Agent Record
 
 ### Agent Model Used
+Claude Opus 4.6 (1M context)
+
 ### Debug Log References
+N/A
+
 ### Completion Notes List
+- Used `export const prerender = false` for SSR query param access (per story recommendation)
+- Added `updateContact()` to `src/lib/loops.ts` — accepts apiKey as parameter (not read internally) for testability
+- Added `tArray()` helper to `src/lib/i18n.ts` for resolving JSON array i18n keys (survey options)
+- Exported `isRateLimited` and `resetRateLimit` from micro-survey API route for test isolation
+- Copy-link interaction uses inline Astro `<script>` (not a React island) per story recommendation
+- All 10 micro-survey tests pass, all 64 total tests pass
+- Build succeeds, astro check 0 errors, eslint 0 new warnings, prettier clean
+
 ### File List
+
+New files:
+- `src/pages/waitlist-confirmed.astro` — Confirmation page (SSR)
+- `src/components/islands/micro-survey.tsx` — MicroSurvey React island
+- `src/pages/api/micro-survey.ts` — POST /api/micro-survey API route
+- `tests/api/micro-survey.test.ts` — Vitest unit tests (10 tests)
+
+Modified files:
+- `src/lib/loops.ts` — Added `updateContact()` function
+- `src/lib/i18n.ts` — Added `tArray()` helper for array i18n keys
+- `src/i18n/en/landing.json` — Added `landing.confirmation.*` keys
+- `src/i18n/fr/landing.json` — Mirrored with placeholder English values
+- `src/i18n/de/landing.json` — Mirrored with placeholder English values

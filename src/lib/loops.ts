@@ -241,3 +241,37 @@ export async function addContact(
     attempts: MAX_ATTEMPTS,
   };
 }
+
+// ---------------------------------------------------------------------------
+// Update contact — Story 3.6 (FR17)
+// ---------------------------------------------------------------------------
+
+const LOOPS_UPDATE_URL = 'https://app.loops.so/api/v1/contacts/update';
+
+/**
+ * Update custom fields on an existing Loops contact identified by email.
+ *
+ * Used by the micro-survey to persist the visitor's answer in the
+ * `microSurveyAnswer` field for drip segmentation. Single-shot — no
+ * retry logic (survey answers are non-critical; the client swallows
+ * failures silently).
+ */
+export async function updateContact(
+  email: string,
+  fields: Record<string, string>,
+  apiKey: string
+): Promise<{ success: boolean }> {
+  try {
+    const response = await fetch(LOOPS_UPDATE_URL, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({ email, ...fields }),
+    });
+    return { success: response.ok };
+  } catch {
+    return { success: false };
+  }
+}

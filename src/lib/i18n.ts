@@ -149,6 +149,31 @@ export function t(
   return key;
 }
 
+/**
+ * Resolve a dot-notation key to an array of strings. Returns an empty
+ * array if the key does not resolve to an array. Used for i18n keys
+ * that hold string arrays (e.g. micro-survey options).
+ */
+export function tArray(key: string, locale: Locale = DEFAULT_LOCALE): string[] {
+  const segments = key.split('.');
+  if (segments.length < 2) return [];
+  const [namespace, ...rest] = segments;
+  const tree = messages[locale] ?? messages[DEFAULT_LOCALE];
+  let node: unknown = tree[namespace];
+  for (const segment of rest) {
+    if (node == null || typeof node !== 'object') return [];
+    node = (node as Record<string, unknown>)[segment];
+  }
+  if (Array.isArray(node) && node.every((v) => typeof v === 'string')) {
+    return node as string[];
+  }
+  // Fallback to default locale
+  if (locale !== DEFAULT_LOCALE) {
+    return tArray(key, DEFAULT_LOCALE);
+  }
+  return [];
+}
+
 /** Type-guard that narrows an arbitrary string to a supported locale. */
 export function isLocale(value: unknown): value is Locale {
   return (
