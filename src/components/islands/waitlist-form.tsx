@@ -382,7 +382,9 @@ export default function WaitlistForm({
       <div
         className={cn(
           'flex-1',
-          variant === 'inline' ? 'min-w-0' : 'w-full sm:min-w-[280px] sm:flex-[2]'
+          variant === 'inline'
+            ? 'min-w-0'
+            : 'w-full sm:min-w-[280px] sm:flex-[2]'
         )}
       >
         <label
