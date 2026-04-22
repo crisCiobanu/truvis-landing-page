@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-04-10
-last_updated: 2026-04-22 (Story 3-6 → review)
+last_updated: 2026-04-22 (Stories 5-4, 5-5 → ready-for-dev — Epic 5 fully storied)
 project: car-buy-assistant
 project_key: NOKEY
 tracking_system: file-system
@@ -101,12 +101,12 @@ development_status:
   # ─────────────────────────────────────────────────────────────
   # Epic 5: Content Operations — CMS, Phase Toggle & Rebuild Pipeline
   # ─────────────────────────────────────────────────────────────
-  epic-5: backlog
-  5-1-create-faq-testimonials-stats-and-sitecontent-content-collections-with-schemas-seeds-and-lib-content-ts-helpers: backlog
-  5-2-configure-keystatic-admin-ui-with-self-hosted-github-oauth-and-mirror-all-five-content-collections: backlog
-  5-3-build-lib-launch-phase-ts-wire-launch-phase-env-var-and-swap-every-epic-2-3-4-todo-epic-5-phase-hard-coded-constant: backlog
-  5-4-swap-epic-2-3-hard-coded-strings-and-placeholder-data-to-real-content-collection-reads: backlog
-  5-5-verify-keystatic-pr-deploy-pipeline-meets-fr34-and-nfr30-end-to-end: backlog
+  epic-5: in-progress
+  5-1-create-faq-testimonials-stats-and-sitecontent-content-collections-with-schemas-seeds-and-lib-content-ts-helpers: ready-for-dev
+  5-2-configure-keystatic-admin-ui-with-self-hosted-github-oauth-and-mirror-all-five-content-collections: ready-for-dev
+  5-3-build-lib-launch-phase-ts-wire-launch-phase-env-var-and-swap-every-epic-2-3-4-todo-epic-5-phase-hard-coded-constant: ready-for-dev
+  5-4-swap-epic-2-3-hard-coded-strings-and-placeholder-data-to-real-content-collection-reads: ready-for-dev
+  5-5-verify-keystatic-pr-deploy-pipeline-meets-fr34-and-nfr30-end-to-end: ready-for-dev
   epic-5-retrospective: optional
 
   # ─────────────────────────────────────────────────────────────
