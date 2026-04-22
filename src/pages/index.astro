@@ -31,7 +31,7 @@ const locale = (Astro.currentLocale ?? 'en') as Locale;
   description={t('landing.meta.description', locale)}
 >
   <HeroSection>
-    <div slot="cta" data-testid="hero-cta-slot">
+    <div slot="cta" data-testid="hero-cta-slot" class="self-stretch">
       <EmailCaptureBlock variant="hero" signupSource="hero" />
     </div>
   </HeroSection>
