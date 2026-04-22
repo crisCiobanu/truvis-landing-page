@@ -451,6 +451,7 @@ export default function WaitlistForm({
         type="submit"
         disabled={isButtonDisabled}
         className={cn(
+          showVisibleLabel && 'sm:mt-6',
           'h-11 min-w-[160px] px-6 text-base font-semibold whitespace-nowrap',
           'disabled:cursor-not-allowed disabled:opacity-50',
           isFooter
