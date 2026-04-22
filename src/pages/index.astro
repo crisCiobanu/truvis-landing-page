@@ -1,17 +1,11 @@
 ---
 /**
- * Home page — Epic 2 final composition (Story 2.9)
+ * Home page — landing-page composition (Stories 2.9, 3.5)
  *
  * This is the canonical landing-page composition for V1. Stories 2.1
- * through 2.8 built each Tier-2 section individually; Story 2.9 is the
- * checkpoint that locks the final order, inserts the mid-page CTA
- * band between `<InspectionStorySection />` and `<SocialProofSection />`,
- * and closes the page with `<FooterCtaSection />`.
- *
- * Three CTA placeholder slots share an identical
- * `data-cta-slot="..."` / `data-testid="..."` convention so Epic 3
- * Story 3.5 can swap them all via find-and-replace of
- * `data-cta-slot="hero|mid|footer"`.
+ * through 2.8 built each Tier-2 section individually; Story 2.9
+ * locked the final order and Story 3.5 wired the three EmailCaptureBlock
+ * instances (hero, mid-page, footer) into the CTA slots.
  *
  * TODO(epic-5): wire real social URLs inside `<Footer>` (owned by
  * BaseLayout) from the `siteContent` collection once Epic 5 Story 5.4
@@ -26,6 +20,7 @@ import SocialProofSection from '@/components/sections/social-proof-section.astro
 import BlogPreviewsSection from '@/components/sections/blog-previews-section.astro';
 import FaqSection from '@/components/sections/faq-section.astro';
 import FooterCtaSection from '@/components/sections/footer-cta-section.astro';
+import EmailCaptureBlock from '@/components/forms/email-capture-block.astro';
 import { t, type Locale } from '@/lib/i18n';
 
 const locale = (Astro.currentLocale ?? 'en') as Locale;
@@ -35,7 +30,11 @@ const locale = (Astro.currentLocale ?? 'en') as Locale;
   title={t('landing.meta.title', locale)}
   description={t('landing.meta.description', locale)}
 >
-  <HeroSection />
+  <HeroSection>
+    <div slot="cta" data-testid="hero-cta-slot">
+      <EmailCaptureBlock variant="hero" signupSource="hero" />
+    </div>
+  </HeroSection>
   <ProblemSection />
   <InspectionStorySection />
 
@@ -43,11 +42,10 @@ const locale = (Astro.currentLocale ?? 'en') as Locale;
     /*
      * Mid-page CTA band — a thin interstitial between the dark-primary
      * inspection-story climax and the white social-proof section. Not
-     * a reusable Tier-2 section (scoped to this page only); lives
-     * inline here so Story 3.5 can grep-replace `data-cta-slot="mid"`
-     * in one place. The `<h2 class="sr-only">` satisfies the
-     * `<section aria-labelledby>` a11y contract without adding a
-     * second visible heading to the page's rhetorical structure.
+     * a reusable Tier-2 section (scoped to this page only). The
+     * `<h2 class="sr-only">` satisfies the `<section aria-labelledby>`
+     * a11y contract without adding a second visible heading to the
+     * page's rhetorical structure.
      */
   }
   <section aria-labelledby="mid-cta-heading" class="bg-[var(--color-bg)]">
@@ -60,27 +58,8 @@ const locale = (Astro.currentLocale ?? 'en') as Locale;
       >
         {t('landing.midCta.lede', locale)}
       </p>
-      {
-        /*
-         * TODO(epic-3): <div data-cta-slot="mid" ...> wrapper is
-         * replaced by <EmailCaptureBlock slot="cta" variant="mid" />
-         * via find-and-replace of data-cta-slot="mid" (Story 3.5).
-         */
-      }
-      <div
-        data-cta-slot="mid"
-        data-testid="mid-cta-slot"
-        class="inline-flex justify-center"
-      >
-        <button
-          type="button"
-          disabled
-          aria-disabled="true"
-          class="inline-flex items-center rounded-md bg-[var(--color-teal)] px-6 py-3 font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-teal)] disabled:cursor-not-allowed disabled:opacity-70"
-        >
-          {t('landing.midCta.ctaPlaceholder', locale)}
-          <span class="sr-only"> — coming soon, form wires in Epic 3</span>
-        </button>
+      <div data-testid="mid-cta-slot" class="inline-flex justify-center">
+        <EmailCaptureBlock variant="inline" signupSource="mid" />
       </div>
     </div>
   </section>
@@ -88,5 +67,9 @@ const locale = (Astro.currentLocale ?? 'en') as Locale;
   <SocialProofSection />
   <BlogPreviewsSection />
   <FaqSection />
-  <FooterCtaSection />
+  <FooterCtaSection>
+    <div slot="cta" data-testid="footer-cta-slot">
+      <EmailCaptureBlock variant="footer" signupSource="footer" />
+    </div>
+  </FooterCtaSection>
 </BaseLayout>
