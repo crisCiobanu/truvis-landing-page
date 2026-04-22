@@ -1,0 +1,228 @@
+---
+/**
+ * Waitlist Confirmation Page — Story 3.6 (AC1, AC2, AC3, AC4, AC7)
+ *
+ * Branded confirmation destination after successful waitlist signup.
+ * Three content blocks: success acknowledgement, social share, micro-survey.
+ *
+ * SSR-rendered (`prerender = false`) to access the email query param
+ * server-side for XSS-safe auto-escaped display.
+ */
+export const prerender = false;
+
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import MicroSurvey from '@/components/islands/micro-survey.tsx';
+import { t, tArray, type Locale } from '@/lib/i18n';
+import { getOptional } from '@/lib/env';
+
+const locale = (Astro.currentLocale ?? 'en') as Locale;
+
+// ── Email from query param ─────────────────────────────────────────────
+const rawEmail = Astro.url.searchParams.get('email') ?? '';
+const isValidEmail = rawEmail.includes('@') && rawEmail.includes('.');
+const email = isValidEmail ? rawEmail : '';
+
+// ── i18n strings ───────────────────────────────────────────────────────
+const headline = t('landing.confirmation.headline', locale);
+const subtext = email
+  ? t('landing.confirmation.subtext', locale, { email })
+  : t('landing.confirmation.subtextFallback', locale);
+const shareHeadline = t('landing.confirmation.shareHeadline', locale);
+
+const siteUrl = getOptional('PUBLIC_SITE_URL', 'https://truvis.app');
+const shareMessage = t('landing.confirmation.shareMessage', locale, {
+  siteUrl,
+});
+const whatsappLabel = t('landing.confirmation.share.whatsapp', locale);
+const copyLinkLabel = t('landing.confirmation.share.copyLink', locale);
+const copiedLabel = t('landing.confirmation.share.copied', locale);
+
+const surveyQuestion = t('landing.confirmation.microSurvey.question', locale);
+const surveyOptions = tArray(
+  'landing.confirmation.microSurvey.options',
+  locale
+);
+const surveySend = t('landing.confirmation.microSurvey.send', locale);
+const surveySkip = t('landing.confirmation.microSurvey.skip', locale);
+const surveyThanks = t('landing.confirmation.microSurvey.thanks', locale);
+const noscriptFallback = t('landing.confirmation.noscriptFallback', locale);
+
+const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareMessage)}`;
+---
+
+<BaseLayout title={`${headline} | Truvis`}>
+  <Fragment slot="head">
+    <meta name="robots" content="noindex, nofollow" />
+  </Fragment>
+
+  <div class="mx-auto max-w-[560px] px-4 py-16 text-center sm:px-6 sm:py-24">
+    {/* ── Checkmark icon ──────────────────────────────────────────────── */}
+    <svg
+      width="64"
+      height="64"
+      viewBox="0 0 64 64"
+      fill="none"
+      aria-hidden="true"
+      class="mx-auto mb-6"
+    >
+      <circle
+        cx="32"
+        cy="32"
+        r="30"
+        stroke="#3D7A8A"
+        stroke-width="3"
+        fill="#3D7A8A"
+        fill-opacity="0.1"></circle>
+      <polyline
+        points="20,34 28,42 44,24"
+        stroke="#3D7A8A"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"></polyline>
+    </svg>
+
+    {/* ── Headline ────────────────────────────────────────────────────── */}
+    <h1
+      class="font-display mb-3 text-[length:var(--text-2xl)] font-bold text-[var(--color-primary)]"
+    >
+      {headline}
+    </h1>
+
+    {/* ── Subtext (email acknowledgement or fallback) ─────────────────── */}
+    <p class="text-[length:var(--text-base)] text-[var(--color-secondary)]">
+      {subtext}
+    </p>
+
+    {/* ── Social share block ──────────────────────────────────────────── */}
+    <section aria-labelledby="share-heading" class="mt-10">
+      <h2
+        id="share-heading"
+        class="font-display mb-4 text-[length:var(--text-lg)] font-semibold text-[var(--color-primary)]"
+      >
+        {shareHeadline}
+      </h2>
+
+      <div
+        class="flex flex-col items-center gap-3 sm:flex-row sm:justify-center"
+      >
+        {/* WhatsApp share */}
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-lg bg-[#25D366] px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-[#20bd5a] focus-visible:ring-2 focus-visible:ring-[var(--color-teal)] focus-visible:ring-offset-2 focus-visible:outline-none"
+          data-share-channel="whatsapp"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+            ></path>
+          </svg>
+          {whatsappLabel}
+        </a>
+
+        {/* Copy link */}
+        <button
+          type="button"
+          data-copy-link
+          data-site-url={siteUrl}
+          data-label-default={copyLinkLabel}
+          data-label-copied={copiedLabel}
+          class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-lg border-2 border-[var(--color-border,#e5e5e5)] px-5 py-3 text-sm font-medium text-[var(--color-primary)] transition-colors hover:border-[var(--color-teal)] focus-visible:ring-2 focus-visible:ring-[var(--color-teal)] focus-visible:ring-offset-2 focus-visible:outline-none"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
+          </svg>
+          <span data-copy-label>{copyLinkLabel}</span>
+        </button>
+      </div>
+
+      {/* Fallback URL display (hidden by default, shown when copy fails) */}
+      <p
+        data-copy-fallback
+        class="mt-3 hidden text-xs break-all text-[var(--color-secondary)]"
+        aria-live="polite"
+      >
+        {siteUrl}
+      </p>
+    </section>
+
+    {/* ── Micro-survey island ─────────────────────────────────────────── */}
+    <MicroSurvey
+      client:visible
+      email={email || undefined}
+      question={surveyQuestion}
+      options={surveyOptions}
+      sendLabel={surveySend}
+      skipLabel={surveySkip}
+      thanksMessage={surveyThanks}
+    />
+    <noscript>
+      <p
+        class="mt-8 text-center text-[length:var(--text-base)] text-[var(--color-primary)]"
+      >
+        {noscriptFallback}
+      </p>
+    </noscript>
+  </div>
+
+  {/* ── Copy link inline script ─────────────────────────────────────── */}
+  <script>
+    const btn = document.querySelector<HTMLButtonElement>('[data-copy-link]');
+    if (btn) {
+      btn.addEventListener('click', async () => {
+        const url = btn.dataset.siteUrl ?? '';
+        const labelEl = btn.querySelector<HTMLSpanElement>('[data-copy-label]');
+        const fallbackEl = document.querySelector<HTMLParagraphElement>(
+          '[data-copy-fallback]'
+        );
+        const defaultLabel = btn.dataset.labelDefault ?? 'Copy link';
+        const copiedLabel = btn.dataset.labelCopied ?? 'Copied!';
+
+        // TODO(epic-6): trackEvent('confirmation_share_click', { channel: 'copy_link' })
+
+        try {
+          await navigator.clipboard.writeText(url);
+          if (labelEl) {
+            labelEl.textContent = copiedLabel;
+            setTimeout(() => {
+              labelEl.textContent = defaultLabel;
+            }, 2000);
+          }
+        } catch {
+          // Clipboard API unavailable — show fallback selectable text
+          if (fallbackEl) {
+            fallbackEl.classList.remove('hidden');
+          }
+        }
+      });
+    }
+
+    const waLink = document.querySelector<HTMLAnchorElement>(
+      '[data-share-channel="whatsapp"]'
+    );
+    if (waLink) {
+      waLink.addEventListener('click', () => {
+        // TODO(epic-6): trackEvent('confirmation_share_click', { channel: 'whatsapp' })
+      });
+    }
+  </script>
+</BaseLayout>
