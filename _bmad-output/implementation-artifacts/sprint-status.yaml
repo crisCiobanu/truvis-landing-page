@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-04-10
-last_updated: 2026-04-22 (Stories 5-4, 5-5 → ready-for-dev — Epic 5 fully storied)
+last_updated: 2026-04-22 (Stories 5-1 to 5-5 → ready-for-dev — Epic 5 fully storied)
 project: car-buy-assistant
 project_key: NOKEY
 tracking_system: file-system
