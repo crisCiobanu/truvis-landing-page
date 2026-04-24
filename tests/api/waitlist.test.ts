@@ -82,19 +82,47 @@ function turnstileFailure() {
   );
 }
 
-// Transactional email success response
-function transactionalSuccess() {
-  return new Response(JSON.stringify({ success: true }), {
+// Loops create success response
+function loopsSuccess() {
+  return new Response(JSON.stringify({ success: true, id: 'contact-123' }), {
     status: 200,
     headers: { 'Content-Type': 'application/json' },
   });
 }
 
-// Transactional email failure response
-function transactionalFailure() {
-  return new Response(JSON.stringify({ error: 'Failed to send' }), {
+// Loops duplicate (409) response
+function loopsDuplicate() {
+  return new Response(JSON.stringify({ message: 'Email already on list' }), {
+    status: 409,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
+// Loops pending (400 with pending message) response
+function loopsPending() {
+  return new Response(
+    JSON.stringify({ message: 'Contact is pending confirmation' }),
+    { status: 400, headers: { 'Content-Type': 'application/json' } }
+  );
+}
+
+// Loops 500 error response
+function loops500() {
+  return new Response(JSON.stringify({ error: 'Internal server error' }), {
     status: 500,
     headers: { 'Content-Type': 'application/json' },
+  });
+}
+
+// Loops 429 rate limit response
+function loops429(retryAfter?: string) {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  if (retryAfter) headers['Retry-After'] = retryAfter;
+  return new Response(JSON.stringify({ error: 'Rate limited' }), {
+    status: 429,
+    headers,
   });
 }
 
@@ -103,7 +131,7 @@ function transactionalFailure() {
 // ---------------------------------------------------------------------------
 const TURNSTILE_URL =
   'https://challenges.cloudflare.com/turnstile/v0/siteverify';
-const TRANSACTIONAL_URL = 'https://app.loops.so/api/v1/transactional';
+const LOOPS_URL = 'https://app.loops.so/api/v1/contacts/create';
 
 // ---------------------------------------------------------------------------
 // Tests
@@ -114,13 +142,13 @@ describe('POST /api/waitlist', () => {
   let mockFetch: Mock;
 
   beforeEach(() => {
+    vi.useFakeTimers();
+
     // Set required env vars
     process.env.LOOPS_API_KEY = 'test-loops-key';
     process.env.LOOPS_AUDIENCE_ID = 'test-audience-id';
     process.env.TURNSTILE_SECRET_KEY = 'test-turnstile-secret';
     process.env.LAUNCH_PHASE = 'pre';
-    process.env.CONFIRM_HMAC_SECRET = 'test-hmac-secret';
-    process.env.LOOPS_DOI_TRANSACTIONAL_ID = 'test-transactional-id';
 
     // Mock global fetch
     mockFetch = vi.fn();
@@ -132,6 +160,7 @@ describe('POST /api/waitlist', () => {
   });
 
   afterEach(() => {
+    vi.useRealTimers();
     vi.restoreAllMocks();
     process.env = { ...originalEnv };
   });
@@ -160,7 +189,7 @@ describe('POST /api/waitlist', () => {
     expect(result.status).toBe(400);
     expect(result.ok).toBe(false);
     expect(result.code).toBe('turnstile_failed');
-    // Only Turnstile was called
+    // Only Turnstile was called, not Loops
     expect(mockFetch).toHaveBeenCalledTimes(1);
     expect(mockFetch.mock.calls[0][0]).toBe(TURNSTILE_URL);
   });
@@ -178,70 +207,105 @@ describe('POST /api/waitlist', () => {
     expect(mockFetch).toHaveBeenCalledTimes(1);
   });
 
-  // ── Test 4: DOI email sent successfully ────────────────────────────────
-  it('returns 200 success when transactional email is sent', async () => {
+  // ── Test 4: New subscribe success ──────────────────────────────────────
+  it('returns 200 success when Loops creates contact', async () => {
     mockFetch
       .mockResolvedValueOnce(turnstileSuccess())
-      .mockResolvedValueOnce(transactionalSuccess());
+      .mockResolvedValueOnce(loopsSuccess());
 
     const result = await callWaitlist(validBody());
 
     expect(result.status).toBe(200);
     expect(result.ok).toBe(true);
     expect(result.code).toBe('success');
-    // 1 Turnstile + 1 transactional email = 2 fetch calls
     expect(mockFetch).toHaveBeenCalledTimes(2);
-    expect(mockFetch.mock.calls[1][0]).toBe(TRANSACTIONAL_URL);
+    expect(mockFetch.mock.calls[1][0]).toBe(LOOPS_URL);
   });
 
-  // ── Test 5: Transactional email includes confirmation URL ──────────────
-  it('sends transactional email with HMAC-signed confirmation URL', async () => {
+  // ── Test 5: Duplicate contact ──────────────────────────────────────────
+  it('returns 200 duplicate when contact already exists', async () => {
     mockFetch
       .mockResolvedValueOnce(turnstileSuccess())
-      .mockResolvedValueOnce(transactionalSuccess());
-
-    await callWaitlist(validBody());
-
-    const transactionalCall = mockFetch.mock.calls[1];
-    const body = JSON.parse(transactionalCall[1].body as string) as Record<
-      string,
-      unknown
-    >;
-
-    expect(body.transactionalId).toBe('test-transactional-id');
-    expect(body.email).toBe('test@example.com');
-
-    const dataVars = body.dataVariables as Record<string, string>;
-    expect(dataVars.companyName).toBe('Truvis');
-    expect(dataVars.optInUrl).toContain('/api/confirm?');
-    expect(dataVars.optInUrl).toContain('email=test%40example.com');
-    expect(dataVars.optInUrl).toContain('signupSource=hero');
-    expect(dataVars.optInUrl).toContain('token=');
-  });
-
-  // ── Test 6: DOI email failure returns 502 ──────────────────────────────
-  it('returns 502 esp_unavailable when transactional email fails', async () => {
-    mockFetch
-      .mockResolvedValueOnce(turnstileSuccess())
-      .mockResolvedValueOnce(transactionalFailure());
+      .mockResolvedValueOnce(loopsDuplicate());
 
     const result = await callWaitlist(validBody());
+
+    expect(result.status).toBe(200);
+    expect(result.ok).toBe(true);
+    expect(result.code).toBe('duplicate');
+  });
+
+  // ── Test 6: Pending contact resend ─────────────────────────────────────
+  it('returns 200 duplicate when contact is pending', async () => {
+    mockFetch
+      .mockResolvedValueOnce(turnstileSuccess())
+      .mockResolvedValueOnce(loopsPending());
+
+    const result = await callWaitlist(validBody());
+
+    expect(result.status).toBe(200);
+    expect(result.ok).toBe(true);
+    expect(result.code).toBe('duplicate');
+  });
+
+  // ── Test 7: ESP 500 retry eventually fails ─────────────────────────────
+  it('returns 502 esp_unavailable after 3 failed attempts (500s)', async () => {
+    mockFetch
+      .mockResolvedValueOnce(turnstileSuccess()) // Turnstile OK
+      .mockResolvedValueOnce(loops500()) // Attempt 1
+      .mockResolvedValueOnce(loops500()) // Attempt 2
+      .mockResolvedValueOnce(loops500()); // Attempt 3
+
+    // Run the request and advance timers for retry delays
+    const promise = callWaitlist(validBody());
+    // Advance through all retry delays
+    await vi.advanceTimersByTimeAsync(5000);
+
+    const result = await promise;
 
     expect(result.status).toBe(502);
     expect(result.ok).toBe(false);
     expect(result.code).toBe('esp_unavailable');
+    // 1 Turnstile + 3 Loops attempts = 4 fetch calls
+    expect(mockFetch).toHaveBeenCalledTimes(4);
   });
 
-  // ── Test 7: DOI email network error returns 502 ────────────────────────
-  it('returns 502 esp_unavailable on transactional email network error', async () => {
+  // ── Test 8: ESP 429 with Retry-After eventually succeeds ───────────────
+  it('returns 200 success after 429 then success (respects Retry-After)', async () => {
     mockFetch
-      .mockResolvedValueOnce(turnstileSuccess())
-      .mockRejectedValueOnce(new Error('Network error'));
+      .mockResolvedValueOnce(turnstileSuccess()) // Turnstile OK
+      .mockResolvedValueOnce(loops429('2')) // Attempt 1 — 429 with Retry-After: 2
+      .mockResolvedValueOnce(loopsSuccess()); // Attempt 2 — success
 
-    const result = await callWaitlist(validBody());
+    const promise = callWaitlist(validBody());
+    // Advance timers past the Retry-After delay (2s = 2000ms)
+    await vi.advanceTimersByTimeAsync(5000);
+
+    const result = await promise;
+
+    expect(result.status).toBe(200);
+    expect(result.ok).toBe(true);
+    expect(result.code).toBe('success');
+    // 1 Turnstile + 2 Loops attempts = 3 fetch calls
+    expect(mockFetch).toHaveBeenCalledTimes(3);
+  });
+
+  // ── Test 9: ESP network error eventually fails ─────────────────────────
+  it('returns 502 esp_unavailable after 3 network errors', async () => {
+    mockFetch
+      .mockResolvedValueOnce(turnstileSuccess()) // Turnstile OK
+      .mockRejectedValueOnce(new Error('Network error')) // Attempt 1
+      .mockRejectedValueOnce(new Error('Network error')) // Attempt 2
+      .mockRejectedValueOnce(new Error('Network error')); // Attempt 3
+
+    const promise = callWaitlist(validBody());
+    await vi.advanceTimersByTimeAsync(5000);
+
+    const result = await promise;
 
     expect(result.status).toBe(502);
     expect(result.ok).toBe(false);
     expect(result.code).toBe('esp_unavailable');
+    expect(mockFetch).toHaveBeenCalledTimes(4);
   });
 });

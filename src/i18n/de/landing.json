@@ -171,11 +171,8 @@
   },
   "confirmation": {
     "headline": "Almost there!",
-    "headlineConfirmed": "You're in.",
     "subtext": "We've sent a confirmation email to {email}. Click the link inside to join the waitlist.",
-    "subtextConfirmed": "Your email {email} is confirmed. Welcome to the Truvis waitlist!",
     "subtextFallback": "Check your inbox and click the confirmation link to join the waitlist.",
-    "subtextFallbackConfirmed": "Your email is confirmed. Welcome to the Truvis waitlist!",
     "shareHeadline": "Know someone who's car shopping?",
     "shareMessage": "I just joined the Truvis waitlist — a used-car inspection app that looks really useful. Check it out: {siteUrl}",
     "share": {
