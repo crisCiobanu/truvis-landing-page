@@ -15,7 +15,7 @@ import type { APIRoute } from 'astro';
 
 export const prerender = false;
 
-import { getRequired, getOptional } from '@/lib/env';
+import { getRequired, getOptional, setRuntimeEnv } from '@/lib/env';
 import { addContact } from '@/lib/loops';
 import { verifyTurnstileToken } from '@/lib/turnstile';
 
@@ -61,7 +61,17 @@ function jsonResponse(body: WaitlistResponse, status: number): Response {
 // Route handler
 // ---------------------------------------------------------------------------
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
+  // Inject Cloudflare Pages runtime env so getRequired()/getOptional()
+  // can read server-side secrets (TURNSTILE_SECRET_KEY, LOOPS_API_KEY, etc.).
+  // In test environments locals may be undefined — skip gracefully.
+  const runtime = (locals as Record<string, unknown> | undefined)?.runtime as
+    | { env: Record<string, unknown> }
+    | undefined;
+  if (runtime?.env) {
+    setRuntimeEnv(runtime.env);
+  }
+
   const startTime = Date.now();
   let signupSource = 'unknown';
   let locale = 'en';

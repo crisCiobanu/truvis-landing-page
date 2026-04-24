@@ -31,10 +31,17 @@ const REDIRECTABLE_LOCALES: readonly Locale[] = ['fr', 'de'] as const;
 
 // Paths the middleware must never redirect.
 const EXEMPT_PREFIXES = ['/api/', '/keystatic/', '/_demo/', '/.well-known/'];
+// SSR pages that handle locale internally via Astro.currentLocale — redirecting
+// them to a locale prefix produces a 404 because Astro's file-based router
+// doesn't match locale-prefixed paths for root-level SSR pages.
+const EXEMPT_PATHS = ['/waitlist-confirmed'];
 
 /** True when the request path is outside the i18n redirect scope. */
 function isExempt(pathname: string): boolean {
-  return EXEMPT_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+  return (
+    EXEMPT_PREFIXES.some((prefix) => pathname.startsWith(prefix)) ||
+    EXEMPT_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}?`))
+  );
 }
 
 /** True when the URL path already starts with a locale prefix. */
