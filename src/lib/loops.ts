@@ -330,7 +330,7 @@ export async function sendTransactionalEmail(params: {
   transactionalId: string;
   dataVariables: Record<string, string>;
   apiKey: string;
-}): Promise<{ success: boolean }> {
+}): Promise<{ success: boolean; error?: string }> {
   try {
     const response = await fetch(LOOPS_TRANSACTIONAL_URL, {
       method: 'POST',
@@ -344,8 +344,25 @@ export async function sendTransactionalEmail(params: {
         dataVariables: params.dataVariables,
       }),
     });
-    return { success: response.ok };
-  } catch {
-    return { success: false };
+    if (!response.ok) {
+      let errorDetail = `status ${response.status}`;
+      try {
+        const body = await response.text();
+        errorDetail += `: ${body}`;
+      } catch {
+        // ignore
+      }
+      console.error(
+        JSON.stringify({ event: 'loops_transactional_error', error: errorDetail })
+      );
+      return { success: false, error: errorDetail };
+    }
+    return { success: true };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Unknown error';
+    console.error(
+      JSON.stringify({ event: 'loops_transactional_error', error: msg })
+    );
+    return { success: false, error: msg };
   }
 }
