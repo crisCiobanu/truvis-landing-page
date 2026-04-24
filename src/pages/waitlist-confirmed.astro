@@ -21,12 +21,26 @@ const locale = (Astro.currentLocale ?? 'en') as Locale;
 const rawEmail = Astro.url.searchParams.get('email') ?? '';
 const isValidEmail = rawEmail.includes('@') && rawEmail.includes('.');
 const email = isValidEmail ? rawEmail : '';
+const isConfirmed = Astro.url.searchParams.get('confirmed') === 'true';
 
 // ── i18n strings ───────────────────────────────────────────────────────
-const headline = t('landing.confirmation.headline', locale);
+const headline = isConfirmed
+  ? t('landing.confirmation.headlineConfirmed', locale)
+  : t('landing.confirmation.headline', locale);
 const subtext = email
-  ? t('landing.confirmation.subtext', locale, { email })
-  : t('landing.confirmation.subtextFallback', locale);
+  ? t(
+      isConfirmed
+        ? 'landing.confirmation.subtextConfirmed'
+        : 'landing.confirmation.subtext',
+      locale,
+      { email }
+    )
+  : t(
+      isConfirmed
+        ? 'landing.confirmation.subtextFallbackConfirmed'
+        : 'landing.confirmation.subtextFallback',
+      locale
+    );
 const shareHeadline = t('landing.confirmation.shareHeadline', locale);
 
 const siteUrl = getOptional('PUBLIC_SITE_URL', 'https://truvis.app');

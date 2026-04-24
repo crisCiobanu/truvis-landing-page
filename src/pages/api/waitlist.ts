@@ -16,7 +16,8 @@ import type { APIRoute } from 'astro';
 export const prerender = false;
 
 import { getRequired, getOptional, setRuntimeEnv } from '@/lib/env';
-import { addContact } from '@/lib/loops';
+import { sendTransactionalEmail } from '@/lib/loops';
+import { generateConfirmToken } from '@/lib/confirm-token';
 import { verifyTurnstileToken } from '@/lib/turnstile';
 
 // ---------------------------------------------------------------------------
@@ -151,21 +152,38 @@ export const POST: APIRoute = async ({ request, locals }) => {
       );
     }
 
-    // ── 5. Loops contact creation ───────────────────────────────────────
+    // ── 5. Send double opt-in confirmation email ─────────────────────────
+    // No contact is created yet — the contact is only created when the
+    // user clicks the confirmation link (/api/confirm). This avoids
+    // duplicate contacts and ensures only confirmed emails enter the list.
     const loopsApiKey = getRequired('LOOPS_API_KEY');
-    const loopsAudienceId = getRequired('LOOPS_AUDIENCE_ID');
     const launchPhase = getOptional('LAUNCH_PHASE', 'pre');
+    const confirmSecret = getRequired('CONFIRM_HMAC_SECRET');
+    const doiTransactionalId = getRequired('LOOPS_DOI_TRANSACTIONAL_ID');
 
-    const loopsResult = await addContact({
+    const tokenPayload = { email, signupSource, locale, launchPhase };
+    const token = await generateConfirmToken(tokenPayload, confirmSecret);
+    const origin = new URL(request.url).origin;
+    const confirmParams = new URLSearchParams({
       email,
-      audienceId: loopsAudienceId,
-      apiKey: loopsApiKey,
       signupSource,
       locale,
       launchPhase,
+      token,
+    });
+    const optInUrl = `${origin}/api/confirm?${confirmParams.toString()}`;
+
+    const emailResult = await sendTransactionalEmail({
+      email,
+      transactionalId: doiTransactionalId,
+      dataVariables: {
+        companyName: 'Truvis',
+        optInUrl,
+      },
+      apiKey: loopsApiKey,
     });
 
-    if (loopsResult.ok) {
+    if (emailResult.success) {
       logCompletion({
         code: 'success',
         signupSource,
@@ -174,77 +192,18 @@ export const POST: APIRoute = async ({ request, locals }) => {
         startTime,
       });
       return jsonResponse(
-        { ok: true, code: 'success', message: "You're on the list!" },
-        200
-      );
-    }
-
-    // Duplicate — friendly success
-    if (loopsResult.code === 'duplicate') {
-      logCompletion({
-        code: 'duplicate',
-        signupSource,
-        locale,
-        turnstileVerified,
-        startTime,
-      });
-      return jsonResponse(
         {
           ok: true,
-          code: 'duplicate',
-          message:
-            'You are already on the waitlist! Check your inbox for our latest update.',
+          code: 'success',
+          message: 'Check your inbox to confirm your email.',
         },
         200
       );
     }
 
-    // Pending — friendly success, no re-send triggered
-    if (loopsResult.code === 'pending') {
-      logCompletion({
-        code: 'pending',
-        signupSource,
-        locale,
-        turnstileVerified,
-        startTime,
-      });
-      return jsonResponse(
-        {
-          ok: true,
-          code: 'duplicate',
-          message:
-            'You have already signed up. Please check your inbox and spam folder for the confirmation email.',
-        },
-        200
-      );
-    }
-
-    // ESP unavailable after retries
-    if (loopsResult.retryable) {
-      logCompletion({
-        code: 'esp_unavailable',
-        signupSource,
-        locale,
-        turnstileVerified,
-        startTime,
-        retryCount: loopsResult.attempts - 1,
-      });
-      // TODO(epic-7): Report to Sentry when all retries exhausted
-      // TODO(v1.1): Enqueue failed signups to KV for background retry
-      return jsonResponse(
-        {
-          ok: false,
-          code: 'esp_unavailable',
-          message:
-            'Our email service is temporarily unavailable. Please try again in a few minutes.',
-        },
-        502
-      );
-    }
-
-    // Non-retryable Loops error
+    // Transactional email failed
     logCompletion({
-      code: 'server_error',
+      code: 'esp_unavailable',
       signupSource,
       locale,
       turnstileVerified,
@@ -253,10 +212,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return jsonResponse(
       {
         ok: false,
-        code: 'server_error',
-        message: 'Something went wrong. Please try again.',
+        code: 'esp_unavailable',
+        message:
+          'Our email service is temporarily unavailable. Please try again in a few minutes.',
       },
-      500
+      502
     );
   } catch (error) {
     // ── Catch-all ─────────────────────────────────────────────────────

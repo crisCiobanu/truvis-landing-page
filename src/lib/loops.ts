@@ -35,6 +35,8 @@ export interface AddContactParams {
   signupSource: string;
   locale: string;
   launchPhase: string;
+  /** When false, creates the contact without subscribing to the mailing list (for double opt-in). */
+  subscribe?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -87,12 +89,19 @@ export function sleep(ms: number): Promise<void> {
 export async function addContact(
   params: AddContactParams
 ): Promise<LoopsResult> {
-  const { email, audienceId, apiKey, signupSource, locale, launchPhase } =
-    params;
+  const {
+    email,
+    audienceId,
+    apiKey,
+    signupSource,
+    locale,
+    launchPhase,
+    subscribe = true,
+  } = params;
 
   const body = JSON.stringify({
     email,
-    mailingLists: { [audienceId]: true },
+    ...(subscribe && { mailingLists: { [audienceId]: true } }),
     source: 'truvis-landing-page',
     userGroup: 'waitlist-v1',
     signupSource,
@@ -273,5 +282,90 @@ export async function updateContact(
     return { success: response.ok };
   } catch {
     return { success: false };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Subscribe to mailing list — double opt-in confirmation
+// ---------------------------------------------------------------------------
+
+/**
+ * Subscribe an existing contact to a mailing list. Called after the user
+ * clicks the double opt-in confirmation link.
+ */
+export async function subscribeToMailingList(
+  email: string,
+  audienceId: string,
+  apiKey: string
+): Promise<{ success: boolean }> {
+  try {
+    const response = await fetch(LOOPS_UPDATE_URL, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        email,
+        mailingLists: { [audienceId]: true },
+      }),
+    });
+    return { success: response.ok };
+  } catch {
+    return { success: false };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Send transactional email — double opt-in
+// ---------------------------------------------------------------------------
+
+const LOOPS_TRANSACTIONAL_URL = 'https://app.loops.so/api/v1/transactional';
+
+/**
+ * Send a transactional email via Loops (e.g. double opt-in confirmation).
+ */
+export async function sendTransactionalEmail(params: {
+  email: string;
+  transactionalId: string;
+  dataVariables: Record<string, string>;
+  apiKey: string;
+}): Promise<{ success: boolean; error?: string }> {
+  try {
+    const response = await fetch(LOOPS_TRANSACTIONAL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${params.apiKey}`,
+      },
+      body: JSON.stringify({
+        transactionalId: params.transactionalId,
+        email: params.email,
+        dataVariables: params.dataVariables,
+      }),
+    });
+    if (!response.ok) {
+      let errorDetail = `status ${response.status}`;
+      try {
+        const body = await response.text();
+        errorDetail += `: ${body}`;
+      } catch {
+        // ignore
+      }
+      console.error(
+        JSON.stringify({
+          event: 'loops_transactional_error',
+          error: errorDetail,
+        })
+      );
+      return { success: false, error: errorDetail };
+    }
+    return { success: true };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Unknown error';
+    console.error(
+      JSON.stringify({ event: 'loops_transactional_error', error: msg })
+    );
+    return { success: false, error: msg };
   }
 }
