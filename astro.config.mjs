@@ -29,21 +29,6 @@ export default defineConfig({
   // `export const prerender = false` — needed for POST /api/waitlist
   // (Story 3.3, Cloudflare Pages Function). All other pages remain
   // fully prerendered (static).
-  adapter: cloudflare({
-    routes: {
-      extend: {
-        // Astro i18n generates locale-prefixed URLs for SSR pages, but the
-        // CF adapter only auto-includes the default-locale path in _routes.json.
-        // Without these entries CF Pages serves /fr/... and /de/... as static
-        // assets → 404 for any SSR page with `prerender = false`.
-        include: [
-          { pattern: '/fr/waitlist-confirmed' },
-          { pattern: '/de/waitlist-confirmed' },
-          { pattern: '/fr/api/*' },
-          { pattern: '/de/api/*' },
-        ],
-      },
-    },
-  }),
+  adapter: cloudflare(),
   output: 'static',
 });

@@ -281,8 +281,7 @@ export default function WaitlistForm({
       // Honeypot check — silently fake success for bots
       const honeypotValue = honeypotRef.current?.value ?? '';
       if (honeypotValue) {
-        const localePrefix = locale !== 'en' ? `/${locale}` : '';
-        window.location.href = `${localePrefix}/waitlist-confirmed`;
+        window.location.href = '/waitlist-confirmed';
         return;
       }
 
@@ -310,8 +309,7 @@ export default function WaitlistForm({
         if (data.code === 'success') {
           // TODO(epic-6): trackEvent('waitlist_signup', { signupSource })
           dispatch({ type: 'SUBMIT_SUCCESS' });
-          const localePrefix = locale !== 'en' ? `/${locale}` : '';
-          window.location.href = `${localePrefix}/waitlist-confirmed?email=${encodeURIComponent(state.email)}`;
+          window.location.href = `/waitlist-confirmed?email=${encodeURIComponent(state.email)}`;
           return;
         }
 
