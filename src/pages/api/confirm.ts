@@ -2,12 +2,11 @@
  * GET /api/confirm — Double opt-in confirmation endpoint
  *
  * Validates the HMAC token from the confirmation email link,
- * subscribes the contact to the mailing list, and redirects
- * to the waitlist-confirmed page.
+ * creates the contact in Loops WITH mailing list subscription,
+ * and redirects to the waitlist-confirmed page.
  *
- * Query params:
- *   - email: the contact's email address
- *   - token: HMAC-SHA256 confirmation token
+ * Query params (all HMAC-signed to prevent tampering):
+ *   - email, signupSource, locale, launchPhase, token
  */
 import type { APIRoute } from 'astro';
 
@@ -15,7 +14,7 @@ export const prerender = false;
 
 import { getRequired, setRuntimeEnv } from '@/lib/env';
 import { validateConfirmToken } from '@/lib/confirm-token';
-import { subscribeToMailingList } from '@/lib/loops';
+import { addContact } from '@/lib/loops';
 
 export const GET: APIRoute = async ({ request, locals, redirect }) => {
   // Inject CF Pages runtime env
@@ -28,6 +27,9 @@ export const GET: APIRoute = async ({ request, locals, redirect }) => {
 
   const url = new URL(request.url);
   const email = url.searchParams.get('email')?.trim().toLowerCase() ?? '';
+  const signupSource = url.searchParams.get('signupSource') ?? 'unknown';
+  const locale = url.searchParams.get('locale') ?? 'en';
+  const launchPhase = url.searchParams.get('launchPhase') ?? 'pre';
   const token = url.searchParams.get('token') ?? '';
 
   if (!email || !token) {
@@ -36,7 +38,8 @@ export const GET: APIRoute = async ({ request, locals, redirect }) => {
 
   try {
     const confirmSecret = getRequired('CONFIRM_HMAC_SECRET');
-    const isValid = await validateConfirmToken(email, token, confirmSecret);
+    const payload = { email, signupSource, locale, launchPhase };
+    const isValid = await validateConfirmToken(payload, token, confirmSecret);
 
     if (!isValid) {
       console.log(
@@ -45,21 +48,33 @@ export const GET: APIRoute = async ({ request, locals, redirect }) => {
       return redirect('/404', 302);
     }
 
-    // Subscribe the contact to the mailing list
+    // Create the contact WITH mailing list subscription — this is the
+    // first time a Loops contact record is created for this email.
     const loopsApiKey = getRequired('LOOPS_API_KEY');
     const loopsAudienceId = getRequired('LOOPS_AUDIENCE_ID');
 
-    const result = await subscribeToMailingList(email, loopsAudienceId, loopsApiKey);
+    const result = await addContact({
+      email,
+      audienceId: loopsAudienceId,
+      apiKey: loopsApiKey,
+      signupSource,
+      locale,
+      launchPhase,
+      subscribe: true,
+    });
 
-    if (!result.success) {
+    if (!result.ok && result.code !== 'duplicate') {
       console.error(
-        JSON.stringify({ event: 'confirm_subscribe_failed' })
+        JSON.stringify({ event: 'confirm_create_failed', code: result.code })
       );
     }
 
     // Redirect to confirmation page regardless — we don't want to leak
-    // whether the subscription succeeded or not
-    return redirect(`/waitlist-confirmed?email=${encodeURIComponent(email)}&confirmed=true`, 302);
+    // whether the creation succeeded or not
+    return redirect(
+      `/waitlist-confirmed?email=${encodeURIComponent(email)}&confirmed=true`,
+      302
+    );
   } catch (error) {
     console.error(
       JSON.stringify({

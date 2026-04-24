@@ -5,7 +5,8 @@
  * `/api/confirm` endpoint can verify that the link was issued by us
  * without needing a database or KV store.
  *
- * Token = hex(HMAC-SHA256(secret, email)).
+ * The HMAC payload includes all fields that travel in the confirmation
+ * URL so that none of them can be tampered with.
  */
 
 const encoder = new TextEncoder();
@@ -26,34 +27,50 @@ function bufferToHex(buffer: ArrayBuffer): string {
     .join('');
 }
 
+export interface ConfirmTokenPayload {
+  email: string;
+  signupSource: string;
+  locale: string;
+  launchPhase: string;
+}
+
+/** Deterministic string from payload fields for HMAC signing. */
+function canonicalize(payload: ConfirmTokenPayload): string {
+  return [
+    payload.email.toLowerCase().trim(),
+    payload.signupSource,
+    payload.locale,
+    payload.launchPhase,
+  ].join('|');
+}
+
 /**
- * Generate a confirmation token for the given email.
+ * Generate a confirmation token covering all payload fields.
  */
 export async function generateConfirmToken(
-  email: string,
+  payload: ConfirmTokenPayload,
   secret: string
 ): Promise<string> {
   const key = await getKey(secret);
   const signature = await crypto.subtle.sign(
     'HMAC',
     key,
-    encoder.encode(email.toLowerCase().trim())
+    encoder.encode(canonicalize(payload))
   );
   return bufferToHex(signature);
 }
 
 /**
- * Validate a confirmation token against the expected email.
+ * Validate a confirmation token against the expected payload.
  * Uses constant-time comparison to prevent timing attacks.
  */
 export async function validateConfirmToken(
-  email: string,
+  payload: ConfirmTokenPayload,
   token: string,
   secret: string
 ): Promise<boolean> {
-  const expected = await generateConfirmToken(email, secret);
+  const expected = await generateConfirmToken(payload, secret);
   if (expected.length !== token.length) return false;
-  // Constant-time comparison
   let mismatch = 0;
   for (let i = 0; i < expected.length; i++) {
     mismatch |= expected.charCodeAt(i) ^ token.charCodeAt(i);
