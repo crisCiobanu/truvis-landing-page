@@ -25,10 +25,37 @@
 type EnvRecord = Record<string, string | boolean | undefined>;
 
 /**
- * Resolve the raw env bag. We read `import.meta.env` first (Astro /
- * Vite) and fall back to `process.env` for Node-only scripts (tests,
- * tooling under `scripts/`). Tests can override by assigning to
- * `process.env` before importing this module.
+ * Request-scoped runtime env injected by Cloudflare Pages Functions.
+ *
+ * CF Pages passes server-side secrets (non-PUBLIC_ vars) through
+ * `context.locals.runtime.env`, NOT through `import.meta.env` or
+ * `process.env`. API route handlers must call `setRuntimeEnv()` at
+ * the top of their handler to make these secrets available to
+ * `getRequired()` / `getOptional()`.
+ */
+let _runtimeEnv: EnvRecord | undefined;
+
+/**
+ * Inject Cloudflare Pages runtime env vars. Call this at the start
+ * of any API route handler:
+ *
+ *   setRuntimeEnv(locals.runtime.env);
+ */
+export function setRuntimeEnv(env: Record<string, unknown>): void {
+  const cleaned: EnvRecord = {};
+  for (const [key, value] of Object.entries(env)) {
+    if (typeof value === 'string') {
+      cleaned[key] = value;
+    }
+  }
+  _runtimeEnv = cleaned;
+}
+
+/**
+ * Resolve the raw env bag. Priority (highest wins):
+ *   1. Cloudflare runtime env (set via `setRuntimeEnv()`)
+ *   2. `import.meta.env` (Astro / Vite — build-time + PUBLIC_ vars)
+ *   3. `process.env` (Node-only scripts, tests)
  */
 function rawEnv(): EnvRecord {
   const viteEnv =
@@ -39,7 +66,7 @@ function rawEnv(): EnvRecord {
     typeof process !== 'undefined' && process.env
       ? (process.env as unknown as EnvRecord)
       : undefined;
-  return { ...nodeEnv, ...viteEnv };
+  return { ...nodeEnv, ...viteEnv, ..._runtimeEnv };
 }
 
 /**
