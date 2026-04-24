@@ -114,6 +114,14 @@ function loops500() {
   });
 }
 
+// Loops transactional email success response
+function loopsTransactionalSuccess() {
+  return new Response(JSON.stringify({ success: true }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
 // Loops 429 rate limit response
 function loops429(retryAfter?: string) {
   const headers: Record<string, string> = {
@@ -149,6 +157,8 @@ describe('POST /api/waitlist', () => {
     process.env.LOOPS_AUDIENCE_ID = 'test-audience-id';
     process.env.TURNSTILE_SECRET_KEY = 'test-turnstile-secret';
     process.env.LAUNCH_PHASE = 'pre';
+    process.env.CONFIRM_HMAC_SECRET = 'test-hmac-secret';
+    process.env.LOOPS_DOI_TRANSACTIONAL_ID = 'test-transactional-id';
 
     // Mock global fetch
     mockFetch = vi.fn();
@@ -211,14 +221,16 @@ describe('POST /api/waitlist', () => {
   it('returns 200 success when Loops creates contact', async () => {
     mockFetch
       .mockResolvedValueOnce(turnstileSuccess())
-      .mockResolvedValueOnce(loopsSuccess());
+      .mockResolvedValueOnce(loopsSuccess())
+      .mockResolvedValueOnce(loopsTransactionalSuccess()); // DOI email
 
     const result = await callWaitlist(validBody());
 
     expect(result.status).toBe(200);
     expect(result.ok).toBe(true);
     expect(result.code).toBe('success');
-    expect(mockFetch).toHaveBeenCalledTimes(2);
+    // 1 Turnstile + 1 Loops create + 1 transactional email = 3 fetch calls
+    expect(mockFetch).toHaveBeenCalledTimes(3);
     expect(mockFetch.mock.calls[1][0]).toBe(LOOPS_URL);
   });
 
@@ -275,7 +287,8 @@ describe('POST /api/waitlist', () => {
     mockFetch
       .mockResolvedValueOnce(turnstileSuccess()) // Turnstile OK
       .mockResolvedValueOnce(loops429('2')) // Attempt 1 — 429 with Retry-After: 2
-      .mockResolvedValueOnce(loopsSuccess()); // Attempt 2 — success
+      .mockResolvedValueOnce(loopsSuccess()) // Attempt 2 — success
+      .mockResolvedValueOnce(loopsTransactionalSuccess()); // DOI email
 
     const promise = callWaitlist(validBody());
     // Advance timers past the Retry-After delay (2s = 2000ms)
@@ -286,8 +299,8 @@ describe('POST /api/waitlist', () => {
     expect(result.status).toBe(200);
     expect(result.ok).toBe(true);
     expect(result.code).toBe('success');
-    // 1 Turnstile + 2 Loops attempts = 3 fetch calls
-    expect(mockFetch).toHaveBeenCalledTimes(3);
+    // 1 Turnstile + 2 Loops attempts + 1 transactional = 4 fetch calls
+    expect(mockFetch).toHaveBeenCalledTimes(4);
   });
 
   // ── Test 9: ESP network error eventually fails ─────────────────────────

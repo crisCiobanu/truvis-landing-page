@@ -16,7 +16,8 @@ import type { APIRoute } from 'astro';
 export const prerender = false;
 
 import { getRequired, getOptional, setRuntimeEnv } from '@/lib/env';
-import { addContact } from '@/lib/loops';
+import { addContact, sendTransactionalEmail } from '@/lib/loops';
+import { generateConfirmToken } from '@/lib/confirm-token';
 import { verifyTurnstileToken } from '@/lib/turnstile';
 
 // ---------------------------------------------------------------------------
@@ -155,7 +156,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const loopsApiKey = getRequired('LOOPS_API_KEY');
     const loopsAudienceId = getRequired('LOOPS_AUDIENCE_ID');
     const launchPhase = getOptional('LAUNCH_PHASE', 'pre');
+    const confirmSecret = getRequired('CONFIRM_HMAC_SECRET');
+    const doiTransactionalId = getRequired('LOOPS_DOI_TRANSACTIONAL_ID');
 
+    // Create contact WITHOUT mailing list subscription (double opt-in flow).
+    // The contact is subscribed only after clicking the confirmation link.
     const loopsResult = await addContact({
       email,
       audienceId: loopsAudienceId,
@@ -163,9 +168,25 @@ export const POST: APIRoute = async ({ request, locals }) => {
       signupSource,
       locale,
       launchPhase,
+      subscribe: false,
     });
 
     if (loopsResult.ok) {
+      // Send double opt-in confirmation email
+      const token = await generateConfirmToken(email, confirmSecret);
+      const origin = new URL(request.url).origin;
+      const optInUrl = `${origin}/api/confirm?email=${encodeURIComponent(email)}&token=${token}`;
+
+      await sendTransactionalEmail({
+        email,
+        transactionalId: doiTransactionalId,
+        dataVariables: {
+          companyName: 'Truvis',
+          optInUrl,
+        },
+        apiKey: loopsApiKey,
+      });
+
       logCompletion({
         code: 'success',
         signupSource,
@@ -174,7 +195,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         startTime,
       });
       return jsonResponse(
-        { ok: true, code: 'success', message: "You're on the list!" },
+        { ok: true, code: 'success', message: 'Check your inbox to confirm your email.' },
         200
       );
     }
