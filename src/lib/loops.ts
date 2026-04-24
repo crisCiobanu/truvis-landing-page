@@ -353,7 +353,10 @@ export async function sendTransactionalEmail(params: {
         // ignore
       }
       console.error(
-        JSON.stringify({ event: 'loops_transactional_error', error: errorDetail })
+        JSON.stringify({
+          event: 'loops_transactional_error',
+          error: errorDetail,
+        })
       );
       return { success: false, error: errorDetail };
     }

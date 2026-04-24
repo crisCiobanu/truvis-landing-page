@@ -192,7 +192,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
         startTime,
       });
       return jsonResponse(
-        { ok: true, code: 'success', message: 'Check your inbox to confirm your email.' },
+        {
+          ok: true,
+          code: 'success',
+          message: 'Check your inbox to confirm your email.',
+        },
         200
       );
     }
