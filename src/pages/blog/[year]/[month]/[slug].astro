@@ -9,7 +9,10 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import BlogArticleHeader from '@/components/blog/blog-article-header.astro';
 import BlogArticleBody from '@/components/blog/blog-article-body.astro';
-import { getAllBlogPostsWithEntries } from '@/lib/content';
+import BlogShareButtons from '@/components/blog/blog-share-buttons.astro';
+import BlogRelatedPosts from '@/components/blog/blog-related-posts.astro';
+import { getAllBlogPostsWithEntries, getRelatedBlogPosts } from '@/lib/content';
+import type { Locale } from '@/lib/i18n';
 import type { BlogPostView } from '@/lib/types/blog';
 import type { CollectionEntry } from 'astro:content';
 
@@ -33,6 +36,8 @@ interface Props {
 
 const { post, entry } = Astro.props;
 const { Content } = await entry.render();
+const locale = (Astro.currentLocale ?? 'en') as Locale;
+const relatedPosts = await getRelatedBlogPosts(post.slug, 3);
 
 const seoTitle = (post.seo?.title || post.title) + ' \u2014 Truvis Blog';
 const seoDescription = post.seo?.description || post.excerpt;
@@ -70,7 +75,10 @@ const ogImage = post.seo?.socialImage || post.featuredImage.src;
       <Content />
     </div>
 
-    <!-- TODO(story-4.5): RelatedArticles component -->
+    <!-- Story 4.5: Share buttons + related articles -->
+    <BlogShareButtons title={post.title} url={post.webUrl} locale={locale} />
+    <BlogRelatedPosts relatedPosts={relatedPosts} locale={locale} />
+
     <!-- TODO(story-4.6): BlogInlineCta component -->
   </BlogArticleBody>
 </BaseLayout>

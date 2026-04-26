@@ -9,7 +9,10 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import BlogArticleHeader from '@/components/blog/blog-article-header.astro';
 import BlogArticleBody from '@/components/blog/blog-article-body.astro';
-import { getAllBlogPostsWithEntries } from '@/lib/content';
+import BlogShareButtons from '@/components/blog/blog-share-buttons.astro';
+import BlogRelatedPosts from '@/components/blog/blog-related-posts.astro';
+import { getAllBlogPostsWithEntries, getRelatedBlogPosts } from '@/lib/content';
+import type { Locale } from '@/lib/i18n';
 import type { BlogPostView } from '@/lib/types/blog';
 import type { CollectionEntry } from 'astro:content';
 import { getOptional } from '@/lib/env';
@@ -36,7 +39,8 @@ const { post, entry } = Astro.props;
 const { year, month } = Astro.params;
 const { Content } = await entry.render();
 
-const locale = Astro.currentLocale ?? 'fr';
+const locale = (Astro.currentLocale ?? 'fr') as Locale;
+const relatedPosts = await getRelatedBlogPosts(post.slug, 3);
 const siteUrl = getOptional('PUBLIC_SITE_URL', 'http://localhost:4321').replace(
   /\/$/,
   ''
@@ -75,7 +79,10 @@ const ogImage = post.seo?.socialImage || post.featuredImage.src;
       <Content />
     </div>
 
-    <!-- TODO(story-4.5): RelatedArticles component -->
+    <!-- Story 4.5: Share buttons + related articles -->
+    <BlogShareButtons title={post.title} url={canonicalUrl} locale={locale} />
+    <BlogRelatedPosts relatedPosts={relatedPosts} locale={locale} />
+
     <!-- TODO(story-4.6): BlogInlineCta component -->
   </BlogArticleBody>
 </BaseLayout>

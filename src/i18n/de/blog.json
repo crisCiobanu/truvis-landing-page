@@ -22,6 +22,15 @@
     "updatedOn": "Updated on {date}",
     "relatedArticles": "Related articles",
     "shareArticle": "Share this article",
-    "backToBlog": "Back to blog"
+    "backToBlog": "Back to blog",
+    "shareHeadline": "Found this useful? Share it.",
+    "keepReading": "Keep reading",
+    "shareWhatsApp": "WhatsApp",
+    "shareTwitter": "Twitter",
+    "copyLink": "Copy link",
+    "linkCopied": "Copied!",
+    "shareOnWhatsApp": "Share on WhatsApp",
+    "shareOnTwitter": "Share on Twitter",
+    "copyArticleLink": "Copy article link"
   }
 }

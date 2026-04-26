@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-04-10
-last_updated: 2026-04-26 (Story 4-4 → review)
+last_updated: 2026-04-26 (Story 4-5 → review)
 project: car-buy-assistant
 project_key: NOKEY
 tracking_system: file-system
@@ -91,7 +91,7 @@ development_status:
   4-2-build-blogpreviewcard-tier-2-composite: review
   4-3-build-blog-index-page-with-category-filter-pills: review
   4-4-build-blog-year-month-slug-dynamic-article-page-with-seo-metadata: review
-  4-5-build-related-articles-navigation-and-social-share-buttons-on-the-article-page: ready-for-dev
+  4-5-build-related-articles-navigation-and-social-share-buttons-on-the-article-page: review
   4-6-build-the-inline-blog-article-cta-block-with-pre-launch-waitlist-variant-and-post-launch-slot: ready-for-dev
   4-7-replace-epic-2-blogpreviewssection-placeholder-with-real-blogpreviewcard-lib-content-ts-data: ready-for-dev
   4-8-build-static-api-v1-blog-json-endpoints-with-vitest-contract-test-and-finalised-contract-md: ready-for-dev

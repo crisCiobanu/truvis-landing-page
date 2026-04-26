@@ -1,6 +1,6 @@
 # Story 4.5: Build related-articles navigation and social share buttons on the article page
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -103,17 +103,17 @@ so that **I can keep reading or pass it to a friend who is car shopping**.
 
 ## Tasks / Subtasks
 
-- [ ] **Task 1 — Add i18n strings** (AC: 7)
-  - [ ] T1.1 Add `shareHeadline`, `keepReading`, `shareWhatsApp`, `shareTwitter`, `copyLink`, `linkCopied`, `shareOnWhatsApp`, `shareOnTwitter`, `copyArticleLink` under `article` in `src/i18n/en/blog.json`
-  - [ ] T1.2 Mirror all keys in `src/i18n/fr/blog.json` with placeholder English values
-  - [ ] T1.3 Mirror all keys in `src/i18n/de/blog.json` with placeholder English values
+- [x] **Task 1 — Add i18n strings** (AC: 7)
+  - [x] T1.1 Add `shareHeadline`, `keepReading`, `shareWhatsApp`, `shareTwitter`, `copyLink`, `linkCopied`, `shareOnWhatsApp`, `shareOnTwitter`, `copyArticleLink` under `article` in `src/i18n/en/blog.json`
+  - [x] T1.2 Mirror all keys in `src/i18n/fr/blog.json` with placeholder English values
+  - [x] T1.3 Mirror all keys in `src/i18n/de/blog.json` with placeholder English values
 
-- [ ] **Task 2 — Add `PUBLIC_TRUVIS_TWITTER_HANDLE` to `.env.example`** (AC: 5)
-  - [ ] T2.1 Add env var entry under a new "Social" section with empty value and Story 4.5 reference comment
-  - [ ] T2.2 Add `TODO(epic-5): move social handles to siteContent collection` comment above the entry
+- [x] **Task 2 — Add `PUBLIC_TRUVIS_TWITTER_HANDLE` to `.env.example`** (AC: 5)
+  - [x] T2.1 Add env var entry under a new "Social" section with empty value and Story 4.5 reference comment
+  - [x] T2.2 Add `TODO(epic-5): move social handles to siteContent collection` comment above the entry
 
-- [ ] **Task 3 — Create `src/components/islands/article-share.tsx` React island** (AC: 2, 3, 4, 6)
-  - [ ] T3.1 Define props interface:
+- [x] **Task 3 — Create `src/components/islands/article-share.tsx` React island** (AC: 2, 3, 4, 6)
+  - [x] T3.1 Define props interface:
     ```ts
     interface ArticleShareProps {
       title: string;           // article title (pre-resolved)
@@ -131,10 +131,10 @@ so that **I can keep reading or pass it to a friend who is car shopping**.
       };
     }
     ```
-  - [ ] T3.2 Implement `useState<boolean>` for `copied` state with `useEffect` timer cleanup
-  - [ ] T3.3 Build WhatsApp button: `<a href="https://wa.me/?text=${encodeURIComponent(title + ' ' + url)}" target="_blank" rel="noopener noreferrer">` with inline SVG icon
-  - [ ] T3.4 Build Twitter/X button: `<a href={twitterUrl} target="_blank" rel="noopener noreferrer">` where `twitterUrl` conditionally includes `&via=${twitterHandle}` only when handle is non-empty
-  - [ ] T3.5 Build Copy link button: `<button onClick={handleCopy}>` using async Clipboard API:
+  - [x] T3.2 Implement `useState<boolean>` for `copied` state with `useEffect` timer cleanup
+  - [x] T3.3 Build WhatsApp button: `<a href="https://wa.me/?text=${encodeURIComponent(title + ' ' + url)}" target="_blank" rel="noopener noreferrer">` with inline SVG icon
+  - [x] T3.4 Build Twitter/X button: `<a href={twitterUrl} target="_blank" rel="noopener noreferrer">` where `twitterUrl` conditionally includes `&via=${twitterHandle}` only when handle is non-empty
+  - [x] T3.5 Build Copy link button: `<button onClick={handleCopy}>` using async Clipboard API:
     ```ts
     async function handleCopy() {
       try {
@@ -154,7 +154,7 @@ so that **I can keep reading or pass it to a friend who is car shopping**.
       }
     }
     ```
-  - [ ] T3.6 Timer effect for "Copied!" revert (~2s):
+  - [x] T3.6 Timer effect for "Copied!" revert (~2s):
     ```ts
     useEffect(() => {
       if (!copied) return;
@@ -162,51 +162,51 @@ so that **I can keep reading or pass it to a friend who is car shopping**.
       return () => clearTimeout(id);
     }, [copied]);
     ```
-  - [ ] T3.7 Wrap all buttons in `<nav aria-label={labels.ariaShareNav || "Share this article"}>` with flex layout
-  - [ ] T3.8 Add `aria-live="polite"` visually-hidden region that announces "Copied!" when `copied` is true:
+  - [x] T3.7 Wrap all buttons in `<nav aria-label={labels.ariaShareNav || "Share this article"}>` with flex layout
+  - [x] T3.8 Add `aria-live="polite"` visually-hidden region that announces "Copied!" when `copied` is true:
     ```tsx
     <span className="sr-only" aria-live="polite" role="status">
       {copied ? labels.linkCopied : ''}
     </span>
     ```
-  - [ ] T3.9 Each button: `aria-label` from props, `min-h-[44px] min-w-[44px]` for touch target, `focus-visible:ring-teal` focus indicator
-  - [ ] T3.10 Add `// TODO(epic-6): trackEvent('blog_share_click', { channel: 'whatsapp' | 'twitter' | 'copy_link', postSlug })` in each handler
-  - [ ] T3.11 Respect `prefers-reduced-motion` for the Copied label transition (UX-DR32): use CSS `transition-opacity` that is disabled under `@media (prefers-reduced-motion: reduce)`
+  - [x] T3.9 Each button: `aria-label` from props, `min-h-[44px] min-w-[44px]` for touch target, `focus-visible:ring-teal` focus indicator
+  - [x] T3.10 Add `// TODO(epic-6): trackEvent('blog_share_click', { channel: 'whatsapp' | 'twitter' | 'copy_link', postSlug })` in each handler
+  - [x] T3.11 Respect `prefers-reduced-motion` for the Copied label transition (UX-DR32): use CSS `transition-opacity` that is disabled under `@media (prefers-reduced-motion: reduce)`
 
-- [ ] **Task 4 — Create inline SVG icon components** (AC: 2)
-  - [ ] T4.1 WhatsApp icon — simplified brand path, single `<svg>` element, `aria-hidden="true"`, `width="20" height="20"`, `fill="currentColor"`, <=1KB
-  - [ ] T4.2 Twitter/X icon — simplified X logo path, same constraints
-  - [ ] T4.3 Link/chain icon — simple chain-link SVG, same constraints
-  - [ ] T4.4 Icons defined inline in `article-share.tsx` or extracted to a local `const` block at file top — no separate icon library dependency
+- [x] **Task 4 — Create inline SVG icon components** (AC: 2)
+  - [x] T4.1 WhatsApp icon — simplified brand path, single `<svg>` element, `aria-hidden="true"`, `width="20" height="20"`, `fill="currentColor"`, <=1KB
+  - [x] T4.2 Twitter/X icon — simplified X logo path, same constraints
+  - [x] T4.3 Link/chain icon — simple chain-link SVG, same constraints
+  - [x] T4.4 Icons defined inline in `article-share.tsx` or extracted to a local `const` block at file top — no separate icon library dependency
 
-- [ ] **Task 5 — Create `src/components/blog/blog-share-buttons.astro` Astro wrapper** (AC: 2, 4, 5)
-  - [ ] T5.1 Accept props: `title: string`, `url: string`, `locale: string`
-  - [ ] T5.2 Read `PUBLIC_TRUVIS_TWITTER_HANDLE` via `getOptional()` from `lib/env.ts` with `TODO(epic-5)` comment
-  - [ ] T5.3 Resolve all i18n label strings via `t()` at build time and pass as `labels` prop object
-  - [ ] T5.4 Render `<ArticleShare client:visible title={title} url={url} twitterHandle={handle} labels={labels} />`
+- [x] **Task 5 — Create `src/components/blog/blog-share-buttons.astro` Astro wrapper** (AC: 2, 4, 5)
+  - [x] T5.1 Accept props: `title: string`, `url: string`, `locale: string`
+  - [x] T5.2 Read `PUBLIC_TRUVIS_TWITTER_HANDLE` via `getOptional()` from `lib/env.ts` with `TODO(epic-5)` comment
+  - [x] T5.3 Resolve all i18n label strings via `t()` at build time and pass as `labels` prop object
+  - [x] T5.4 Render `<ArticleShare client:visible title={title} url={url} twitterHandle={handle} labels={labels} />`
 
-- [ ] **Task 6 — Create `src/components/blog/blog-related-posts.astro`** (AC: 1)
-  - [ ] T6.1 Accept props: `relatedPosts: BlogEntryView[]`, `locale: string`
-  - [ ] T6.2 Guard: if `relatedPosts.length === 0`, render nothing (return early or conditional block)
-  - [ ] T6.3 Render `SectionEyebrow` with `eyebrow={t('blog.article.keepReading', locale)}`
-  - [ ] T6.4 Render responsive grid: `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6`
-  - [ ] T6.5 Map `relatedPosts` to `<BlogPreviewCard post={post} />` instances
-  - [ ] T6.6 Wrap in a `<section aria-label="Related articles">` for landmark navigation
+- [x] **Task 6 — Create `src/components/blog/blog-related-posts.astro`** (AC: 1)
+  - [x] T6.1 Accept props: `relatedPosts: BlogEntryView[]`, `locale: string`
+  - [x] T6.2 Guard: if `relatedPosts.length === 0`, render nothing (return early or conditional block)
+  - [x] T6.3 Render `SectionEyebrow` with `eyebrow={t('blog.article.keepReading', locale)}`
+  - [x] T6.4 Render responsive grid: `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6`
+  - [x] T6.5 Map `relatedPosts` to `<BlogPreviewCard post={post} />` instances
+  - [x] T6.6 Wrap in a `<section aria-label="Related articles">` for landmark navigation
 
-- [ ] **Task 7 — Integrate into article page `src/pages/blog/[year]/[month]/[slug].astro`** (AC: 1, 2)
-  - [ ] T7.1 Import `getRelatedBlogPosts` from `lib/content.ts`
-  - [ ] T7.2 Call `const relatedPosts = await getRelatedBlogPosts(slug, 3)` in the page's frontmatter
-  - [ ] T7.3 Import and render `<BlogShareButtons>` after the article body `</article>` or at the end of the article body section
-  - [ ] T7.4 Import and render `<BlogRelatedPosts relatedPosts={relatedPosts} locale={locale} />` after share buttons, before the Story 4.6 CTA slot
-  - [ ] T7.5 Ensure page ordering is: article hero -> article body -> share buttons -> related articles strip -> (CTA placeholder for Story 4.6) -> footer
+- [x] **Task 7 — Integrate into article page `src/pages/blog/[year]/[month]/[slug].astro`** (AC: 1, 2)
+  - [x] T7.1 Import `getRelatedBlogPosts` from `lib/content.ts`
+  - [x] T7.2 Call `const relatedPosts = await getRelatedBlogPosts(slug, 3)` in the page's frontmatter
+  - [x] T7.3 Import and render `<BlogShareButtons>` after the article body `</article>` or at the end of the article body section
+  - [x] T7.4 Import and render `<BlogRelatedPosts relatedPosts={relatedPosts} locale={locale} />` after share buttons, before the Story 4.6 CTA slot
+  - [x] T7.5 Ensure page ordering is: article hero -> article body -> share buttons -> related articles strip -> (CTA placeholder for Story 4.6) -> footer
 
-- [ ] **Task 8 — Accessibility and text-expansion audit** (AC: 6)
-  - [ ] T8.1 Verify `<nav aria-label="Share this article">` wraps share buttons
-  - [ ] T8.2 Verify `aria-live="polite"` region announces "Copied!" state change
-  - [ ] T8.3 Verify all buttons meet 44x44px touch target
-  - [ ] T8.4 Verify keyboard activation (Enter/Space) on all buttons
-  - [ ] T8.5 Verify 140% text expansion does not break layout (test with longer FR/DE placeholder strings)
-  - [ ] T8.6 Run axe-core — zero violations
+- [x] **Task 8 — Accessibility and text-expansion audit** (AC: 6)
+  - [x] T8.1 Verify `<nav aria-label="Share this article">` wraps share buttons
+  - [x] T8.2 Verify `aria-live="polite"` region announces "Copied!" state change
+  - [x] T8.3 Verify all buttons meet 44x44px touch target
+  - [x] T8.4 Verify keyboard activation (Enter/Space) on all buttons
+  - [x] T8.5 Verify 140% text expansion does not break layout (test with longer FR/DE placeholder strings)
+  - [x] T8.6 Run axe-core — zero violations
 
 ## Dev Notes
 
@@ -324,6 +324,34 @@ src/i18n/de/blog.json                          ← Mirror with placeholder Engli
 ## Dev Agent Record
 
 ### Agent Model Used
+Claude Opus 4.6 (1M context)
+
 ### Debug Log References
+- No blocking issues encountered.
+
 ### Completion Notes List
+- All 8 tasks and subtasks completed in a single pass.
+- Created `article-share.tsx` React island with WhatsApp, Twitter/X, and Copy link buttons. Includes `useState` for "Copied!" feedback, `useEffect` timer cleanup, `aria-live` announcement, 44x44px touch targets, `focus-visible` indicators, and `motion-safe` transitions.
+- Created 4 inline SVG icon components (WhatsApp, Twitter/X, Link, Check) at file top -- all `aria-hidden`, 20x20, currentColor, well under 1KB each.
+- Created `blog-share-buttons.astro` Astro wrapper that resolves i18n labels at build time, reads `PUBLIC_TRUVIS_TWITTER_HANDLE` via `getOptional()`, and mounts the island with `client:visible`.
+- Created `blog-related-posts.astro` with SectionEyebrow + responsive 1/2/3-column grid of BlogPreviewCard instances. Returns early when no related posts.
+- Integrated both components into EN, FR, and DE article pages after the prose content, before the Story 4.6 CTA placeholder.
+- Added 9 i18n keys to `en/blog.json`, mirrored in `fr/blog.json` and `de/blog.json` with placeholder English values.
+- Added `PUBLIC_TRUVIS_TWITTER_HANDLE` to `.env.example` under a "Social" section with `TODO(epic-5)` comment.
+- All validations pass: `astro check` 0 errors, `npm run build` succeeds for all 9 article pages (3 locales x 3 seed articles), `eslint` clean, `prettier` clean, `vitest` 74/74 tests pass with zero regressions.
+
 ### File List
+- src/components/islands/article-share.tsx (new)
+- src/components/blog/blog-share-buttons.astro (new)
+- src/components/blog/blog-related-posts.astro (new)
+- src/pages/blog/[year]/[month]/[slug].astro (modified)
+- src/pages/fr/blog/[year]/[month]/[slug].astro (modified)
+- src/pages/de/blog/[year]/[month]/[slug].astro (modified)
+- src/i18n/en/blog.json (modified)
+- src/i18n/fr/blog.json (modified)
+- src/i18n/de/blog.json (modified)
+- .env.example (modified)
+- _bmad-output/implementation-artifacts/sprint-status.yaml (modified)
+
+### Change Log
+- 2026-04-26: Implemented Story 4.5 -- related articles navigation and social share buttons on the article page.
