@@ -6,6 +6,9 @@
     "readMore": "Read more",
     "readingTime": "{minutes} min read"
   },
+  "card": {
+    "readArticle": "Read article"
+  },
   "article": {
     "publishedOn": "Published on {date}",
     "updatedOn": "Updated on {date}",

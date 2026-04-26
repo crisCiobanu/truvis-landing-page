@@ -1,0 +1,132 @@
+---
+/**
+ * BlogPreviewCard smoke page — Story 4.2 AC10
+ *
+ * Renders six BlogPreviewCard instances (three from seed data, three
+ * synthetic with 140%-expanded strings) in a responsive grid so
+ * reviewers can eyeball every variant. Not routable in production
+ * (Astro's `_` prefix on the parent folder excludes it).
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import BlogPreviewCard from '@/components/blog/blog-preview-card.astro';
+import { getFeaturedBlogPosts } from '@/lib/content';
+import type { BlogPostView } from '@/lib/types/blog';
+
+const seedPosts = await getFeaturedBlogPosts(3);
+
+// Synthetic 140%-expanded mock objects for text expansion tolerance (AC8)
+const syntheticPosts: BlogPostView[] = [
+  {
+    slug: 'synthetic-long-title-test',
+    title:
+      'This Is a Deliberately Long Title That Simulates 140% Text Expansion for French and German Translations to Verify Wrapping',
+    excerpt:
+      'This excerpt is intentionally verbose to simulate what happens when French or German translations expand the original English copy by approximately one hundred and forty percent of its original character count.',
+    category: 'buying-guide',
+    publishedAt: '2026-04-01T10:00:00.000Z',
+    author: 'Test Author',
+    readTime: '12 min',
+    featured: true,
+    featuredImage: {
+      src: '',
+      alt: 'Placeholder for testing',
+      width: 1200,
+      height: 630,
+    },
+    webUrl: '/blog/2026/04/synthetic-long-title-test',
+    seo: {},
+    relatedSlugs: [],
+  },
+  {
+    slug: 'synthetic-long-category-test',
+    title:
+      'Another Extended Title for Verifying That Multiple Lines of Text Wrap Correctly Inside the Card Component',
+    excerpt:
+      'A second synthetic excerpt that is also intentionally long so we can verify the two-line clamp behaviour works properly when text is significantly longer than expected in production.',
+    category: 'inspection-tips',
+    publishedAt: '2026-03-28T08:00:00.000Z',
+    author: 'Test Author',
+    readTime: '8 min',
+    featured: false,
+    featuredImage: {
+      src: 'placeholder-inspection.svg',
+      alt: 'Placeholder for testing',
+      width: 1200,
+      height: 630,
+    },
+    webUrl: '/blog/2026/03/synthetic-long-category-test',
+    seo: {},
+    relatedSlugs: [],
+  },
+  {
+    slug: 'synthetic-maximum-expansion',
+    title:
+      'Maximale Textexpansion: Dieser Titel ist absichtlich sehr lang um die Textexpansionstoleranz von hundertundvierzig Prozent zu testen',
+    excerpt:
+      'Cet extrait est volontairement tres long pour simuler ce qui se passe lorsque les traductions francaises ou allemandes etendent le texte anglais original de cent quarante pour cent de son nombre de caracteres original, verifiant ainsi.',
+    category: 'deep-dive',
+    publishedAt: '2026-03-20T14:00:00.000Z',
+    author: 'Test Author',
+    readTime: '15 min',
+    featured: false,
+    featuredImage: {
+      src: '',
+      alt: 'Placeholder for testing',
+      width: 1200,
+      height: 630,
+    },
+    webUrl: '/blog/2026/03/synthetic-maximum-expansion',
+    seo: {},
+    relatedSlugs: [],
+  },
+];
+---
+
+<BaseLayout
+  title="BlogPreviewCard smoke test — Truvis (not indexed)"
+  description="Local-dev smoke page for the BlogPreviewCard composite. Not indexed."
+>
+  <meta slot="head" name="robots" content="noindex, nofollow" />
+
+  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="mb-12 border-l-4 border-[var(--color-amber)] pl-4">
+      <p
+        class="font-mono text-xs font-semibold tracking-widest text-[var(--color-teal)] uppercase"
+      >
+        Story 4.2 · AC10 · BlogPreviewCard smoke
+      </p>
+      <h1
+        class="font-display mt-2 text-3xl font-bold text-[var(--color-primary)]"
+      >
+        BlogPreviewCard — visual verification
+      </h1>
+      <p class="mt-3 max-w-2xl text-[var(--color-muted)]">
+        Six cards: three from seed data (via <code>getFeaturedBlogPosts</code>),
+        three synthetic mocks with 140%-expanded strings. The first seed card
+        has <code>priority=true</code> for eager loading verification.
+      </p>
+    </div>
+
+    <h2
+      class="font-display mb-6 text-xl font-semibold text-[var(--color-primary)]"
+    >
+      Seed data cards
+    </h2>
+    <div class="mb-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        seedPosts.map((post, i) => (
+          <BlogPreviewCard post={post} priority={i === 0} />
+        ))
+      }
+    </div>
+
+    <h2
+      class="font-display mb-6 text-xl font-semibold text-[var(--color-primary)]"
+    >
+      Synthetic 140%-expanded cards
+    </h2>
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {syntheticPosts.map((post) => <BlogPreviewCard post={post} />)}
+    </div>
+  </section>
+</BaseLayout>

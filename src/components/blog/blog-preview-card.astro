@@ -1,0 +1,143 @@
+---
+/**
+ * BlogPreviewCard — Tier 2 blog composite (Story 4.2)
+ *
+ * Renders a single blog post preview as a linked card. Pure Astro — zero
+ * client-side JS. Consumed by the blog index, related-articles strip, and
+ * the landing page blog section.
+ */
+import { Image } from 'astro:assets';
+
+import { t, type Locale } from '@/lib/i18n';
+import type { BlogPostView } from '@/lib/types/blog';
+import { cn } from '@/lib/utils';
+
+interface Props {
+  post: BlogPostView;
+  class?: string;
+  priority?: boolean;
+}
+
+const { post, class: className, priority = false } = Astro.props;
+const locale = (Astro.currentLocale ?? 'en') as Locale;
+
+// Extract numeric minutes from readTime string (e.g. "6 min" → 6)
+const readMinutes = parseInt(post.readTime, 10) || 1;
+
+// Determine whether the featured image is a real URL or a placeholder sentinel.
+// Placeholder sentinels: empty string, or starts with "placeholder".
+const isPlaceholder =
+  !post.featuredImage.src ||
+  post.featuredImage.src === '' ||
+  /placeholder/i.test(post.featuredImage.src);
+
+// Format category for display: "buying-guide" → "Buying Guide"
+const categoryLabel = post.category
+  .split('-')
+  .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+  .join(' ');
+---
+
+<a
+  href={post.webUrl}
+  class={cn(
+    'group flex flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-divider)] bg-[var(--color-bg)] shadow-[var(--shadow-sm)]',
+    'hover:shadow-[var(--shadow-md)]',
+    'focus-visible:outline-2 focus-visible:outline-[var(--color-teal)] focus-visible:outline-offset-2',
+    'motion-safe:transition-[box-shadow,color] motion-safe:duration-[var(--duration-base)] motion-safe:ease-out',
+    className
+  )}
+>
+  <article class="flex h-full flex-col">
+    {/* Thumbnail — 16:9, rounded top corners, overflow hidden */}
+    <div class="aspect-[16/9] overflow-hidden rounded-t-[var(--radius-lg)]">
+      {
+        isPlaceholder ? (
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 320 180"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-full w-full object-cover"
+          >
+            <rect width="320" height="180" fill="var(--color-surface-3)" />
+            <circle
+              cx="160"
+              cy="70"
+              r="28"
+              fill="var(--color-teal)"
+              opacity="0.18"
+            />
+            <rect
+              x="110"
+              y="110"
+              width="100"
+              height="8"
+              rx="4"
+              fill="var(--color-teal)"
+              opacity="0.22"
+            />
+            <rect
+              x="130"
+              y="126"
+              width="60"
+              height="6"
+              rx="3"
+              fill="var(--color-amber)"
+              opacity="0.25"
+            />
+          </svg>
+        ) : (
+          <Image
+            src={post.featuredImage.src}
+            alt={post.featuredImage.alt}
+            width={post.featuredImage.width}
+            height={post.featuredImage.height}
+            loading={priority ? 'eager' : 'lazy'}
+            fetchpriority={priority ? 'high' : undefined}
+            class="h-full w-full object-cover"
+          />
+        )
+      }
+    </div>
+
+    {/* Content area */}
+    <div class="flex flex-1 flex-col gap-3 p-5">
+      {/* Category badge */}
+      <span
+        class="inline-flex w-fit items-center rounded-full bg-[var(--color-surface-3)] px-3 py-1 font-mono text-xs font-medium tracking-widest text-[var(--color-teal)] uppercase"
+      >
+        {categoryLabel}
+      </span>
+
+      {/* Title */}
+      <h3
+        class="font-display text-[length:var(--text-lg)] leading-tight font-semibold text-[var(--color-primary)] group-hover:text-[var(--color-teal)] motion-safe:transition-colors motion-safe:duration-[var(--duration-base)]"
+      >
+        {post.title}
+      </h3>
+
+      {/* Excerpt */}
+      <p
+        class="line-clamp-2 text-[length:var(--text-base)] leading-relaxed text-[var(--color-muted)]"
+      >
+        {post.excerpt}
+      </p>
+
+      {/* Footer row */}
+      <div class="mt-auto flex items-center justify-between pt-2">
+        <time
+          datetime={`PT${readMinutes}M`}
+          class="text-[length:var(--text-xs)] text-[var(--color-faint)]"
+        >
+          {post.readTime}
+        </time>
+        <span
+          class="text-[length:var(--text-sm)] font-semibold text-[var(--color-teal)]"
+        >
+          {t('blog.card.readArticle', locale)} &rarr;
+        </span>
+      </div>
+    </div>
+  </article>
+</a>
