@@ -1,0 +1,81 @@
+---
+/**
+ * German blog article page — Story 4.4 (AC2)
+ *
+ * Thin locale wrapper. Astro's i18n routing sets currentLocale = "de".
+ * Duplicates getStaticPaths + rendering logic from the English route.
+ * V1: DE strings are byte-for-byte English copies (FR52).
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import BlogArticleHeader from '@/components/blog/blog-article-header.astro';
+import BlogArticleBody from '@/components/blog/blog-article-body.astro';
+import { getAllBlogPostsWithEntries } from '@/lib/content';
+import type { BlogPostView } from '@/lib/types/blog';
+import type { CollectionEntry } from 'astro:content';
+import { getOptional } from '@/lib/env';
+
+export async function getStaticPaths() {
+  const postsWithEntries = await getAllBlogPostsWithEntries();
+  return postsWithEntries.map(({ post, entry }) => {
+    const date = new Date(post.publishedAt);
+    const year = String(date.getUTCFullYear());
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    return {
+      params: { year, month, slug: post.slug },
+      props: { post, entry },
+    };
+  });
+}
+
+interface Props {
+  post: BlogPostView;
+  entry: CollectionEntry<'blog'>;
+}
+
+const { post, entry } = Astro.props;
+const { year, month } = Astro.params;
+const { Content } = await entry.render();
+
+const locale = Astro.currentLocale ?? 'de';
+const siteUrl = getOptional('PUBLIC_SITE_URL', 'http://localhost:4321').replace(
+  /\/$/,
+  ''
+);
+const canonicalUrl = `${siteUrl}/${locale}/blog/${year}/${month}/${post.slug}`;
+
+const seoTitle = (post.seo?.title || post.title) + ' \u2014 Truvis Blog';
+const seoDescription = post.seo?.description || post.excerpt;
+const ogImage = post.seo?.socialImage || post.featuredImage.src;
+---
+
+<BaseLayout
+  title={seoTitle}
+  description={seoDescription}
+  canonical={canonicalUrl}
+  ogImage={ogImage}
+  ogType="article"
+>
+  <Fragment slot="head">
+    <meta property="article:published_time" content={post.publishedAt} />
+    <meta property="article:author" content={post.author} />
+    <meta property="article:section" content={post.category} />
+    {
+      post.seo?.keywords?.map((tag) => (
+        <meta property="article:tag" content={tag} />
+      ))
+    }
+  </Fragment>
+
+  <!-- TODO(epic-6): inject blogPostingJsonLd() via BaseLayout head-jsonld slot -->
+
+  <BlogArticleBody>
+    <BlogArticleHeader post={post} />
+
+    <div class="prose mx-auto max-w-[65ch]">
+      <Content />
+    </div>
+
+    <!-- TODO(story-4.5): RelatedArticles component -->
+    <!-- TODO(story-4.6): BlogInlineCta component -->
+  </BlogArticleBody>
+</BaseLayout>

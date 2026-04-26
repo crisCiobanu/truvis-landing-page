@@ -16,6 +16,8 @@
     "readArticle": "Read article"
   },
   "article": {
+    "byAuthor": "By {author}",
+    "minRead": "{minutes} min read",
     "publishedOn": "Published on {date}",
     "updatedOn": "Updated on {date}",
     "relatedArticles": "Related articles",

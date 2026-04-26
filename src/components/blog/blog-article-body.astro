@@ -1,0 +1,19 @@
+---
+/**
+ * BlogArticleBody — Tier 2 blog composite (Story 4.4, AC7, AC9, AC11)
+ *
+ * Semantic <article> wrapper with Schema.org BlogPosting microdata.
+ * Contains a <slot /> for the article header + prose content + future
+ * integration points (related articles, inline CTA).
+ *
+ * Zero client-side JS — pure Astro component.
+ */
+---
+
+<article
+  itemscope
+  itemtype="https://schema.org/BlogPosting"
+  class="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8"
+>
+  <slot />
+</article>

@@ -26,8 +26,11 @@ export function buildBlogEntryView(
   ).replace(/\/$/, '');
 
   // Astro 5 strips `slug` from data and surfaces it as entry.slug/entry.id.
-  // Prefer front-matter slug if present; fall back to entry.id with date prefix stripped.
-  const slug = entry.data.slug ?? entry.id.replace(/^\d{4}-\d{2}-\d{2}-/, '');
+  // Prefer front-matter slug if present; fall back to entry.id with date
+  // prefix and file extension stripped.
+  const slug =
+    entry.data.slug ??
+    entry.id.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/\.(mdx?|md)$/, '');
 
   const date = entry.data.publishDate;
   const year = date.getUTCFullYear().toString();
@@ -74,6 +77,26 @@ export async function getAllBlogPosts(): Promise<BlogPostView[]> {
     .sort(
       (a, b) =>
         new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+    );
+}
+
+/**
+ * All blog posts with their raw Astro entries (for `entry.render()`).
+ * Sorted by publishDate descending.
+ *
+ * This is the only way page routes should obtain renderable entries —
+ * they must NEVER call `getCollection('blog')` directly (AR25).
+ */
+export async function getAllBlogPostsWithEntries(): Promise<
+  { post: BlogPostView; entry: CollectionEntry<'blog'> }[]
+> {
+  const entries = await getCollection('blog');
+  return entries
+    .map((entry) => ({ post: buildBlogEntryView(entry), entry }))
+    .sort(
+      (a, b) =>
+        new Date(b.post.publishedAt).getTime() -
+        new Date(a.post.publishedAt).getTime()
     );
 }
 

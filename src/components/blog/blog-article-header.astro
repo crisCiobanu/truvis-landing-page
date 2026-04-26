@@ -1,0 +1,130 @@
+---
+/**
+ * BlogArticleHeader — Tier 2 blog composite (Story 4.4, AC8–AC11)
+ *
+ * Renders the article hero: category badge, H1 title, metadata row
+ * (author, publish date, read time), and the featured image.
+ * The single <h1> per page lives here (UX-DR28).
+ *
+ * Zero client-side JS — pure Astro component.
+ */
+import { Image } from 'astro:assets';
+
+import { t, type Locale } from '@/lib/i18n';
+import type { BlogPostView } from '@/lib/types/blog';
+
+interface Props {
+  post: BlogPostView;
+}
+
+const { post } = Astro.props;
+const locale = (Astro.currentLocale ?? 'en') as Locale;
+
+// Format category for display: "buying-guide" → "Buying Guide"
+const categoryLabel = post.category
+  .split('-')
+  .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+  .join(' ');
+
+// Human-readable date via Intl.DateTimeFormat (AC11, T5.3)
+const formattedDate = new Intl.DateTimeFormat(locale, {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}).format(new Date(post.publishedAt));
+
+// Extract numeric minutes from readTime string (e.g. "5 min read" → 5)
+const readTimeNumber = parseInt(post.readTime, 10) || 1;
+
+// Detect placeholder images (same logic as blog-preview-card)
+const isPlaceholder =
+  !post.featuredImage.src ||
+  post.featuredImage.src === '' ||
+  /placeholder/i.test(post.featuredImage.src);
+---
+
+<header class="mx-auto mb-10 max-w-3xl">
+  {/* Category badge */}
+  <span
+    class="mb-4 inline-flex items-center rounded-full bg-[var(--color-surface-3)] px-3 py-1 font-mono text-xs font-medium tracking-widest text-[var(--color-teal)] uppercase"
+  >
+    {categoryLabel}
+  </span>
+
+  {/* Single H1 per page (UX-DR28) — MDX content starts at H2 */}
+  <h1
+    class="font-display mt-4 text-3xl leading-tight font-bold text-[var(--color-primary)] sm:text-4xl lg:text-5xl"
+    itemprop="headline"
+  >
+    {post.title}
+  </h1>
+
+  {/* Metadata row: author, publish date, read time */}
+  <div
+    class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-[length:var(--text-sm)] text-[var(--color-muted)]"
+  >
+    <span itemprop="author"
+      >{t('blog.article.byAuthor', locale, { author: post.author })}</span
+    >
+    <span aria-hidden="true" class="text-[var(--color-divider)]">&middot;</span>
+    <time datetime={post.publishedAt} itemprop="datePublished">
+      {formattedDate}
+    </time>
+    <span aria-hidden="true" class="text-[var(--color-divider)]">&middot;</span>
+    <span>{t('blog.article.minRead', locale, { minutes: readTimeNumber })}</span
+    >
+  </div>
+
+  {/* Featured image — LCP candidate (AC10) */}
+  <div class="mt-8">
+    {
+      isPlaceholder ? (
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 1200 630"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-full rounded-[var(--radius-lg)] object-cover"
+        >
+          <rect width="1200" height="630" fill="var(--color-surface-3)" />
+          <circle
+            cx="600"
+            cy="250"
+            r="80"
+            fill="var(--color-teal)"
+            opacity="0.18"
+          />
+          <rect
+            x="450"
+            y="380"
+            width="300"
+            height="20"
+            rx="10"
+            fill="var(--color-teal)"
+            opacity="0.22"
+          />
+          <rect
+            x="500"
+            y="420"
+            width="200"
+            height="14"
+            rx="7"
+            fill="var(--color-amber)"
+            opacity="0.25"
+          />
+        </svg>
+      ) : (
+        <Image
+          src={post.featuredImage.src}
+          alt={post.featuredImage.alt}
+          width={post.featuredImage.width}
+          height={post.featuredImage.height}
+          loading="eager"
+          fetchpriority="high"
+          class="w-full rounded-[var(--radius-lg)] object-cover"
+          itemprop="image"
+        />
+      )
+    }
+  </div>
+</header>
