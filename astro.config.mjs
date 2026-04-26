@@ -1,12 +1,13 @@
 import { defineConfig } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
+import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://truvis.app',
-  integrations: [react(), sitemap()],
+  integrations: [mdx(), react(), sitemap()],
   // Story 1.6 / AR17 / FR50 — Astro built-in i18n routing.
   // English ships at `/` (prefixDefaultLocale: false); French and German
   // URLs `/fr/` and `/de/` are reserved for V1.2 translated content. For
