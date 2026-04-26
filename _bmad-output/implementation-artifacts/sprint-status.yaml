@@ -92,7 +92,7 @@ development_status:
   4-3-build-blog-index-page-with-category-filter-pills: review
   4-4-build-blog-year-month-slug-dynamic-article-page-with-seo-metadata: review
   4-5-build-related-articles-navigation-and-social-share-buttons-on-the-article-page: review
-  4-6-build-the-inline-blog-article-cta-block-with-pre-launch-waitlist-variant-and-post-launch-slot: ready-for-dev
+  4-6-build-the-inline-blog-article-cta-block-with-pre-launch-waitlist-variant-and-post-launch-slot: done
   4-7-replace-epic-2-blogpreviewssection-placeholder-with-real-blogpreviewcard-lib-content-ts-data: ready-for-dev
   4-8-build-static-api-v1-blog-json-endpoints-with-vitest-contract-test-and-finalised-contract-md: ready-for-dev
   4-9-configure-cloudflare-waf-rate-limiting-and-cdn-cache-headers-for-api-v1-blog: ready-for-dev
