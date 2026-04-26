@@ -88,6 +88,7 @@ describe('Blog API contract tests', () => {
     });
 
     it('contains only BlogPostView fields (no leaked internals)', () => {
+      // Keep in sync with BlogPostViewSchema in src/lib/types/blog.ts
       const expectedKeys = new Set([
         'slug',
         'title',

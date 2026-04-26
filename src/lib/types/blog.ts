@@ -33,7 +33,7 @@ export const BlogPostViewSchema = z.object({
   seo: z.object({
     title: z.string().optional(),
     description: z.string().optional(),
-    socialImage: z.string().optional(),
+    socialImage: z.string().url({ message: 'must be absolute URL' }).optional(),
     keywords: z.array(z.string()).optional(),
   }),
   relatedSlugs: z.array(z.string()),

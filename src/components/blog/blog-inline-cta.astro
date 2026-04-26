@@ -22,7 +22,7 @@ const locale = (Astro.currentLocale ?? 'en') as Locale;
 
 <!-- TODO(epic-6): trackEvent('blog_cta_view', { placement: 'inline' }) -->
 <aside
-  aria-label="Call to action"
+  aria-label={t('blog.article.inlineCta.ariaLabel', locale)}
   class="my-8 rounded-[var(--radius-lg)] border-l-4 border-[var(--color-teal)] bg-[var(--color-surface-2)] p-6 sm:p-8"
 >
   <p class="font-display text-lg font-semibold text-[var(--color-primary)]">
