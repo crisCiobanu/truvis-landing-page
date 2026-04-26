@@ -31,6 +31,12 @@
     "linkCopied": "Copied!",
     "shareOnWhatsApp": "Share on WhatsApp",
     "shareOnTwitter": "Share on Twitter",
-    "copyArticleLink": "Copy article link"
+    "copyArticleLink": "Copy article link",
+    "inlineCta": {
+      "ariaLabel": "Call to action",
+      "headline": "Ready to buy smarter?",
+      "body": "Join thousands of car buyers who inspect with confidence.",
+      "downloadApp": "Download the app"
+    }
   }
 }

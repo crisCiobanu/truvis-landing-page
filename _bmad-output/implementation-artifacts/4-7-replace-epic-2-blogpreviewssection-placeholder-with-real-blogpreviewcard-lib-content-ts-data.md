@@ -1,6 +1,6 @@
 # Story 4.7: Replace Epic 2 `BlogPreviewsSection` placeholder with real `BlogPreviewCard` + `lib/content.ts` data
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 

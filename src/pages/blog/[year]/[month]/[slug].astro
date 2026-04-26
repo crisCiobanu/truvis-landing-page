@@ -11,6 +11,7 @@ import BlogArticleHeader from '@/components/blog/blog-article-header.astro';
 import BlogArticleBody from '@/components/blog/blog-article-body.astro';
 import BlogShareButtons from '@/components/blog/blog-share-buttons.astro';
 import BlogRelatedPosts from '@/components/blog/blog-related-posts.astro';
+import BlogInlineCta from '@/components/blog/blog-inline-cta.astro';
 import { getAllBlogPostsWithEntries, getRelatedBlogPosts } from '@/lib/content';
 import type { Locale } from '@/lib/i18n';
 import type { BlogPostView } from '@/lib/types/blog';
@@ -79,6 +80,7 @@ const ogImage = post.seo?.socialImage || post.featuredImage.src;
     <BlogShareButtons title={post.title} url={post.webUrl} locale={locale} />
     <BlogRelatedPosts relatedPosts={relatedPosts} locale={locale} />
 
-    <!-- TODO(story-4.6): BlogInlineCta component -->
+    <!-- Story 4.6: Inline CTA block -->
+    <BlogInlineCta />
   </BlogArticleBody>
 </BaseLayout>

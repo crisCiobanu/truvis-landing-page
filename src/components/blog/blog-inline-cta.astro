@@ -1,0 +1,57 @@
+---
+/**
+ * BlogInlineCta — Story 4.6 (AC1–AC8)
+ *
+ * Tier 2 blog composite: visually distinct CTA block rendered after the
+ * related-articles strip on every blog article page.
+ *
+ * Pre-launch (V1): renders EmailCaptureBlock with variant="inline".
+ * Post-launch (Epic 8): renders a named slot with app-store button fallback.
+ *
+ * No client:* directive here — EmailCaptureBlock manages its own hydration.
+ */
+
+// TODO(epic-5): replace LAUNCH_PHASE_V1 with isPostLaunch() from lib/launch-phase.ts
+const LAUNCH_PHASE_V1: 'pre' | 'post' = 'pre';
+
+import EmailCaptureBlock from '@/components/forms/email-capture-block.astro';
+import { t, type Locale } from '@/lib/i18n';
+
+const locale = (Astro.currentLocale ?? 'en') as Locale;
+---
+
+<!-- TODO(epic-6): trackEvent('blog_cta_view', { placement: 'inline' }) -->
+<aside
+  aria-label={t('blog.article.inlineCta.ariaLabel', locale)}
+  class="my-8 rounded-[var(--radius-lg)] border-l-4 border-[var(--color-teal)] bg-[var(--color-surface-2)] p-6 sm:p-8"
+>
+  <p class="font-display text-lg font-semibold text-[var(--color-primary)]">
+    {t('blog.article.inlineCta.headline', locale)}
+  </p>
+  <p class="mt-2 text-[var(--color-primary)]">
+    {t('blog.article.inlineCta.body', locale)}
+  </p>
+
+  <div class="mt-4">
+    {
+      LAUNCH_PHASE_V1 === 'pre' ? (
+        <EmailCaptureBlock variant="inline" signupSource="blog-article" />
+      ) : (
+        <slot name="post-launch-cta">
+          <div data-cta-slot="blog-inline" data-testid="blog-inline-cta-slot">
+            {/* TODO(epic-8): replace fallback with real app store buttons */}
+            <button
+              type="button"
+              disabled
+              aria-disabled="true"
+              class="inline-flex items-center rounded-md bg-[var(--color-teal)] px-6 py-3 font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-teal)] disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {t('blog.article.inlineCta.downloadApp', locale)}
+            </button>
+            <span class="sr-only">Coming soon — filled in Epic 8</span>
+          </div>
+        </slot>
+      )
+    }
+  </div>
+</aside>
