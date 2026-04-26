@@ -1,0 +1,84 @@
+---
+/**
+ * Blog article page — Story 4.4 (AC1, AC3–AC11)
+ *
+ * Dynamic route: /blog/YYYY/MM/slug
+ * Thin Tier 3 shell — composes Tier 2 blog components + BaseLayout.
+ * Content access only via lib/content.ts (AR25).
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import BlogArticleHeader from '@/components/blog/blog-article-header.astro';
+import BlogArticleBody from '@/components/blog/blog-article-body.astro';
+import BlogShareButtons from '@/components/blog/blog-share-buttons.astro';
+import BlogRelatedPosts from '@/components/blog/blog-related-posts.astro';
+import { getAllBlogPostsWithEntries, getRelatedBlogPosts } from '@/lib/content';
+import type { Locale } from '@/lib/i18n';
+import type { BlogPostView } from '@/lib/types/blog';
+import type { CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const postsWithEntries = await getAllBlogPostsWithEntries();
+  return postsWithEntries.map(({ post, entry }) => {
+    const date = new Date(post.publishedAt);
+    const year = String(date.getUTCFullYear());
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    return {
+      params: { year, month, slug: post.slug },
+      props: { post, entry },
+    };
+  });
+}
+
+interface Props {
+  post: BlogPostView;
+  entry: CollectionEntry<'blog'>;
+}
+
+const { post, entry } = Astro.props;
+const { Content } = await entry.render();
+const locale = (Astro.currentLocale ?? 'en') as Locale;
+const relatedPosts = await getRelatedBlogPosts(post.slug, 3);
+
+const seoTitle = (post.seo?.title || post.title) + ' \u2014 Truvis Blog';
+const seoDescription = post.seo?.description || post.excerpt;
+const ogImage = post.seo?.socialImage || post.featuredImage.src;
+---
+
+<BaseLayout
+  title={seoTitle}
+  description={seoDescription}
+  canonical={post.webUrl}
+  ogImage={ogImage}
+  ogType="article"
+>
+  <!-- AC4: Article-specific OG tags not covered by BaseLayout -->
+  <Fragment slot="head">
+    <meta property="article:published_time" content={post.publishedAt} />
+    <meta property="article:author" content={post.author} />
+    <meta property="article:section" content={post.category} />
+    {
+      post.seo?.keywords?.map((tag) => (
+        <meta property="article:tag" content={tag} />
+      ))
+    }
+  </Fragment>
+
+  <!-- TODO(epic-6): inject blogPostingJsonLd() via BaseLayout head-jsonld slot -->
+
+  <BlogArticleBody>
+    <BlogArticleHeader post={post} />
+
+    <!-- AC7: Prose container with Truvis typography tokens -->
+    <!-- Content headings are H2+ (AC8: single H1 rule — H1 is in the article header) -->
+    <!-- TODO(epic-6): enforce alt in body images via remark plugin -->
+    <div class="prose mx-auto max-w-[65ch]">
+      <Content />
+    </div>
+
+    <!-- Story 4.5: Share buttons + related articles -->
+    <BlogShareButtons title={post.title} url={post.webUrl} locale={locale} />
+    <BlogRelatedPosts relatedPosts={relatedPosts} locale={locale} />
+
+    <!-- TODO(story-4.6): BlogInlineCta component -->
+  </BlogArticleBody>
+</BaseLayout>

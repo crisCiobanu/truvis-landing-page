@@ -1,0 +1,35 @@
+---
+/**
+ * BlogRelatedPosts — Tier 2 blog composite (Story 4.5, AC1)
+ *
+ * Renders up to 3 related articles in a responsive grid with a SectionEyebrow
+ * heading. If the related list is empty, renders nothing.
+ *
+ * Zero client-side JS — pure Astro component.
+ */
+import BlogPreviewCard from '@/components/blog/blog-preview-card.astro';
+import SectionEyebrow from '@/components/sections/section-eyebrow.astro';
+import { t, type Locale } from '@/lib/i18n';
+import type { BlogPostView } from '@/lib/types/blog';
+
+interface Props {
+  relatedPosts: BlogPostView[];
+  locale: Locale;
+}
+
+const { relatedPosts, locale } = Astro.props;
+
+// AC1: if the related list is empty, the entire strip is not rendered
+if (relatedPosts.length === 0) return;
+---
+
+<section
+  aria-label="Related articles"
+  class="mt-12 border-t border-[var(--color-divider)] pt-10"
+>
+  <SectionEyebrow eyebrow={t('blog.article.keepReading', locale)} />
+
+  <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {relatedPosts.map((post) => <BlogPreviewCard post={post} />)}
+  </div>
+</section>

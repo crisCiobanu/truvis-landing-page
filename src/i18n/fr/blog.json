@@ -4,13 +4,33 @@
     "description": "Guides, checklists and research to help you buy a used car with confidence.",
     "allCategories": "All categories",
     "readMore": "Read more",
-    "readingTime": "{minutes} min read"
+    "readingTime": "{minutes} min read",
+    "eyebrow": "The Truvis blog",
+    "headline": "Guides and research for smarter used-car decisions",
+    "filterAriaLabel": "Filter by category",
+    "featuredToggle": "Featured",
+    "emptyHeadline": "No articles yet",
+    "emptySubheadline": "Subscribe to the waitlist to be notified when we start publishing."
+  },
+  "card": {
+    "readArticle": "Read article"
   },
   "article": {
+    "byAuthor": "By {author}",
+    "minRead": "{minutes} min read",
     "publishedOn": "Published on {date}",
     "updatedOn": "Updated on {date}",
     "relatedArticles": "Related articles",
     "shareArticle": "Share this article",
-    "backToBlog": "Back to blog"
+    "backToBlog": "Back to blog",
+    "shareHeadline": "Found this useful? Share it.",
+    "keepReading": "Keep reading",
+    "shareWhatsApp": "WhatsApp",
+    "shareTwitter": "Twitter",
+    "copyLink": "Copy link",
+    "linkCopied": "Copied!",
+    "shareOnWhatsApp": "Share on WhatsApp",
+    "shareOnTwitter": "Share on Twitter",
+    "copyArticleLink": "Copy article link"
   }
 }

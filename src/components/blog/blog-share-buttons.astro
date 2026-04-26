@@ -1,0 +1,42 @@
+---
+/**
+ * BlogShareButtons — Tier 2 Astro wrapper for ArticleShare island (Story 4.5, AC2/AC4/AC5)
+ *
+ * Resolves i18n strings at build time via t() and reads the optional Twitter
+ * handle from env. Passes everything as serializable props to the React island
+ * which is hydrated with client:visible.
+ */
+import ArticleShare from '@/components/islands/article-share';
+import { getOptional } from '@/lib/env';
+import { t, type Locale } from '@/lib/i18n';
+
+interface Props {
+  title: string;
+  url: string;
+  locale: Locale;
+}
+
+const { title, url, locale } = Astro.props;
+
+// TODO(epic-5): move social handles to siteContent collection
+const twitterHandle = getOptional('PUBLIC_TRUVIS_TWITTER_HANDLE');
+
+const labels = {
+  shareHeadline: t('blog.article.shareHeadline', locale),
+  whatsApp: t('blog.article.shareWhatsApp', locale),
+  twitter: t('blog.article.shareTwitter', locale),
+  copyLink: t('blog.article.copyLink', locale),
+  linkCopied: t('blog.article.linkCopied', locale),
+  ariaWhatsApp: t('blog.article.shareOnWhatsApp', locale),
+  ariaTwitter: t('blog.article.shareOnTwitter', locale),
+  ariaCopyLink: t('blog.article.copyArticleLink', locale),
+};
+---
+
+<ArticleShare
+  client:visible
+  title={title}
+  url={url}
+  twitterHandle={twitterHandle || undefined}
+  labels={labels}
+/>

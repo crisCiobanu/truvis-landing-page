@@ -1,10 +1,11 @@
 ---
 /**
- * Blog index page — Story 4.3
+ * French blog index — Story 4.3 (localised route)
  *
- * Lists every published article with category filter pills and a
- * featured toggle. All filtering is vanilla JS (no React island).
- * Graceful degradation: without JS all cards remain visible.
+ * Thin shell duplicating the English blog index composition. Astro's
+ * i18n routing sets `Astro.currentLocale` to "fr" automatically, so
+ * all `t()` calls resolve French strings (V1: byte-for-byte English
+ * copies per FR52; real translations land in V1.2).
  */
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionEyebrow from '@/components/sections/section-eyebrow.astro';
@@ -15,7 +16,7 @@ import BlogFilterScript from '@/components/blog/blog-filter-script.astro';
 import { getAllBlogPosts } from '@/lib/content';
 import { t, type Locale } from '@/lib/i18n';
 
-const locale = (Astro.currentLocale ?? 'en') as Locale;
+const locale = (Astro.currentLocale ?? 'fr') as Locale;
 const posts = await getAllBlogPosts();
 const categories = [...new Set(posts.map((p) => p.category))];
 ---
@@ -25,7 +26,6 @@ const categories = [...new Set(posts.map((p) => p.category))];
   description={t('blog.index.description', locale)}
 >
   <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-    {/* Eyebrow + headline */}
     <SectionEyebrow variant="light" eyebrow={t('blog.index.eyebrow', locale)} />
     <h1
       class="font-display mt-4 text-3xl font-bold text-[var(--color-primary)] sm:text-4xl lg:text-5xl"
@@ -36,12 +36,10 @@ const categories = [...new Set(posts.map((p) => p.category))];
     {
       posts.length > 0 ? (
         <>
-          {/* Filter pills + featured toggle */}
           <div class="mt-8 mb-10">
             <BlogCategoryFilter categories={categories} locale={locale} />
           </div>
 
-          {/* Responsive card grid */}
           <div
             id="blog-grid"
             class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
@@ -57,7 +55,6 @@ const categories = [...new Set(posts.map((p) => p.category))];
           </div>
         </>
       ) : (
-        /* Empty state */
         <div class="mx-auto mt-16 max-w-lg text-center">
           <h2 class="font-display text-2xl font-bold text-[var(--color-primary)]">
             {t('blog.index.emptyHeadline', locale)}
