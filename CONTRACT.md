@@ -118,27 +118,64 @@ type BlogCategory =
 
 ### 5.4 Endpoints
 
-> Endpoints ship in Story 4.8. Curl examples will be added then.
-
 #### `GET /api/v1/blog/posts.json`
 
-Returns all published blog posts sorted by `publishedAt` descending.
+Returns all published blog posts sorted by `publishedAt` descending. Response is a raw JSON array of `BlogPostView` objects (no wrapper).
 
 ```bash
-# Placeholder — endpoint not yet implemented
-curl -s https://truvis.app/api/v1/blog/posts.json | jq '.posts[0].title'
+curl -s https://truvis.app/api/v1/blog/posts.json | jq '.[0].title'
 ```
 
 #### `GET /api/v1/blog/posts/[slug].json`
 
-Returns a single blog post by slug, or 404 if not found.
+Returns a single `BlogPostView` object by slug.
 
 ```bash
-# Placeholder — endpoint not yet implemented
 curl -s https://truvis.app/api/v1/blog/posts/7-things-to-check-before-buying-a-10-year-old-diesel.json | jq '.title'
 ```
 
-### 5.5 CDN Cache Headers
+#### `GET /api/v1/blog/categories.json`
+
+Returns a JSON array of `{ category: string, postCount: number }` objects, sorted alphabetically by category.
+
+```bash
+curl -s https://truvis.app/api/v1/blog/categories.json | jq '.'
+```
+
+### 5.5 Versioning Policy
+
+The `/v1/` path is stable for at least one mobile app release cycle.
+
+- **Additions** are safe: new fields can be added at any time. Consumers must tolerate unknown fields.
+- **Removals, renames, or type changes** require a new `/v2/` endpoint. The `/v1/` endpoint will be kept alive during the migration period (at least one full mobile app release cycle).
+- The TypeScript interface (`BlogPostView`) and runtime Zod schema (`BlogPostViewSchema`) in `src/lib/types/blog.ts` are the single source of truth for the schema shape.
+
+### 5.6 How the Contract is Enforced
+
+A Vitest contract test at `tests/content.test.ts` runs in CI on every pull request:
+
+1. Builds the site via `astro build` to generate the static JSON endpoints.
+2. Parses every generated endpoint file.
+3. Validates every object against `BlogPostViewSchema` (Zod runtime schema).
+4. Includes negative test cases proving the schema rejects snake_case fields, relative URLs, bare string images, and non-ISO dates.
+
+Any contract violation fails the PR check — changes cannot be merged until the shape is restored or `BlogPostViewSchema` is intentionally updated.
+
+### 5.7 Deep Linking
+
+Every `webUrl` in the API response is a stable, canonical URL that resolves to the full article HTML page (e.g., `https://truvis.app/blog/2026/03/7-things-to-check-before-buying-a-10-year-old-diesel`).
+
+Mobile app deep links **must** use `webUrl` directly. Do not construct URLs client-side from slug or date fields.
+
+### 5.8 Resilience
+
+All three endpoints are static JSON files generated at build time and served from the Cloudflare Pages CDN edge. There is no runtime server or CMS dependency per request.
+
+- **Latency:** CDN edge TTFB is typically <50ms, well under the 300ms budget (NFR8).
+- **CMS outage:** A CMS outage cannot affect a live deploy. The last successful build remains served until the next deploy succeeds (NFR36).
+- **Concurrency:** Static CDN-served files can handle arbitrary concurrent load. Rate limiting (100 req/min/IP) is enforced at the Cloudflare WAF edge layer (Story 4.9).
+
+### 5.9 CDN Cache Headers
 
 All `/api/v1/blog/*` responses include:
 
@@ -150,7 +187,7 @@ Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=60480
 - `s-maxage=86400` — CDN cache: 24 hours
 - `stale-while-revalidate=604800` — serve stale for up to 7 days while revalidating in the background
 
-### 5.6 Rate Limits
+### 5.10 Rate Limits
 
 ```
 100 requests/minute per IP
@@ -158,7 +195,7 @@ Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=60480
 
 Enforced by Cloudflare WAF (NFR18). Exceeding the limit returns HTTP 429 with a `Retry-After` header.
 
-### 5.7 How to Report Breaking Changes
+### 5.11 How to Report Breaking Changes
 
 If you discover a response that does not match this contract, or if you need a field that would require a breaking change:
 
