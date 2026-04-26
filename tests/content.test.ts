@@ -68,7 +68,12 @@ describe('Blog API contract tests', () => {
     it('all image refs are objects with src/alt/width/height', () => {
       for (const post of posts) {
         const p = post as {
-          featuredImage: { src: string; alt: string; width: number; height: number };
+          featuredImage: {
+            src: string;
+            alt: string;
+            width: number;
+            height: number;
+          };
         };
         expect(typeof p.featuredImage).toBe('object');
         expect(p.featuredImage.src).toMatch(/^https?:\/\//);

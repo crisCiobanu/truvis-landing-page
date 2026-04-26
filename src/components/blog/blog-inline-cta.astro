@@ -38,10 +38,7 @@ const locale = (Astro.currentLocale ?? 'en') as Locale;
         <EmailCaptureBlock variant="inline" signupSource="blog-article" />
       ) : (
         <slot name="post-launch-cta">
-          <div
-            data-cta-slot="blog-inline"
-            data-testid="blog-inline-cta-slot"
-          >
+          <div data-cta-slot="blog-inline" data-testid="blog-inline-cta-slot">
             {/* TODO(epic-8): replace fallback with real app store buttons */}
             <button
               type="button"
