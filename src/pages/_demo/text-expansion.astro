@@ -439,6 +439,89 @@ const padded = {
     </div>
 
     {/* ------------------------------------------------------------------ */}
+    {/* Blog index — pills, headline, empty state (Story 4.3)              */}
+    {/* ------------------------------------------------------------------ */}
+    <div
+      class="mb-12 rounded-lg bg-[var(--color-bg)] p-8 ring-1 ring-[var(--color-divider)]"
+    >
+      <p
+        class="mb-4 font-mono text-xs tracking-widest text-[var(--color-muted)] uppercase"
+      >
+        Blog index · story 4.3 · 140% padded strings
+      </p>
+      <p class="mb-6 text-xs text-[var(--color-muted)]">
+        Verify that the eyebrow pill, headline, filter pills, and empty-state
+        strings all wrap cleanly at 375/768/1280px. None should clip or
+        overflow.
+      </p>
+
+      {/* Eyebrow — padded */}
+      <div class="mb-6">
+        <SectionEyebrow
+          eyebrow="The Truvis blog — editorial and industry insights"
+          variant="light"
+        />
+      </div>
+
+      {/* Headline — padded */}
+      <h2
+        class="font-display text-3xl font-bold text-[var(--color-primary)] sm:text-4xl lg:text-5xl"
+      >
+        Guides and research for smarter used-car decisions across European
+        markets today
+      </h2>
+
+      {/* Filter pills — padded category names */}
+      <div class="mt-8 mb-6">
+        <nav
+          aria-label="Filter by category (stress test)"
+          class="flex items-center gap-2 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-x-visible"
+        >
+          <button
+            class="inline-flex items-center rounded-full bg-[var(--color-teal)] px-4 py-2 text-sm font-semibold whitespace-nowrap text-white"
+            style="min-height:44px"
+          >
+            All categories and topics available
+          </button>
+          <button
+            class="inline-flex items-center rounded-full bg-[var(--color-surface-3)] px-4 py-2 text-sm font-semibold whitespace-nowrap text-[var(--color-primary)]"
+            style="min-height:44px"
+          >
+            Buying Guide And Recommendations
+          </button>
+          <button
+            class="inline-flex items-center rounded-full bg-[var(--color-surface-3)] px-4 py-2 text-sm font-semibold whitespace-nowrap text-[var(--color-primary)]"
+            style="min-height:44px"
+          >
+            Inspection Tips And Best Practices
+          </button>
+          <span
+            class="mx-1 hidden h-6 w-px bg-[var(--color-divider)] sm:block"
+            aria-hidden="true"></span>
+          <button
+            class="inline-flex items-center rounded-full bg-[var(--color-surface-3)] px-4 py-2 text-sm font-semibold whitespace-nowrap text-[var(--color-primary)]"
+            style="min-height:44px"
+          >
+            Featured articles only
+          </button>
+        </nav>
+      </div>
+
+      {/* Empty state — padded */}
+      <div
+        class="mx-auto mt-8 max-w-lg rounded-lg bg-[var(--color-surface-2)] p-8 text-center"
+      >
+        <h3 class="font-display text-2xl font-bold text-[var(--color-primary)]">
+          No articles have been published yet at this time
+        </h3>
+        <p class="mt-3 text-[var(--color-muted)]">
+          Subscribe to the waitlist to be notified when we start publishing
+          articles and editorial content.
+        </p>
+      </div>
+    </div>
+
+    {/* ------------------------------------------------------------------ */}
     {/* Footer tagline stress                                               */}
     {/* ------------------------------------------------------------------ */}
     <div class="mb-12 rounded-lg bg-[var(--color-primary)] p-8">

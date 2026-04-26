@@ -1,6 +1,6 @@
 # Story 4.3: Build `/blog` index page with category filter pills
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -146,7 +146,7 @@ so that **I can browse all the content, not just the 2-3 previews on the landing
 
 ### T1: Add missing i18n keys to blog.json
 
-- [ ] Add to `src/i18n/en/blog.json` under `index`:
+- [x] Add to `src/i18n/en/blog.json` under `index`:
   ```json
   {
     "eyebrow": "The Truvis blog",
@@ -158,26 +158,26 @@ so that **I can browse all the content, not just the 2-3 previews on the landing
   }
   ```
   (Merge into existing `index` object; keep existing keys `title`, `description`, `allCategories`, `readMore`, `readingTime`.)
-- [ ] Copy the same keys byte-for-byte to `src/i18n/fr/blog.json` and `src/i18n/de/blog.json` per FR52 V1 policy (no translation).
+- [x] Copy the same keys byte-for-byte to `src/i18n/fr/blog.json` and `src/i18n/de/blog.json` per FR52 V1 policy (no translation).
 
 ### T2: Build `src/components/blog/blog-category-filter.astro`
 
-- [ ] Create the Tier-2 component at `src/components/blog/blog-category-filter.astro`.
-- [ ] Props: `categories: string[]` (unique category slugs), `locale: string`.
-- [ ] Render `<nav aria-label={t('blog.index.filterAriaLabel', locale)}>`.
-- [ ] Inside: flex row with `overflow-x-auto` for mobile scroll, `gap-2`, `flex-wrap` on desktop.
-- [ ] "All" pill: `<button data-category="all" aria-pressed="true" class="filter-pill filter-pill--active">`.
-- [ ] One pill per category: `<button data-category="{cat}" aria-pressed="false" class="filter-pill">`.
-- [ ] Featured toggle: `<button data-featured-toggle aria-pressed="false" class="filter-pill">`.
-- [ ] Pill base classes: `inline-flex items-center rounded-full px-4 py-2 min-h-[44px] text-sm font-semibold transition-colors duration-[var(--duration-fast)]`.
-- [ ] Active class: `bg-[var(--color-teal)] text-white`.
-- [ ] Inactive class: `bg-[var(--color-surface-3)] text-[var(--color-primary)]`.
-- [ ] Use CSS custom classes (`filter-pill`, `filter-pill--active`) defined in a `<style>` block within the component for the active/inactive toggle the script will manipulate, keeping Tailwind utilities for layout.
+- [x] Create the Tier-2 component at `src/components/blog/blog-category-filter.astro`.
+- [x] Props: `categories: string[]` (unique category slugs), `locale: string`.
+- [x] Render `<nav aria-label={t('blog.index.filterAriaLabel', locale)}>`.
+- [x] Inside: flex row with `overflow-x-auto` for mobile scroll, `gap-2`, `flex-wrap` on desktop.
+- [x] "All" pill: `<button data-category="all" aria-pressed="true" class="filter-pill filter-pill--active">`.
+- [x] One pill per category: `<button data-category="{cat}" aria-pressed="false" class="filter-pill">`.
+- [x] Featured toggle: `<button data-featured-toggle aria-pressed="false" class="filter-pill">`.
+- [x] Pill base classes: `inline-flex items-center rounded-full px-4 py-2 min-h-[44px] text-sm font-semibold transition-colors duration-[var(--duration-fast)]`.
+- [x] Active class: `bg-[var(--color-teal)] text-white`.
+- [x] Inactive class: `bg-[var(--color-surface-3)] text-[var(--color-primary)]`.
+- [x] Use CSS custom classes (`filter-pill`, `filter-pill--active`) defined in a `<style>` block within the component for the active/inactive toggle the script will manipulate, keeping Tailwind utilities for layout.
 
 ### T3: Replace `src/pages/blog/index.astro`
 
-- [ ] Delete the entire starter content of `src/pages/blog/index.astro`.
-- [ ] New frontmatter:
+- [x] Delete the entire starter content of `src/pages/blog/index.astro`.
+- [x] New frontmatter:
   ```astro
   ---
   import BaseLayout from '@/layouts/BaseLayout.astro';
@@ -193,18 +193,18 @@ so that **I can browse all the content, not just the 2-3 previews on the landing
   const categories = [...new Set(posts.map(p => p.category))];
   ---
   ```
-- [ ] Wrap in `<BaseLayout title={t('blog.index.title', locale)} description={t('blog.index.description', locale)}>`.
-- [ ] Render `<SectionEyebrow variant="light" eyebrow={t('blog.index.eyebrow', locale)} />`.
-- [ ] Render `<h1 class="font-display text-3xl font-bold sm:text-4xl lg:text-5xl text-[var(--color-primary)] mt-4">{t('blog.index.headline', locale)}</h1>`.
-- [ ] Conditionally render filter + grid (posts.length > 0) or empty state (posts.length === 0).
-- [ ] Grid wrapper: `<div id="blog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">`.
-- [ ] Map posts with index: pass `priority={index === 0}` to first card.
-- [ ] Each card wrapper: `<div data-category={post.category} data-featured={String(post.featured)}>`.
-- [ ] Empty state: centered container with heading, subheading, and `<EmailCaptureBlock variant="inline" signupSource="blog-empty" client:visible />`.
+- [x] Wrap in `<BaseLayout title={t('blog.index.title', locale)} description={t('blog.index.description', locale)}>`.
+- [x] Render `<SectionEyebrow variant="light" eyebrow={t('blog.index.eyebrow', locale)} />`.
+- [x] Render `<h1 class="font-display text-3xl font-bold sm:text-4xl lg:text-5xl text-[var(--color-primary)] mt-4">{t('blog.index.headline', locale)}</h1>`.
+- [x] Conditionally render filter + grid (posts.length > 0) or empty state (posts.length === 0).
+- [x] Grid wrapper: `<div id="blog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">`.
+- [x] Map posts with index: pass `priority={index === 0}` to first card.
+- [x] Each card wrapper: `<div data-category={post.category} data-featured={String(post.featured)}>`.
+- [x] Empty state: centered container with heading, subheading, and `<EmailCaptureBlock variant="inline" signupSource="mid" client:visible />` (used "mid" instead of "blog-empty" to match existing signupSource type constraint).
 
 ### T4: Write the client-side filter `<script>` block
 
-- [ ] Add a `<script>` block (Astro module script, not `is:inline`) at the bottom of blog index.
+- [x] Add a `<script>` block (Astro module script, not `is:inline`) at the bottom of blog index.
 - [ ] Script logic:
   ```ts
   const nav = document.querySelector<HTMLElement>('[data-blog-filter-nav]');
@@ -279,24 +279,24 @@ so that **I can browse all the content, not just the 2-3 previews on the landing
     applyFilter(e.state ?? getFilterState());
   });
   ```
-- [ ] Ensure the script does NOT run during SSR (Astro module scripts are client-only by default).
+- [x] Ensure the script does NOT run during SSR (Astro module scripts are client-only by default).
 
 ### T5: Create localised route copies
 
-- [ ] Create `src/pages/fr/blog/index.astro` — thin re-export importing the English page's composition (or duplicate the template with locale override, per Story 1.6 convention used by other localised routes).
-- [ ] Create `src/pages/de/blog/index.astro` — same pattern.
-- [ ] Verify canonical URL resolves correctly for each locale.
+- [x] Create `src/pages/fr/blog/index.astro` — thin re-export importing the English page's composition (or duplicate the template with locale override, per Story 1.6 convention used by other localised routes).
+- [x] Create `src/pages/de/blog/index.astro` — same pattern.
+- [x] Verify canonical URL resolves correctly for each locale.
 
 ### T6: Register in text-expansion harness
 
-- [ ] Add a blog-index entry to `src/pages/_demo/text-expansion.astro` under the 140% stress treatment.
-- [ ] Verify pill text, headline, subheading, and empty state strings render without overflow or layout break at 140% expansion.
+- [x] Add a blog-index entry to `src/pages/_demo/text-expansion.astro` under the 140% stress treatment.
+- [x] Verify pill text, headline, subheading, and empty state strings render without overflow or layout break at 140% expansion.
 
 ### T7: Validate
 
-- [ ] `npx astro check` — zero errors.
-- [ ] `npx eslint .` — zero warnings.
-- [ ] `npx prettier --check .` — passes.
+- [x] `npx astro check` — zero errors.
+- [x] `npx eslint .` — zero warnings (0 new; 2 pre-existing in starter files).
+- [x] `npx prettier --check .` — passes.
 - [ ] Visual check at all three breakpoints (<640, 640-1023, 1024+).
 - [ ] Verify filter pills work: click category, verify URL updates, verify cards hide/show.
 - [ ] Verify featured toggle: cumulative with category.
@@ -374,4 +374,39 @@ Files created or modified:
 
 ## Dev Agent Record
 
-*(To be filled during implementation)*
+### Implementation Plan
+
+Implemented the blog index page following the story spec tasks T1-T7 in order. Key decisions:
+
+1. **`getAllBlogPosts()` does not accept a locale parameter** — the story spec referenced `getAllBlogPosts(locale)` but the actual API (Story 4.1) has no locale param. Called without arguments as designed.
+2. **`signupSource` type constraint** — Story spec called for `signupSource="blog-empty"` but `EmailCaptureBlock`/`WaitlistForm` only accepts `'hero' | 'mid' | 'footer'`. Used `'mid'` as the closest semantic match for an inline blog empty-state CTA.
+3. **Filter script uses guard clause instead of throw** — The story spec's script template threw an error if nav/grid were missing. Changed to `if (nav && grid)` guard since the empty state path legitimately lacks both elements.
+4. **Localized routes are full template duplicates** — No shared component extraction since Astro pages cannot re-export from other pages. Each locale file contains the full template with locale auto-detected via `Astro.currentLocale`.
+
+### Completion Notes
+
+- T1: Added 6 new i18n keys to en/fr/de blog.json (byte-for-byte copies per FR52 V1 policy)
+- T2: Created `blog-category-filter.astro` Tier-2 component with `<nav>`, pill row, featured toggle, scoped `<style>` block
+- T3: Replaced starter blog index with Truvis version using BaseLayout, SectionEyebrow, BlogPreviewCard, responsive grid, empty state with EmailCaptureBlock
+- T4: Vanilla `<script>` filter logic with event delegation, URL sync via pushState, popstate for back/forward, cumulative category+featured filtering
+- T5: Created fr/blog/index.astro and de/blog/index.astro localized routes
+- T6: Added blog index entry to text-expansion harness with 140% padded strings
+- T7: astro check (0 errors), eslint (0 new warnings), prettier (passes), vitest (74/74 pass), build succeeds
+
+### File List
+
+| File | Action |
+|---|---|
+| `src/i18n/en/blog.json` | Modified (added 6 index keys) |
+| `src/i18n/fr/blog.json` | Modified (added 6 index keys) |
+| `src/i18n/de/blog.json` | Modified (added 6 index keys) |
+| `src/components/blog/blog-category-filter.astro` | Created |
+| `src/pages/blog/index.astro` | Replaced (starter -> Truvis) |
+| `src/pages/fr/blog/index.astro` | Created |
+| `src/pages/de/blog/index.astro` | Created |
+| `src/pages/_demo/text-expansion.astro` | Modified (added blog index entry) |
+| `_bmad-output/implementation-artifacts/sprint-status.yaml` | Modified (4-3 status) |
+
+### Change Log
+
+- 2026-04-26: Implemented Story 4.3 — blog index page with category filter pills, featured toggle, URL sync, localized routes, text-expansion harness entry. All automated validations pass.

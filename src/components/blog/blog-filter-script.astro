@@ -1,0 +1,94 @@
+---
+/**
+ * BlogFilterScript — shared client-side filter logic (Story 4.3)
+ *
+ * Extracted into its own Astro component so the ~75-line vanilla JS
+ * script is authored once and included by every locale blog index page.
+ *
+ * Expects the page to contain:
+ *   - A `[data-blog-filter-nav]` element with category + featured buttons
+ *   - A `#blog-grid` element whose direct children carry `data-category`
+ *     and `data-featured` attributes
+ */
+---
+
+<script>
+  const nav = document.querySelector<HTMLElement>('[data-blog-filter-nav]');
+  const grid = document.getElementById('blog-grid');
+  if (nav && grid) {
+    const cards = grid.querySelectorAll<HTMLElement>('[data-category]');
+    const categoryButtons =
+      nav.querySelectorAll<HTMLButtonElement>('[data-category]');
+    const featuredToggle = nav.querySelector<HTMLButtonElement>(
+      '[data-featured-toggle]'
+    );
+
+    function getFilterState(): { category: string; featured: boolean } {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        category: params.get('category') ?? 'all',
+        featured: params.get('featured') === 'true',
+      };
+    }
+
+    function applyFilter(state: { category: string; featured: boolean }) {
+      // Update category pills
+      categoryButtons.forEach((btn) => {
+        const isActive = btn.dataset.category === state.category;
+        btn.setAttribute('aria-pressed', String(isActive));
+        btn.classList.toggle('filter-pill--active', isActive);
+      });
+
+      // Update featured toggle
+      if (featuredToggle) {
+        featuredToggle.setAttribute('aria-pressed', String(state.featured));
+        featuredToggle.classList.toggle('filter-pill--active', state.featured);
+      }
+
+      // Show/hide cards
+      cards.forEach((card) => {
+        const matchCategory =
+          state.category === 'all' || card.dataset.category === state.category;
+        const matchFeatured =
+          !state.featured || card.dataset.featured === 'true';
+        card.classList.toggle('hidden', !(matchCategory && matchFeatured));
+      });
+    }
+
+    function updateUrl(state: { category: string; featured: boolean }) {
+      const url = new URL(window.location.href);
+      if (state.category === 'all') url.searchParams.delete('category');
+      else url.searchParams.set('category', state.category);
+      if (!state.featured) url.searchParams.delete('featured');
+      else url.searchParams.set('featured', 'true');
+      history.pushState(state, '', url);
+    }
+
+    // Event delegation on nav
+    nav.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>(
+        'button'
+      );
+      if (!btn) return;
+
+      const current = getFilterState();
+
+      if (btn.hasAttribute('data-featured-toggle')) {
+        current.featured = !current.featured;
+      } else if (btn.dataset.category) {
+        current.category = btn.dataset.category;
+      }
+
+      applyFilter(current);
+      updateUrl(current);
+    });
+
+    // Restore from URL on load
+    applyFilter(getFilterState());
+
+    // Handle browser back/forward
+    window.addEventListener('popstate', (e) => {
+      applyFilter((e as PopStateEvent).state ?? getFilterState());
+    });
+  }
+</script>

@@ -22,7 +22,7 @@ import { cn } from '@/lib/utils';
 // ---------------------------------------------------------------------------
 
 export interface WaitlistFormProps {
-  signupSource: 'hero' | 'mid' | 'footer';
+  signupSource: 'hero' | 'mid' | 'footer' | 'blog-empty';
   className?: string;
   variant: 'hero' | 'inline' | 'footer';
   locale?: Locale;

@@ -1,0 +1,95 @@
+---
+/**
+ * BlogCategoryFilter — Tier 2 blog composite (Story 4.3)
+ *
+ * Renders a horizontal pill row for category filtering plus a featured
+ * toggle. All interactivity is handled by a vanilla `<script>` block
+ * on the blog index page — this component renders static HTML only.
+ *
+ * Graceful degradation: without JS, pills render as inert buttons and
+ * all cards remain visible.
+ */
+import { t, type Locale } from '@/lib/i18n';
+
+interface Props {
+  categories: string[];
+  locale: Locale;
+}
+
+const { categories, locale } = Astro.props;
+
+// Format category slug for display: "buying-guide" → "Buying Guide"
+function formatCategory(slug: string): string {
+  return slug
+    .split('-')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+---
+
+<nav
+  aria-label={t('blog.index.filterAriaLabel', locale)}
+  data-blog-filter-nav
+  class="flex items-center gap-2 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-x-visible"
+  style="-webkit-overflow-scrolling: touch;"
+>
+  {/* "All" pill — active by default */}
+  <button
+    data-category="all"
+    aria-pressed="true"
+    class="filter-pill filter-pill--active"
+  >
+    {t('blog.index.allCategories', locale)}
+  </button>
+
+  {/* One pill per unique category */}
+  {
+    categories.map((cat) => (
+      <button data-category={cat} aria-pressed="false" class="filter-pill">
+        {formatCategory(cat)}
+      </button>
+    ))
+  }
+
+  {/* Visual separator */}
+  <span
+    class="mx-1 hidden h-6 w-px bg-[var(--color-divider)] sm:block"
+    aria-hidden="true"></span>
+
+  {/* Featured toggle */}
+  <button data-featured-toggle aria-pressed="false" class="filter-pill">
+    {t('blog.index.featuredToggle', locale)}
+  </button>
+</nav>
+
+<style>
+  .filter-pill {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    border-radius: 9999px;
+    padding-inline: 1rem;
+    padding-block: 0.5rem;
+    min-height: 44px;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background-color: var(--color-surface-3);
+    color: var(--color-primary);
+    transition:
+      background-color var(--duration-fast) ease,
+      color var(--duration-fast) ease;
+  }
+
+  .filter-pill:focus-visible {
+    outline: 2px solid var(--color-teal);
+    outline-offset: 2px;
+  }
+
+  .filter-pill--active {
+    background-color: var(--color-teal);
+    color: white;
+  }
+</style>
