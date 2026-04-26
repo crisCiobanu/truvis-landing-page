@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-04-10
-last_updated: 2026-04-22 (Stories 5-1 to 5-5 → ready-for-dev — Epic 5 fully storied)
+last_updated: 2026-04-26 (Story 3-7 → done — E2E double opt-in verified)
 project: car-buy-assistant
 project_key: NOKEY
 tracking_system: file-system
@@ -80,7 +80,7 @@ development_status:
   3-4-build-emailcaptureblock-composite-and-waitlistform-react-island-with-full-state-machine: done
   3-5-replace-epic-2-cta-placeholder-slots-with-real-emailcaptureblock: done
   3-6-build-waitlist-confirmed-confirmation-page-with-confirmationpagelayout-and-embedded-microsurvey: review
-  3-7-verify-end-to-end-double-opt-in-drip-enrolment-and-unsubscribe-via-loops-test-audience: ready-for-dev
+  3-7-verify-end-to-end-double-opt-in-drip-enrolment-and-unsubscribe-via-loops-test-audience: done
   epic-3-retrospective: optional
 
   # ─────────────────────────────────────────────────────────────
