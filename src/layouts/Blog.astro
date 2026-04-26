@@ -16,8 +16,8 @@ const { entry, headings } = Astro.props;
 
 const pageData = {
   title: entry.data.title,
-  description: entry.data.description,
-  image: entry.data.image,
+  description: entry.data.excerpt,
+  image: entry.data.featuredImage.src,
   type: 'article',
 };
 
@@ -48,7 +48,7 @@ function formatDate(date: Date) {
           <div class="mb-4 flex flex-wrap items-center gap-3">
             <Badge variant="secondary">{entry.data.category}</Badge>
             <span class="text-muted-foreground text-sm">
-              {formatDate(new Date(entry.data.date))}
+              {formatDate(new Date(entry.data.publishDate))}
             </span>
             {
               entry.data.author && (
@@ -59,23 +59,10 @@ function formatDate(date: Date) {
             }
           </div>
 
-          {/* Tags */}
           {
-            entry.data.tags && entry.data.tags.length > 0 && (
-              <div class="mb-4 flex flex-wrap gap-2">
-                {entry.data.tags.map((tag) => (
-                  <span class="bg-muted text-muted-foreground rounded-md px-2 py-1 text-xs">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )
-          }
-
-          {
-            entry.data.description && (
+            entry.data.excerpt && (
               <p class="text-muted-foreground mb-6 text-xl">
-                {entry.data.description}
+                {entry.data.excerpt}
               </p>
             )
           }
@@ -89,17 +76,13 @@ function formatDate(date: Date) {
             />
           </div>
 
-          {
-            entry.data.image && entry.data.image.trim() !== '' && (
-              <Image
-                src={entry.data.image}
-                alt={entry.data.title}
-                width={1200}
-                height={630}
-                class="w-full rounded-lg object-cover"
-              />
-            )
-          }
+          <Image
+            src={entry.data.featuredImage.src}
+            alt={entry.data.featuredImage.alt}
+            width={entry.data.featuredImage.width}
+            height={entry.data.featuredImage.height}
+            class="w-full rounded-lg object-cover"
+          />
         </header>
 
         <div class="prose dark:prose-invert max-w-none">

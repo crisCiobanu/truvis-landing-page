@@ -27,7 +27,7 @@ export function BlogSearch({
   posts,
   viewMode = 'list',
   gridColumns = '2',
-  placeholder = 'Search posts by title or description...',
+  placeholder = 'Search posts by title or excerpt...',
   className,
 }: BlogSearchProps) {
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -41,9 +41,9 @@ export function BlogSearch({
 
     return posts.filter((post) => {
       const title = post.data.title.toLowerCase();
-      const description = post.data.description.toLowerCase();
+      const excerpt = post.data.excerpt.toLowerCase();
 
-      return title.includes(query) || description.includes(query);
+      return title.includes(query) || excerpt.includes(query);
     });
   }, [posts, searchQuery]);
 
@@ -101,11 +101,11 @@ export function BlogSearch({
                   viewMode === 'list' ? 'flex flex-1' : ''
                 }`}
               >
-                {entry.data.image && viewMode === 'list' && (
+                {viewMode === 'list' && (
                   <div className="w-48 shrink-0">
                     <img
-                      src={entry.data.image}
-                      alt={entry.data.title}
+                      src={entry.data.featuredImage.src}
+                      alt={entry.data.featuredImage.alt}
                       className="h-full w-full object-cover"
                     />
                   </div>
@@ -113,28 +113,21 @@ export function BlogSearch({
                 <div className="flex-1 p-6">
                   <div className="mb-4 flex items-center gap-2">
                     <Badge variant="secondary">{entry.data.category}</Badge>
-                    {entry.data.tags && entry.data.tags.length > 0 && (
-                      <span className="text-muted-foreground text-xs">
-                        {entry.data.tags.slice(0, 2).join(', ')}
-                      </span>
-                    )}
                     <span className="text-muted-foreground ml-auto flex items-center text-sm">
                       <Calendar className="mr-1 h-4 w-4" />
-                      {formatDate(new Date(entry.data.date))}
+                      {formatDate(new Date(entry.data.publishDate))}
                     </span>
                   </div>
                   <h2 className="mb-2 text-2xl font-bold">
                     {entry.data.title}
                   </h2>
-                  <p className="text-muted-foreground">
-                    {entry.data.description}
-                  </p>
+                  <p className="text-muted-foreground">{entry.data.excerpt}</p>
                 </div>
-                {entry.data.image && viewMode === 'grid' && (
+                {viewMode === 'grid' && (
                   <div className="aspect-video w-full">
                     <img
-                      src={entry.data.image}
-                      alt={entry.data.title}
+                      src={entry.data.featuredImage.src}
+                      alt={entry.data.featuredImage.alt}
                       className="h-full w-full object-cover"
                     />
                   </div>

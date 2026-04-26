@@ -40,11 +40,133 @@ Reviewer grep: `rg "process\.env|import\.meta\.env" src/ --glob '!src/lib/env.ts
 
 Reviewer grep: `rg "\$[a-z][a-zA-Z]*\.set\(" src/ --glob '!src/lib/stores/**'` must return zero results.
 
-## 5. Blog API contract (FR / NFR31)
+## 5. Blog API Contract (FR / NFR31)
 
-- `/api/v1/blog/*.json` is the **only** data contract with the Truvis mobile app.
-- Every change to the endpoint payload is **additive-only**. Removing or renaming a field requires bumping to `/api/v2/...` and keeping `/v1/` frozen for at least one mobile release.
-- Epic 4 story 4.8 lands the full schema here. Until then, no endpoint under `/api/v1/blog/` exists.
+> **Audience:** Mobile app developers consuming the Truvis blog API.
+> **Guarantee:** This contract is additive-only at `/v1/`. Field renames or removals require a new `/v2/` endpoint, with `/v1/` kept alive for at least one mobile app release cycle.
+
+### 5.1 Base URL & Versioning
+
+```
+${PUBLIC_SITE_URL}/api/v1/blog/
+```
+
+- All endpoints are versioned under `/v1/`.
+- New fields may be added to existing responses at any time (additive-only).
+- Existing fields will never be renamed, removed, or have their type changed within a version.
+- If a breaking change is required, a new `/v2/` namespace will be introduced and `/v1/` will remain operational for at least one mobile app release cycle.
+
+### 5.2 `BlogPostView` Type
+
+The canonical TypeScript interface for every blog entry returned by the API:
+
+```typescript
+interface BlogPostView {
+  slug: string;
+  title: string;
+  excerpt: string;
+  category: BlogCategory;
+  publishedAt: string; // ISO 8601 with timezone
+  author: string;
+  readTime: string;
+  featured: boolean;
+  featuredImage: {
+    src: string; // absolute URL
+    alt: string;
+    width: number;
+    height: number;
+  };
+  webUrl: string; // absolute URL
+  seo: {
+    title?: string;
+    description?: string;
+    socialImage?: string;
+    keywords?: string[];
+  };
+  relatedSlugs: string[];
+}
+
+type BlogCategory =
+  | 'buying-guide'
+  | 'inspection-tips'
+  | 'case-study'
+  | 'deep-dive';
+```
+
+### 5.3 Field Table
+
+| Field                  | Type           | Required | Example                                                   | Description                                                          |
+| ---------------------- | -------------- | -------- | --------------------------------------------------------- | -------------------------------------------------------------------- |
+| `slug`                 | `string`       | Yes      | `"7-things-to-check-before-buying-a-10-year-old-diesel"`  | URL-safe kebab-case identifier                                       |
+| `title`                | `string`       | Yes      | `"7 Things to Check Before Buying a 10-Year-Old Diesel"`  | Article title (max 70 chars)                                         |
+| `excerpt`              | `string`       | Yes      | `"A pre-purchase checklist for older diesel vehicles..."` | Short description (max 200 chars)                                    |
+| `category`             | `BlogCategory` | Yes      | `"buying-guide"`                                          | One of: `buying-guide`, `inspection-tips`, `case-study`, `deep-dive` |
+| `publishedAt`          | `string`       | Yes      | `"2026-03-15T00:00:00.000Z"`                              | ISO 8601 datetime with timezone                                      |
+| `author`               | `string`       | Yes      | `"Cristian Ciobanu"`                                      | Author display name                                                  |
+| `readTime`             | `string`       | Yes      | `"6 min"`                                                 | Estimated reading time                                               |
+| `featured`             | `boolean`      | Yes      | `true`                                                    | Whether the article is featured                                      |
+| `featuredImage.src`    | `string`       | Yes      | `"https://truvis.app/assets/blog/placeholder.svg"`        | Absolute URL to the featured image                                   |
+| `featuredImage.alt`    | `string`       | Yes      | `"A mechanic inspecting a diesel engine bay"`             | Alt text for accessibility                                           |
+| `featuredImage.width`  | `number`       | Yes      | `1200`                                                    | Image width in pixels                                                |
+| `featuredImage.height` | `number`       | Yes      | `630`                                                     | Image height in pixels                                               |
+| `webUrl`               | `string`       | Yes      | `"https://truvis.app/blog/2026/03/7-things-to-check..."`  | Absolute URL to the web article                                      |
+| `seo.title`            | `string`       | No       | `"7 Things to Check... \| Truvis"`                        | SEO title override                                                   |
+| `seo.description`      | `string`       | No       | `"A pre-purchase checklist..."`                           | SEO meta description override                                        |
+| `seo.socialImage`      | `string`       | No       | `"https://truvis.app/og/article.png"`                     | Social sharing image URL                                             |
+| `seo.keywords`         | `string[]`     | No       | `["diesel inspection", "used car checklist"]`             | SEO keywords                                                         |
+| `relatedSlugs`         | `string[]`     | Yes      | `["the-900-euro-problem...", "why-a-pre-purchase..."]`    | Slugs of related articles (may be empty)                             |
+
+### 5.4 Endpoints
+
+> Endpoints ship in Story 4.8. Curl examples will be added then.
+
+#### `GET /api/v1/blog/posts.json`
+
+Returns all published blog posts sorted by `publishedAt` descending.
+
+```bash
+# Placeholder — endpoint not yet implemented
+curl -s https://truvis.app/api/v1/blog/posts.json | jq '.posts[0].title'
+```
+
+#### `GET /api/v1/blog/posts/[slug].json`
+
+Returns a single blog post by slug, or 404 if not found.
+
+```bash
+# Placeholder — endpoint not yet implemented
+curl -s https://truvis.app/api/v1/blog/posts/7-things-to-check-before-buying-a-10-year-old-diesel.json | jq '.title'
+```
+
+### 5.5 CDN Cache Headers
+
+All `/api/v1/blog/*` responses include:
+
+```
+Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=604800
+```
+
+- `max-age=300` — browser cache: 5 minutes
+- `s-maxage=86400` — CDN cache: 24 hours
+- `stale-while-revalidate=604800` — serve stale for up to 7 days while revalidating in the background
+
+### 5.6 Rate Limits
+
+```
+100 requests/minute per IP
+```
+
+Enforced by Cloudflare WAF (NFR18). Exceeding the limit returns HTTP 429 with a `Retry-After` header.
+
+### 5.7 How to Report Breaking Changes
+
+If you discover a response that does not match this contract, or if you need a field that would require a breaking change:
+
+1. Open a GitHub issue on this repository
+2. Apply the label `api-contract`
+3. Include the endpoint URL, the expected shape, and the actual shape
+
+We will triage within 48 hours and coordinate any changes with a deprecation window.
 
 ## 6. CSS Motion Tokens
 

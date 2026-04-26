@@ -17,3 +17,11 @@ This file aggregates items flagged during code review or dev that are real but n
 ## Deferred from: code review of 3-2-provision-cloudflare-turnstile-and-wire-site-and-secret-keys (2026-04-21)
 
 - **Whitespace-only env values pass `getRequired()` validation** — `getRequired()` in `src/lib/env.ts:52` checks `=== ''` but not `.trim()`. A value like `"  "` would pass validation and propagate as a valid key, causing confusing downstream errors (e.g., Turnstile `siteverify` rejection). Pre-existing gap in the helper, not introduced by Story 3.2.
+
+## Deferred from: code review of story-4.1 (2026-04-26)
+
+- **`getCollection()` called directly in `src/pages/blog/index.astro` and `src/pages/blog/[...slug].astro`** — violates Content Access Boundary (AR25, CLAUDE.md). Pre-existing starter template pages; will be rebuilt in Stories 4.3–4.5.
+- **`BlogSearch.tsx` uses raw `CollectionEntry` instead of `BlogPostView`** — imports `CollectionEntry` from `astro:content` and operates on `entry.data.*` fields directly. Pre-existing component; refactor when blog pages are rebuilt.
+- **`BlogSearch.tsx` lives outside `src/components/islands/` but uses `client:load`** — per CLAUDE.md, `client:load` components must live in `islands/`. Pre-existing component location.
+- **`Blog.astro` imports `CollectionEntry` from `astro:content`** — should use `BlogPostView` from `lib/types/blog.ts`. Pre-existing layout; will be rebuilt in Stories 4.3–4.5.
+- **`webUrl` pattern `/blog/year/month/slug` doesn't match current Astro routes** — current `[...slug].astro` generates flat routes. The `webUrl` format is the intended URL structure; blog pages will be built to match in Stories 4.3–4.5.
