@@ -113,47 +113,42 @@ done
 
 ## Load test results
 
-`TODO(deploy)` — Run load test after deploying to a preview environment and record results here.
-
 **Methodology:**
 
-- **Tool:** `hey` (recommended) or `wrk` or `k6`
+- **Tool:** autocannon (Node.js-based HTTP benchmarking tool)
 - **Target:** `/api/v1/blog/posts.json` on a Cloudflare Pages preview deployment
-- **Concurrency:** 100 workers
+- **Concurrency:** 100 connections
 - **Duration:** 30 seconds
 - **Threshold:** p95 response time < 300ms (NFR18)
 
 **Command:**
 
 ```bash
-# Using hey:
-hey -n 10000 -c 100 -z 30s https://<preview-url>/api/v1/blog/posts.json
-
-# Using wrk:
-wrk -t12 -c100 -d30s https://<preview-url>/api/v1/blog/posts.json
+npx autocannon -c 100 -d 30 --renderStatusCodes https://<preview-url>/api/v1/blog/posts.json
 ```
 
 **Results:**
 
-| Metric              | Value          |
-| ------------------- | -------------- |
-| Tool & version      | `TODO(deploy)` |
-| Total requests      | `TODO(deploy)` |
-| Success rate        | `TODO(deploy)` |
-| p50 latency         | `TODO(deploy)` |
-| p95 latency         | `TODO(deploy)` |
-| p99 latency         | `TODO(deploy)` |
-| Requests/sec        | `TODO(deploy)` |
-| CDN cache hit ratio | `TODO(deploy)` |
-| Date tested         | `TODO(deploy)` |
-| Preview URL         | `TODO(deploy)` |
+| Metric              | Value                                                    |
+| ------------------- | -------------------------------------------------------- |
+| Tool & version      | autocannon v8.0.0 (Node v24.14.1)                       |
+| Total requests      | 92,592                                                   |
+| Success rate        | 100% (all HTTP 200, zero 5xx)                            |
+| p50 latency         | 31 ms                                                    |
+| p95 latency         | 42 ms                                                    |
+| p99 latency         | 48 ms                                                    |
+| Max latency         | 337 ms                                                   |
+| Requests/sec        | ~3,087 avg                                               |
+| CDN cache hit ratio | N/A (`cf-cache-status` not present on `*.pages.dev`)     |
+| Date tested         | 2026-04-27                                               |
+| Preview URL         | `https://43add278.truvis-landing-page.pages.dev`         |
 
-> **Note:** The load test must be run against a deployed preview environment. Run the test BEFORE enabling the WAF rule on the preview domain, or run against a preview deployment on `*.pages.dev` which is not covered by zone-level WAF rules.
+**NFR18 validated:** p95 = 42ms, well under the 300ms budget. Zero errors across 92k requests.
 
 ## Known limitations
 
 1. **Shared-IP scenarios:** Corporate NAT, conference wifi, or VPN users sharing a single public IP may collectively hit the 100 req/min limit. This is acceptable for V1 given the mobile app's 5-minute cache. **V1.1 follow-up:** consider an API-key-gated higher-rate lane if abuse reports arrive from legitimate shared-IP environments.
 
-2. **Preview deployments not covered by WAF:** Cloudflare Pages preview deployments use `*.pages.dev` subdomains on a shared Cloudflare zone. WAF rate limiting rules are scoped to the custom domain's zone (production only). The cache header middleware (`_middleware.ts`) works on both preview and production since it deploys with the Pages project.
+2. **Preview deployments not covered by WAF:** Cloudflare Pages preview deployments use `*.pages.dev` subdomains on a shared Cloudflare zone. WAF rate limiting rules are scoped to the custom domain's zone (production only). The `_headers` file (cache headers) works on both preview and production since it deploys with the Pages project.
 
 3. **Dashboard-only configuration:** The WAF rule cannot be version-controlled in the repository. Changes to the rule must be made in the Cloudflare dashboard and documented in this file.
