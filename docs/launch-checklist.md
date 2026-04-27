@@ -179,7 +179,7 @@ Loops provides built-in unsubscribe handling via a footer link on every email.
 - [ ] Verify CDN cache hit: second `curl -I` shows `cf-cache-status: HIT`
 - [ ] Re-run load test against production: `hey -n 10000 -c 100 -z 30s https://truvis.app/api/v1/blog/posts.json`
 - [ ] Confirm p95 < 300ms (NFR18 budget)
-- [ ] Verify rate limit: send 101 rapid requests, confirm 429 + Retry-After on excess
+- [ ] Verify rate limit: send 25+ rapid requests in 10s, confirm 429 + Retry-After on excess
 
 ---
 

@@ -4,21 +4,21 @@
 
 The Truvis blog content API (`/api/v1/blog/*`) is protected by a Cloudflare WAF rate limiting rule (NFR14). This prevents abuse and ensures the mobile app carousel has reliable, low-latency access to blog content.
 
-The static JSON endpoints are also served with explicit CDN cache headers via a Cloudflare Pages Functions middleware (AR9), ensuring aggressive edge caching and resilience.
+The static JSON endpoints are also served with explicit CDN cache headers via a Cloudflare Pages `_headers` file (AR9), ensuring aggressive edge caching and resilience.
 
 ## Rule configuration
 
-| Field                  | Value                                               |
-| ---------------------- | --------------------------------------------------- |
-| **Rule name**          | `Blog API rate limit - /api/v1/blog/*`              |
-| **Rule ID**            | `TODO(deploy)` — record after creating in dashboard |
-| **Matcher**            | `(http.request.uri.path matches "^/api/v1/blog/")`  |
-| **Threshold**          | 100 requests per 60 seconds                         |
-| **Counting**           | Per client IP (`ip.src`)                            |
-| **Mitigation action**  | Block (HTTP 429)                                    |
-| **Mitigation timeout** | 60 seconds                                          |
-| **Response headers**   | `Retry-After: 60`                                   |
-| **Scope**              | Production zone only (see Known Limitations)        |
+| Field                  | Value                                              |
+| ---------------------- | -------------------------------------------------- |
+| **Rule name**          | `blog-api-rate-limit`                              |
+| **Matcher**            | `(http.request.uri.path matches "^/api/v1/blog/")` |
+| **Threshold**          | 21 requests per 10 seconds (~126 req/min)          |
+| **Counting**           | Per client IP (`ip.src`)                           |
+| **Mitigation action**  | Block (HTTP 429)                                   |
+| **Mitigation timeout** | 10 seconds                                         |
+| **Scope**              | Production zone only (see Known Limitations)       |
+
+The shorter 10-second window provides tighter burst protection than a per-minute limit — a misbehaving client is blocked within seconds rather than after accumulating requests over a full minute.
 
 ### Configuration approach
 
@@ -30,34 +30,12 @@ The WAF rate limiting rule is configured via the **Cloudflare dashboard** (not `
 2. Select the production zone (e.g., `truvis.app`)
 3. Navigate to **Security > WAF > Rate limiting rules**
 4. Click **Create rule** and enter:
-   - **Rule name:** `Blog API rate limit - /api/v1/blog/*`
+   - **Rule name:** `blog-api-rate-limit`
    - **If incoming requests match:** `(http.request.uri.path matches "^/api/v1/blog/")`
-   - **Rate:** 100 requests per 60 seconds
+   - **Rate:** 21 requests per 10 seconds
    - **Counting expression:** Per IP (`ip.src`)
-   - **Then:** Block for 60 seconds (returns HTTP 429)
+   - **Then:** Block for 10 seconds (returns HTTP 429)
 5. Save and deploy the rule
-6. Record the rule ID in this document (replace the `TODO(deploy)` above)
-
-**Alternative — Cloudflare API:**
-
-```bash
-curl -X POST "https://api.cloudflare.com/client/v4/zones/{zone_id}/rulesets/phases/http_ratelimit/entrypoint" \
-  -H "Authorization: Bearer {api_token}" \
-  -H "Content-Type: application/json" \
-  --data '{
-    "rules": [{
-      "action": "block",
-      "expression": "(http.request.uri.path matches \"^/api/v1/blog/\")",
-      "ratelimit": {
-        "characteristics": ["ip.src"],
-        "period": 60,
-        "requests_per_period": 100,
-        "mitigation_timeout": 60
-      },
-      "description": "Blog API rate limit - /api/v1/blog/*"
-    }]
-  }'
-```
 
 ## Cache headers
 
@@ -147,7 +125,7 @@ npx autocannon -c 100 -d 30 --renderStatusCodes https://<preview-url>/api/v1/blo
 
 ## Known limitations
 
-1. **Shared-IP scenarios:** Corporate NAT, conference wifi, or VPN users sharing a single public IP may collectively hit the 100 req/min limit. This is acceptable for V1 given the mobile app's 5-minute cache. **V1.1 follow-up:** consider an API-key-gated higher-rate lane if abuse reports arrive from legitimate shared-IP environments.
+1. **Shared-IP scenarios:** Corporate NAT, conference wifi, or VPN users sharing a single public IP may collectively hit the 21 req/10s limit. This is acceptable for V1 given the mobile app's 5-minute cache. **V1.1 follow-up:** consider an API-key-gated higher-rate lane if abuse reports arrive from legitimate shared-IP environments.
 
 2. **Preview deployments not covered by WAF:** Cloudflare Pages preview deployments use `*.pages.dev` subdomains on a shared Cloudflare zone. WAF rate limiting rules are scoped to the custom domain's zone (production only). The `_headers` file (cache headers) works on both preview and production since it deploys with the Pages project.
 

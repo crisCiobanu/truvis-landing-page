@@ -173,7 +173,7 @@ All three endpoints are static JSON files generated at build time and served fro
 
 - **Latency:** CDN edge TTFB is typically <50ms, well under the 300ms budget (NFR8).
 - **CMS outage:** A CMS outage cannot affect a live deploy. The last successful build remains served until the next deploy succeeds (NFR36).
-- **Concurrency:** Static CDN-served files can handle arbitrary concurrent load. Rate limiting (100 req/min/IP) is enforced at the Cloudflare WAF edge layer (Story 4.9).
+- **Concurrency:** Static CDN-served files can handle arbitrary concurrent load. Rate limiting (21 req/10s per IP, ~126 req/min) is enforced at the Cloudflare WAF edge layer (Story 4.9).
 
 ### 5.9 CDN Cache Headers
 
@@ -189,9 +189,9 @@ Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=60480
 
 ### 5.10 Rate Limits
 
-The `/api/v1/blog/*` endpoints are rate-limited to **100 requests per minute per client IP**. Clients exceeding this limit receive an HTTP `429 Too Many Requests` response with a `Retry-After` header indicating when the client may retry (in seconds).
+The `/api/v1/blog/*` endpoints are rate-limited to **21 requests per 10 seconds per client IP** (~126 requests/minute). Clients exceeding this limit receive an HTTP `429 Too Many Requests` response with a `Retry-After` header indicating when the client may retry (in seconds).
 
-Enforced by Cloudflare WAF at the edge layer (NFR14).
+Enforced by Cloudflare WAF at the edge layer (NFR14). The shorter 10-second window provides tighter burst protection than a per-minute limit.
 
 **Mobile app guidance:** The carousel should implement a 5-minute local cache (matching the `max-age=300` Cache-Control directive) to stay comfortably under the rate limit even on shared networks (e.g., corporate NAT, conference wifi).
 
