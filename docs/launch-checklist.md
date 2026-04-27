@@ -172,6 +172,17 @@ Loops provides built-in unsubscribe handling via a footer link on every email.
 
 ---
 
+## Blog API Verification
+
+- [ ] Confirm WAF rate limit rule is active on the production zone (Cloudflare dashboard > Security > WAF)
+- [ ] Verify Cache-Control header: `curl -I https://truvis.app/api/v1/blog/posts.json`
+- [ ] Verify CDN cache hit: second `curl -I` shows `cf-cache-status: HIT`
+- [ ] Re-run load test against production: `hey -n 10000 -c 100 -z 30s https://truvis.app/api/v1/blog/posts.json`
+- [ ] Confirm p95 < 300ms (NFR18 budget)
+- [ ] Verify rate limit: send 25+ rapid requests in 10s, confirm 429 + Retry-After on excess
+
+---
+
 ## Pre-Launch Verification
 
 - [ ] End-to-end double opt-in flow verified (Story 3.7)

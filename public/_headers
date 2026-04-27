@@ -1,0 +1,5 @@
+# CDN cache headers for the Blog API (AR9, Story 4.9)
+# Applied to all static JSON endpoints under /api/v1/blog/
+# See docs/integrations/cloudflare-waf.md for rationale.
+/api/v1/blog/*
+  Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=604800
