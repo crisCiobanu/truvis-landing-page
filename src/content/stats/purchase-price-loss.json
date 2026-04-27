@@ -1,0 +1,9 @@
+{
+  "id": "purchase-price-loss",
+  "value": "5%",
+  "label": "of the purchase price vanishes to repairs that were visible before the sale \u2014 if you knew where to look.",
+  "source": "Carfax Europe 2023 \u2014 average repair costs as a percentage of the sale price across 200,000 transactions.",
+  "category": "coral",
+  "phase": "pre",
+  "order": 3
+}

@@ -1,0 +1,8 @@
+{
+  "id": "how-accurate",
+  "question": "How accurate are Truvis's severity ratings?",
+  "answer": "Severity is calibrated against the documented fault histories for each specific model and model year, combined with the visible and audible signals Truvis asks you to check. It is a decision-support tool, not a diagnostic certification, so always combine it with a test drive and, for expensive cars, a professional inspection.",
+  "order": 6,
+  "featured": false,
+  "category": "general"
+}

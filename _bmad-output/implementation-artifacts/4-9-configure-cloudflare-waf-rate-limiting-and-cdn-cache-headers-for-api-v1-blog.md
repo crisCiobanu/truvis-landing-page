@@ -1,6 +1,6 @@
 # Story 4.9: Configure Cloudflare WAF rate limiting and CDN cache headers for `/api/v1/blog/*`
 
-Status: review
+Status: done
 
 ## Story
 

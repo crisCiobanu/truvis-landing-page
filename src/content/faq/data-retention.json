@@ -1,0 +1,8 @@
+{
+  "id": "data-retention",
+  "question": "How long does Truvis keep my inspection data?",
+  "answer": "Inspection data stays on your device indefinitely unless you delete it. If you enable cloud sync, you can delete every record from the app settings. Deletion is immediate, verifiable, and permanent. See our privacy policy for the full data lifecycle.",
+  "order": 7,
+  "featured": false,
+  "category": "privacy"
+}

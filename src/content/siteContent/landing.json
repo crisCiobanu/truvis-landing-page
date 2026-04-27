@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "headline": "A buyer paid \u20ac7,200 for a car with a \u20ac900 problem he couldn\u2019t see.",
+    "subheadline": "Truvis is a pocket inspector that walks you through a used car, flags what matters, and tells you what to negotiate \u2014 before you pay.",
+    "postLaunchHeadline": "",
+    "postLaunchSubheadline": ""
+  },
+  "problem": {
+    "body": [
+      "Used cars hide problems that a casual test drive won\u2019t surface \u2014 worn clutches, misaligned frames, electronic gremlins, history odometer rolls. The ones that do get caught are usually caught at the mechanic, after the money has already changed hands.",
+      "Roughly 1 in 3 private-party used cars has at least one undisclosed issue costing more than \u20ac500 to fix. The average buyer walks away from a handshake deal \u20ac640 poorer than they expected.",
+      "On a \u20ac12,000 car, that is a 5% hit before you\u2019ve even driven it home. It is also entirely preventable \u2014 if you know what to look for."
+    ],
+    "stats": [
+      {
+        "label": "undisclosed issues",
+        "value": "1 in 3",
+        "source": "ADAC Used Car Report 2023"
+      },
+      {
+        "label": "average hidden cost",
+        "value": "\u20ac640",
+        "source": "RAC Vehicle Inspections 2022"
+      },
+      {
+        "label": "of purchase price lost",
+        "value": "5%",
+        "source": "Carfax Europe 2023"
+      }
+    ]
+  },
+  "footer": {
+    "tagline": "Your next car deserves a second opinion.",
+    "smallPrint": "\u00a9 2026 Truvis. All rights reserved."
+  },
+  "socialLinks": {
+    "twitter": "",
+    "instagram": "",
+    "tiktok": "",
+    "youtube": ""
+  },
+  "appStoreUrls": {
+    "ios": "",
+    "android": ""
+  },
+  "ctaLabels": {
+    "preLaunchPrimary": "Join the waitlist",
+    "postLaunchPrimary": "Download the app"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "what-about-privacy",
+  "question": "What does Truvis do with my data?",
+  "answer": "Truvis stores your inspection history on your device by default. If you opt into cloud sync, inspection data is stored in an EU region only. We never sell your data, we never share it with dealerships, and you can delete your history any time from the app settings.",
+  "order": 3,
+  "featured": true,
+  "category": "privacy"
+}

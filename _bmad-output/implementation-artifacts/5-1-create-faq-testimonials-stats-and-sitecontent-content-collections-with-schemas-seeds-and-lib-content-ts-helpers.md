@@ -1,6 +1,6 @@
 # Story 5.1: Create `faq`, `testimonials`, `stats` and `siteContent` Content Collections with schemas, seeds and `lib/content.ts` helpers
 
-Status: ready-for-dev
+Status: done
 
 <!-- Validation optional. Run validate-create-story for a quality check before dev-story. -->
 
@@ -106,37 +106,41 @@ Scope boundaries:
 
 ## Tasks / Subtasks
 
-- [ ] **Task 1 — Extend `src/content/config.ts` with four new collection schemas** (AC: 1, 2, 3, 4, 5)
-  - [ ] T1.1 Define `FaqSchema` Zod object: `id` (string), `question` (string, max 200), `answer` (string — Markdown), `order` (number), `featured` (boolean, default false), `category` (optional string). Collection type: `'data'`
-  - [ ] T1.2 Define `TestimonialSchema` Zod object: `id` (string), `quote` (string), `attribution` (string), `context` (optional string), `phase` (enum `['pre', 'post']`, default `'pre'`), `featured` (boolean, default false), `authorImage` (optional `z.object({src: z.string(), alt: z.string(), width: z.number(), height: z.number()})`), `rating` (optional `z.number().min(1).max(5)`). Add `.refine()` to reject `phase: 'post'` without `authorImage`
-  - [ ] T1.3 Define `StatsSchema` Zod object: `id` (string), `value` (string), `label` (string), `source` (optional string), `category` (enum `['teal', 'amber', 'coral']`), `phase` (enum `['pre', 'post']`, default `'pre'`), `order` (number). Add `.refine()` to require `source` when `phase === 'pre'`
-  - [ ] T1.4 Define `SiteContentSchema` Zod object with nested groups: `hero` (`{headline: z.string(), subheadline: z.string(), postLaunchHeadline: z.string().optional(), postLaunchSubheadline: z.string().optional()}`), `problem` (`{body: z.array(z.string()), stats: z.array(z.object({label: z.string(), value: z.string(), source: z.string()}))}`), `footer` (`{tagline: z.string(), smallPrint: z.string()}`), `socialLinks` (`{twitter?: z.string().url(), instagram?: z.string().url(), tiktok?: z.string().url(), youtube?: z.string().url()}`), `appStoreUrls` (`{ios?: z.string(), android?: z.string()}`), `ctaLabels` (`{preLaunchPrimary: z.string(), postLaunchPrimary: z.string()}`). Collection type: `'data'`
-  - [ ] T1.5 Register all four collections in `export const collections = { ... }` alongside existing `blog`
+- [x] **Task 1 — Extend `src/content/config.ts` with four new collection schemas** (AC: 1, 2, 3, 4, 5)
+  - [x] T1.1 Define `FaqSchema` Zod object: `id` (string), `question` (string, max 200), `answer` (string — Markdown), `order` (number), `featured` (boolean, default false), `category` (optional string). Collection type: `'data'`
+  - [x] T1.2 Define `TestimonialSchema` Zod object: `id` (string), `quote` (string), `attribution` (string), `context` (optional string), `phase` (enum `['pre', 'post']`, default `'pre'`), `featured` (boolean, default false), `authorImage` (optional `z.object({src: z.string(), alt: z.string(), width: z.number(), height: z.number()})`), `rating` (optional `z.number().min(1).max(5)`). Add `.refine()` to reject `phase: 'post'` without `authorImage`
+  - [x] T1.3 Define `StatsSchema` Zod object: `id` (string), `value` (string), `label` (string), `source` (optional string), `category` (enum `['teal', 'amber', 'coral']`), `phase` (enum `['pre', 'post']`, default `'pre'`), `order` (number). Add `.refine()` to require `source` when `phase === 'pre'`
+  - [x] T1.4 Define `SiteContentSchema` Zod object with nested groups: `hero` (`{headline: z.string(), subheadline: z.string(), postLaunchHeadline: z.string().optional(), postLaunchSubheadline: z.string().optional()}`), `problem` (`{body: z.array(z.string()), stats: z.array(z.object({label: z.string(), value: z.string(), source: z.string()}))}`), `footer` (`{tagline: z.string(), smallPrint: z.string()}`), `socialLinks` (`{twitter?: z.string().url(), instagram?: z.string().url(), tiktok?: z.string().url(), youtube?: z.string().url()}`), `appStoreUrls` (`{ios?: z.string(), android?: z.string()}`), `ctaLabels` (`{preLaunchPrimary: z.string(), postLaunchPrimary: z.string()}`). Collection type: `'data'`
+  - [x] T1.5 Register all four collections in `export const collections = { ... }` alongside existing `blog`
 
-- [ ] **Task 2 — Create seed content files** (AC: 2, 3, 4, 5)
-  - [ ] T2.1 Create `src/content/faq/` directory with 6+ JSON/YAML seed files covering canonical questions (scope, professional inspection, privacy, cost, platforms, accuracy, data retention). Each file uses `id` matching the filename slug. Example: `src/content/faq/what-does-truvis-cost.json`
-  - [ ] T2.2 Create `src/content/testimonials/` directory with 2 seed files: one pre-launch market-insight quote (no authorImage, no rating), one post-launch placeholder (with authorImage placeholder)
-  - [ ] T2.3 Create `src/content/stats/` directory with 3 pre-launch seed entries matching the current StatCard values from `social-proof-section.astro` — use real market data with source citations. Categories: `teal`, `amber`, `coral` (one each)
-  - [ ] T2.4 Create `src/content/siteContent/landing.json` with realistic V1 values: hero headline/subheadline matching current i18n values, problem body paragraphs, footer tagline/smallPrint, empty `socialLinks`, empty `appStoreUrls`, CTA labels ("Join the waitlist" / "Download the app")
+- [x] **Task 2 — Create seed content files** (AC: 2, 3, 4, 5)
+  - [x] T2.1 Create `src/content/faq/` directory with 6+ JSON/YAML seed files covering canonical questions (scope, professional inspection, privacy, cost, platforms, accuracy, data retention). Each file uses `id` matching the filename slug. Example: `src/content/faq/what-does-truvis-cost.json`
+  - [x] T2.2 Create `src/content/testimonials/` directory with 2 seed files: one pre-launch market-insight quote (no authorImage, no rating), one post-launch placeholder (with authorImage placeholder)
+  - [x] T2.3 Create `src/content/stats/` directory with 3 pre-launch seed entries matching the current StatCard values from `social-proof-section.astro` — use real market data with source citations. Categories: `teal`, `amber`, `coral` (one each)
+  - [x] T2.4 Create `src/content/siteContent/landing.json` with realistic V1 values: hero headline/subheadline matching current i18n values, problem body paragraphs, footer tagline/smallPrint, empty `socialLinks`, empty `appStoreUrls`, CTA labels ("Join the waitlist" / "Download the app")
 
-- [ ] **Task 3 — Create `src/lib/content.ts` with typed helpers** (AC: 6)
-  - [ ] T3.1 Define view types: `FaqEntryView`, `TestimonialView`, `StatView`, `SiteContentView` — camelCase, typed
-  - [ ] T3.2 Implement `getFaqEntries()`: calls `getCollection('faq')`, sorts by `order` then `id`, maps through `buildFaqEntryView()`
-  - [ ] T3.3 Implement `getFeaturedFaqEntries(limit?)`: filters `featured === true`, applies optional limit
-  - [ ] T3.4 Implement `getTestimonials(phase?)`: filters by phase, defaults to `'pre'` with `// TODO(epic-5-phase): default to isPostLaunch() once Story 5.3 ships`
-  - [ ] T3.5 Implement `getStats(phase?)`: filters by phase and sorts by `order`, same default pattern
-  - [ ] T3.6 Implement `getSiteContent()`: calls `getEntry('siteContent', 'landing')`, returns typed view
-  - [ ] T3.7 If `lib/content.ts` doesn't exist, also add blog helpers (`getAllPosts`, `getPostBySlug`, `getPostsByCategory`, `getBlogCategories`) using `getCollection('blog')`. If it already exists, extend it
+- [x] **Task 3 — Create `src/lib/content.ts` with typed helpers** (AC: 6)
+  - [x] T3.1 Define view types: `FaqEntryView`, `TestimonialView`, `StatView`, `SiteContentView` — camelCase, typed
+  - [x] T3.2 Implement `getFaqEntries()`: calls `getCollection('faq')`, sorts by `order` then `id`, maps through `buildFaqEntryView()`
+  - [x] T3.3 Implement `getFeaturedFaqEntries(limit?)`: filters `featured === true`, applies optional limit
+  - [x] T3.4 Implement `getTestimonials(phase?)`: filters by phase, defaults to `'pre'` with `// TODO(epic-5-phase): default to isPostLaunch() once Story 5.3 ships`
+  - [x] T3.5 Implement `getStats(phase?)`: filters by phase and sorts by `order`, same default pattern
+  - [x] T3.6 Implement `getSiteContent()`: calls `getEntry('siteContent', 'landing')`, returns typed view
+  - [x] T3.7 If `lib/content.ts` doesn't exist, also add blog helpers (`getAllPosts`, `getPostBySlug`, `getPostsByCategory`, `getBlogCategories`) using `getCollection('blog')`. If it already exists, extend it
 
-- [ ] **Task 4 — Update boundary enforcement** (AC: 7)
-  - [ ] T4.1 Add Content Collection access rule to `docs/design-conventions.md`: list all five collections, state the `lib/content.ts` single-access-point rule
-  - [ ] T4.2 Verify no file outside `lib/content.ts` calls `getCollection('faq' | 'testimonials' | 'stats' | 'siteContent')` — if any exist, refactor them
+- [x] **Task 4 — Update boundary enforcement** (AC: 7)
+  - [x] T4.1 Add Content Collection access rule to `docs/design-conventions.md`: list all five collections, state the `lib/content.ts` single-access-point rule
+  - [x] T4.2 Verify no file outside `lib/content.ts` calls `getCollection('faq' | 'testimonials' | 'stats' | 'siteContent')` — if any exist, refactor them
 
-- [ ] **Task 5 — Build verification** (AC: 1)
-  - [ ] T5.1 Run `astro build` — must succeed with all four new collections and seed data
-  - [ ] T5.2 Run `astro check` — zero TypeScript errors
-  - [ ] T5.3 Run `npx eslint .` — no new errors
-  - [ ] T5.4 Run `npx prettier --check .` — no formatting issues
+- [x] **Task 5 — Build verification** (AC: 1)
+  - [x] T5.1 Run `astro build` — must succeed with all four new collections and seed data
+  - [x] T5.2 Run `astro check` — zero TypeScript errors
+  - [x] T5.3 Run `npx eslint .` — no new errors
+  - [x] T5.4 Run `npx prettier --check .` — no formatting issues
+
+### Review Findings
+
+- [x] [Review][Patch] statsSchema refinement allows empty-string source — added `.min(1)` to `source` field [src/content/config.ts:98] — FIXED
 
 ## Dev Notes
 
@@ -226,10 +230,43 @@ docs/design-conventions.md                  <- Add Content Collection access bou
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+Claude Opus 4.6 (1M context)
 
 ### Debug Log References
 
+None — clean implementation, no blockers encountered.
+
 ### Completion Notes List
 
+- Extended `src/content/config.ts` with four new collection schemas (`faq`, `testimonials`, `stats`, `siteContent`) with Zod validation and refinements (post-launch testimonials require authorImage, pre-launch stats require source citation)
+- Created 7 FAQ seed entries, 2 testimonial seed entries, 3 stats seed entries, and 1 siteContent/landing.json — all matching existing i18n placeholder content with real market data source citations
+- Extended existing `src/lib/content.ts` (from Epic 4) with typed view interfaces and helpers: `getFaqEntries()`, `getFeaturedFaqEntries()`, `getTestimonials()`, `getStats()`, `getSiteContent()` — all following the `build*View()` transform pattern established by `buildBlogEntryView()`
+- Phase defaults hard-coded to `'pre'` with `TODO(epic-5-phase)` comments for Story 5.3
+- Extended `docs/design-conventions.md` with Content Collection access boundary rule listing all five collections
+- All verification passed: astro check (0 errors), astro build (complete), eslint (0 new errors), prettier (all formatted), vitest (90/90 tests passed, 0 regressions)
+
+### Change Log
+
+- 2026-04-27: Story 5.1 implemented — four new Content Collections with schemas, seeds, and typed lib/content.ts helpers
+
 ### File List
+
+New files:
+- src/content/faq/what-does-truvis-do.json
+- src/content/faq/does-truvis-replace-mechanic.json
+- src/content/faq/what-about-privacy.json
+- src/content/faq/what-does-truvis-cost.json
+- src/content/faq/which-phones.json
+- src/content/faq/how-accurate.json
+- src/content/faq/data-retention.json
+- src/content/testimonials/market-insight-pre.json
+- src/content/testimonials/user-review-post.json
+- src/content/stats/hidden-defect-rate.json
+- src/content/stats/average-hidden-cost.json
+- src/content/stats/purchase-price-loss.json
+- src/content/siteContent/landing.json
+
+Modified files:
+- src/content/config.ts
+- src/lib/content.ts
+- docs/design-conventions.md

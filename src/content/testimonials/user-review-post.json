@@ -1,0 +1,15 @@
+{
+  "id": "user-review-post",
+  "quote": "Truvis flagged a timing-chain issue I would have completely missed. Saved me at least €1,800 in repairs.",
+  "attribution": "Early Access User",
+  "context": "Post-launch user testimonial placeholder.",
+  "phase": "post",
+  "featured": true,
+  "authorImage": {
+    "src": "/images/testimonials/placeholder-avatar.jpg",
+    "alt": "Early access user avatar",
+    "width": 80,
+    "height": 80
+  },
+  "rating": 5
+}

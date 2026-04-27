@@ -1,0 +1,8 @@
+{
+  "id": "does-truvis-replace-mechanic",
+  "question": "Does Truvis replace a professional pre-purchase inspection?",
+  "answer": "No, and it is not designed to. A qualified mechanic with a lift and diagnostic scan tools will always see more than a phone in a car park. Truvis is the step before that: it tells you whether a car is worth booking a mechanic for at all, and which specific things to ask the mechanic to check.",
+  "order": 2,
+  "featured": true,
+  "category": "general"
+}
