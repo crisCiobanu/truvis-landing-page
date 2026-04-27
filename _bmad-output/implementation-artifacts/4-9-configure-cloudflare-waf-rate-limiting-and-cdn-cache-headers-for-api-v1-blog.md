@@ -439,13 +439,11 @@ No files under `src/` are created or modified.
 Claude Opus 4.6 (1M context)
 
 ### Debug Log References
-- `astro check` initially failed because it type-checked `functions/` directory — resolved by adding `"exclude": ["functions"]` to root `tsconfig.json` and creating a separate `functions/tsconfig.json` with `@cloudflare/workers-types`.
+- Initial approach used `functions/api/v1/blog/_middleware.ts` (Cloudflare Pages Functions middleware). After deploying to preview, discovered that the `@astrojs/cloudflare` adapter generates a `_worker.js` that takes priority over the `functions/` directory. The blog API routes are in `_routes.json` `exclude` list, so they're served as static files directly from CDN — bypassing both the worker and functions middleware. Switched to `public/_headers` file approach, which is the standard Cloudflare Pages mechanism for adding headers to static assets.
 - Prettier formatting issue on `docs/integrations/cloudflare-waf.md` — fixed with `prettier --write`.
 
 ### Completion Notes List
-- Created `functions/api/v1/blog/_middleware.ts` — Cloudflare Pages Functions edge middleware that sets `Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=604800` on all `/api/v1/blog/*` responses (AC3).
-- Created `functions/tsconfig.json` for IDE support with `@cloudflare/workers-types`.
-- Added `"exclude": ["functions"]` to root `tsconfig.json` to prevent `astro check` from type-checking Cloudflare Pages Functions (which use a different TypeScript environment).
+- Created `public/_headers` — Cloudflare Pages headers file that sets `Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=604800` on all `/api/v1/blog/*` responses (AC3). Initially attempted `functions/api/v1/blog/_middleware.ts` but that approach doesn't work when `@astrojs/cloudflare` adapter generates `_worker.js` — switched to the `_headers` file which is the correct mechanism for static asset headers on Cloudflare Pages.
 - WAF rate limit rule configuration documented in `docs/integrations/cloudflare-waf.md` with dashboard steps, API alternative, verification commands, load test methodology template, and known limitations (AC1, AC2).
 - Expanded `CONTRACT.md` section 5.10 with mobile app guidance about 5-minute local cache and detailed `Retry-After` header documentation (AC4). Changes are additive-only (NFR31).
 - Added "Blog API Verification" section to `docs/launch-checklist.md` with 6 pre-launch checklist items (AC6).
@@ -457,12 +455,10 @@ Claude Opus 4.6 (1M context)
 
 ### File List
 New files:
-- `functions/api/v1/blog/_middleware.ts` — Cloudflare Pages Functions edge middleware (cache headers)
-- `functions/tsconfig.json` — TypeScript config for Cloudflare Pages Functions
+- `public/_headers` — Cloudflare Pages headers file (cache headers for `/api/v1/blog/*`)
 - `docs/integrations/cloudflare-waf.md` — WAF rule documentation, load test template, known limitations
 
 Modified files:
 - `CONTRACT.md` — Expanded section 5.10 with mobile app guidance and Retry-After details
 - `docs/launch-checklist.md` — Added "Blog API Verification" section
-- `tsconfig.json` — Added `"exclude": ["functions"]` to prevent astro check interference
 - `_bmad-output/implementation-artifacts/sprint-status.yaml` — Story 4-9 status updated

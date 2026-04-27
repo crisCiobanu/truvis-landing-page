@@ -61,13 +61,13 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{zone_id}/rulesets/phas
 
 ## Cache headers
 
-The CDN cache headers are set via a Cloudflare Pages Functions middleware at:
+The CDN cache headers are set via a Cloudflare Pages `_headers` file at:
 
 ```
-functions/api/v1/blog/_middleware.ts
+public/_headers
 ```
 
-This middleware intercepts all responses under `/api/v1/blog/*` and adds the `Cache-Control` header. The response body is passed through unchanged.
+This file instructs the Cloudflare Pages CDN to add the `Cache-Control` header to all static responses matching `/api/v1/blog/*`. The `_headers` approach is used because the `@astrojs/cloudflare` adapter generates a `_worker.js` that takes priority over `functions/` directory middleware, and the blog API routes are excluded from the worker (served as static files directly from the CDN).
 
 | Directive                | Value  | Purpose                                               |
 | ------------------------ | ------ | ----------------------------------------------------- |
