@@ -129,19 +129,19 @@ npx autocannon -c 100 -d 30 --renderStatusCodes https://<preview-url>/api/v1/blo
 
 **Results:**
 
-| Metric              | Value                                                    |
-| ------------------- | -------------------------------------------------------- |
-| Tool & version      | autocannon v8.0.0 (Node v24.14.1)                       |
-| Total requests      | 92,592                                                   |
-| Success rate        | 100% (all HTTP 200, zero 5xx)                            |
-| p50 latency         | 31 ms                                                    |
-| p95 latency         | 42 ms                                                    |
-| p99 latency         | 48 ms                                                    |
-| Max latency         | 337 ms                                                   |
-| Requests/sec        | ~3,087 avg                                               |
-| CDN cache hit ratio | N/A (`cf-cache-status` not present on `*.pages.dev`)     |
-| Date tested         | 2026-04-27                                               |
-| Preview URL         | `https://43add278.truvis-landing-page.pages.dev`         |
+| Metric              | Value                                                |
+| ------------------- | ---------------------------------------------------- |
+| Tool & version      | autocannon v8.0.0 (Node v24.14.1)                    |
+| Total requests      | 92,592                                               |
+| Success rate        | 100% (all HTTP 200, zero 5xx)                        |
+| p50 latency         | 31 ms                                                |
+| p95 latency         | 42 ms                                                |
+| p99 latency         | 48 ms                                                |
+| Max latency         | 337 ms                                               |
+| Requests/sec        | ~3,087 avg                                           |
+| CDN cache hit ratio | N/A (`cf-cache-status` not present on `*.pages.dev`) |
+| Date tested         | 2026-04-27                                           |
+| Preview URL         | `https://43add278.truvis-landing-page.pages.dev`     |
 
 **NFR18 validated:** p95 = 42ms, well under the 300ms budget. Zero errors across 92k requests.
 
