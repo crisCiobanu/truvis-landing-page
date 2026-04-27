@@ -48,6 +48,22 @@ Every transition and animation MUST reference one of the three canonical duratio
 
 `@media (prefers-reduced-motion: reduce)` in `global.css` cuts every transition to `0.01ms`. Any exception for essential motion must be opted-in with a code comment citing UX-DR32.
 
+## Content Collection access boundary (AR25)
+
+All `getCollection()` and `getEntry()` calls go through `src/lib/content.ts`. This is enforced by convention and code review — no other file in the repo may call `getCollection()` or `getEntry()` directly.
+
+Collections managed by this boundary:
+
+| Collection     | Type    | Entry pattern                       |
+| -------------- | ------- | ----------------------------------- |
+| `blog`         | content | Markdown articles under `blog/`     |
+| `faq`          | data    | JSON entries under `faq/`           |
+| `testimonials` | data    | JSON entries under `testimonials/`  |
+| `stats`        | data    | JSON entries under `stats/`         |
+| `siteContent`  | data    | Single entry: `siteContent/landing` |
+
+Consumers import typed helpers (`getFaqEntries()`, `getTestimonials()`, `getStats()`, `getSiteContent()`, `getAllBlogPosts()`, etc.) from `@/lib/content`. Raw `CollectionEntry` types never leak out — every helper returns a `*View` type.
+
 ## References
 
 - Visual source of truth: `_bmad-output/planning-artifacts/ux-design-hybrid.html`

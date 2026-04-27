@@ -1,0 +1,8 @@
+{
+  "id": "which-phones",
+  "question": "Which phones does Truvis run on?",
+  "answer": "Truvis will launch on iOS and Android. The waitlist covers both, and we will notify you as soon as your platform is ready to download.",
+  "order": 5,
+  "featured": false,
+  "category": "general"
+}

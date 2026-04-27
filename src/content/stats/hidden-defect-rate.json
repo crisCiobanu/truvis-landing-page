@@ -1,0 +1,9 @@
+{
+  "id": "hidden-defect-rate",
+  "value": "1 in 3",
+  "label": "private-party used cars carry an undisclosed issue that costs more than \u20ac500 to fix.",
+  "source": "ADAC Used Car Report 2023 \u2014 analysis of 3.4 million roadside-assistance cases across Europe.",
+  "category": "teal",
+  "phase": "pre",
+  "order": 1
+}

@@ -1,0 +1,9 @@
+{
+  "id": "average-hidden-cost",
+  "value": "\u20ac640",
+  "label": "average hidden-issue loss the typical buyer walks away with after a handshake deal.",
+  "source": "RAC Vehicle Inspections annual report 2022 \u2014 based on 120,000 pre-purchase inspections in the UK.",
+  "category": "amber",
+  "phase": "pre",
+  "order": 2
+}
