@@ -189,11 +189,11 @@ Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=60480
 
 ### 5.10 Rate Limits
 
-```
-100 requests/minute per IP
-```
+The `/api/v1/blog/*` endpoints are rate-limited to **100 requests per minute per client IP**. Clients exceeding this limit receive an HTTP `429 Too Many Requests` response with a `Retry-After` header indicating when the client may retry (in seconds).
 
-Enforced by Cloudflare WAF (NFR18). Exceeding the limit returns HTTP 429 with a `Retry-After` header.
+Enforced by Cloudflare WAF at the edge layer (NFR14).
+
+**Mobile app guidance:** The carousel should implement a 5-minute local cache (matching the `max-age=300` Cache-Control directive) to stay comfortably under the rate limit even on shared networks (e.g., corporate NAT, conference wifi).
 
 ### 5.11 How to Report Breaking Changes
 
